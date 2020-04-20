@@ -36,7 +36,6 @@ namespace Logics
             
             CreateMap<Rating, RatingDto>();
             CreateMap<RatingForCreationDto, Rating>();
-            CreateMap<RatingForUpdateDto, Rating>();
             
             CreateMap<Review, ReviewDto>();
             CreateMap<ReviewForCreationDto, Review>();

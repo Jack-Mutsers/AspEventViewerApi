@@ -12,27 +12,27 @@ namespace Repository
     {
         public StageRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public void Create_Stage(Stage stage)
+        public void CreateStage(Stage stage)
         {
             Create(stage);
         }
 
-        public void Delete_Stage(Stage stage)
+        public void DeleteStage(Stage stage)
         {
             Delete(stage);
         }
 
-        public IEnumerable<Stage> Get_All_By_Event_Date(int event_date_id)
+        public IEnumerable<Stage> GetAllByEventDate(int event_date_id)
         {
             return FindByCondition(s => s.event_date_id == event_date_id);
         }
 
-        public Stage Get_By_Id(int stage_id)
+        public Stage GetById(int stage_id)
         {
             return FindByCondition(s => s.id == stage_id).FirstOrDefault();
         }
 
-        public void Update_Stage(Stage stage)
+        public void UpdateStage(Stage stage)
         {
             Update(stage);
         }

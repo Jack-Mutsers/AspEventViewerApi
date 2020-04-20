@@ -7,10 +7,11 @@ namespace Contracts
 {
     public interface IArtistRepository
     {
-        IEnumerable<Artist> Get_All_artists();
-        Artist Get_Artist_By_Id(int artist_id);
-        void Create_Artist(Artist artist);
-        void Update_Artist(Artist artist);
-        void Delete_Artist(Artist artist);
+        IEnumerable<Artist> GetAllArtists();
+        IEnumerable<Artist> GetArtistsByGenre(int genre_id);
+        Artist GetById(int artist_id);
+        void CreateArtist(Artist artist);
+        void UpdateArtist(Artist artist);
+        void DeleteArtist(Artist artist);
     }
 }

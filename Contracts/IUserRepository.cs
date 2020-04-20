@@ -7,9 +7,10 @@ namespace Contracts
 {
     public interface IUserRepository
     {
-        User Get_User_By_Login(User user);
-        void Create_User(User user);
-        void Update_User(User user);
-        void Delete_User(User user);
+        User GetUserByLogin(string username, string password);
+        User GetById(int User_id);
+        void CreateUser(User user);
+        void UpdateUser(User user);
+        void DeleteUser(User user);
     }
 }

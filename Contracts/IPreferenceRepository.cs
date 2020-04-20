@@ -7,9 +7,10 @@ namespace Contracts
 {
     public interface IPreferenceRepository
     {
-        IEnumerable<Preference> Get_Preference_by_user(int user_id);
-        void Create_Preference(Preference preference);
-        void Update_Preference(Preference preference);
-        void Delete_Preference(Preference preference);
+        IEnumerable<Preference> GetPreferenceByUser(int user_id);
+        Preference GetById(int preference_id);
+        void CreatePreference(Preference preference);
+        void UpdatePreference(Preference preference);
+        void DeletePreference(Preference preference);
     }
 }

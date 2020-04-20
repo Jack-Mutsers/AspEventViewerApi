@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,27 +13,32 @@ namespace Repository
     {
         public ArtistRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public void Create_Artist(Artist artist)
+        public void CreateArtist(Artist artist)
         {
             Create(artist);
         }
 
-        public void Delete_Artist(Artist artist)
+        public void DeleteArtist(Artist artist)
         {
             Delete(artist);
         }
 
-        public IEnumerable<Artist> Get_All_artists()
+        public IEnumerable<Artist> GetAllArtists()
         {
             return FindAll();
         }
 
-        public Artist Get_Artist_By_Id(int artist_id)
+        public IEnumerable<Artist> GetArtistsByGenre(int genre_id)
+        {
+            return FindByCondition(g => g.genre_id == genre_id);
+        }
+
+        public Artist GetById(int artist_id)
         {
             return FindByCondition(a => a.id == artist_id).FirstOrDefault();
         }
 
-        public void Update_Artist(Artist artist)
+        public void UpdateArtist(Artist artist)
         {
             Update(artist);
         }

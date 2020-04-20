@@ -13,32 +13,37 @@ namespace Repository
     {
         public ScheduleRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public void Create_schedule(Schedule schedule)
+        public void CreateSchedule(Schedule schedule)
         {
             Create(schedule);
         }
 
-        public void Delete_schedule(Schedule schedule)
+        public void DeleteSchedule(Schedule schedule)
         {
             Delete(schedule);
         }
 
-        public IEnumerable<Schedule> Get_All()
+        public IEnumerable<Schedule> GetAll()
         {
             return FindAll().Include(ac => ac.stage).Include(ac => ac.@event);
         }
 
-        public Schedule Get_By_Stage(int stage_id)
+        public Schedule GetById(int schedule_id)
+        {
+            return FindByCondition(s => s.id == schedule_id).FirstOrDefault();
+        }
+
+        public Schedule GetByStage(int stage_id)
         {
             return FindByCondition(s => s.stage_id == stage_id).Include(ac => ac.stage).Include(ac => ac.@event).FirstOrDefault();
         }
 
-        public Schedule Get_By_Stage_with_details(int stage_id)
+        public Schedule GetByStageWithDetails(int stage_id)
         {
             return FindByCondition(s => s.stage_id == stage_id).Include(ac => ac.scheduleItems).Include(ac => ac.stage).Include(ac => ac.@event).FirstOrDefault();
         }
 
-        public void Update_schedule(Schedule schedule)
+        public void UpdateSchedule(Schedule schedule)
         {
             Update(schedule);
         }

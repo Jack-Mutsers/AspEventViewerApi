@@ -7,9 +7,9 @@ namespace Contracts
 {
     public interface IEventDateRepository
     {
-        EventDate Get_Event_Date_By_Id(int event_date_id);
-        void Create_Event_Date(EventDate event_date);
-        void Update_Event_Date(EventDate event_date);
-        void Delete_Event_Date(EventDate event_date);
+        EventDate GetById(int event_date_id);
+        void CreateEventDate(EventDate event_date);
+        void UpdateEventDate(EventDate event_date);
+        void DeleteEventDate(EventDate event_date);
     }
 }

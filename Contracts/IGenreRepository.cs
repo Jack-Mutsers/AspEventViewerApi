@@ -7,7 +7,7 @@ namespace Contracts
 {
     public interface IGenreRepository
     {
-        IEnumerable<Genre> Get_All_Genres();
-        Genre Get_Genre_By_Id(int genre_id);
+        IEnumerable<Genre> GetAllGenres();
+        Genre GetById(int genre_id);
     }
 }

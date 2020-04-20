@@ -12,27 +12,27 @@ namespace Repository
     {
         public EventRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public void Create_Event(Event @event)
+        public void CreateEvent(Event @event)
         {
             Create(@event);
         }
 
-        public void Delete_Event(Event @event)
+        public void DeleteEvent(Event @event)
         {
             Delete(@event);
         }
 
-        public IEnumerable<Event> Get_All_Events()
+        public IEnumerable<Event> GetAllEvents()
         {
             return FindAll();
         }
 
-        public Event Get_Event_By_Id(int event_id)
+        public Event GetById(int event_id)
         {
             return FindByCondition(e => e.id == event_id).FirstOrDefault();
         }
 
-        public void Update_Event(Event @event)
+        public void UpdateEvent(Event @event)
         {
             Update(@event);
         }

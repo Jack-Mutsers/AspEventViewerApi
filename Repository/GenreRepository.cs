@@ -12,12 +12,12 @@ namespace Repository
     {
         public GenreRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public IEnumerable<Genre> Get_All_Genres()
+        public IEnumerable<Genre> GetAllGenres()
         {
             return FindAll();
         }
 
-        public Genre Get_Genre_By_Id(int genre_id)
+        public Genre GetById(int genre_id)
         {
             return FindByCondition(g => g.id == genre_id).FirstOrDefault();
         }

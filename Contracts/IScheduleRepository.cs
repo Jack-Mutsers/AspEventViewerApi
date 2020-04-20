@@ -7,11 +7,12 @@ namespace Contracts
 {
     public interface IScheduleRepository
     {
-        IEnumerable<Schedule> Get_All();
-        Schedule Get_By_Stage(int stage_id);
-        Schedule Get_By_Stage_with_details(int stage_id);
-        void Create_schedule(Schedule schedule);
-        void Update_schedule(Schedule schedule);
-        void Delete_schedule(Schedule schedule);
+        IEnumerable<Schedule> GetAll();
+        Schedule GetByStage(int stage_id);
+        Schedule GetByStageWithDetails(int stage_id);
+        Schedule GetById(int Schedule_id);
+        void CreateSchedule(Schedule schedule);
+        void UpdateSchedule(Schedule schedule);
+        void DeleteSchedule(Schedule schedule);
     }
 }

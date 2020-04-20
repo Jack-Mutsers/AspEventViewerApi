@@ -12,22 +12,27 @@ namespace Repository
     {
         public DatePlanningRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public void Create_Date_Planning(DatePlanning date_planning)
+        public void CreateDatePlanning(DatePlanning date_planning)
         {
             Create(date_planning);
         }
 
-        public void Delete_Date_Planning(DatePlanning date_planning)
+        public void DeleteDatePlanning(DatePlanning date_planning)
         {
             Delete(date_planning);
         }
 
-        public IEnumerable<DatePlanning> Get_All_Date_Planning(int event_id)
+        public IEnumerable<DatePlanning> GetAllByEvent(int event_id)
         {
             return FindByCondition(dp => dp.event_id == event_id);
         }
 
-        public void Update_Date_Planning(DatePlanning date_planning)
+        public DatePlanning GetById(int planning_id)
+        {
+            return FindByCondition(dp => dp.id == planning_id).FirstOrDefault();
+        }
+
+        public void UpdateDatePlanning(DatePlanning date_planning)
         {
             Update(date_planning);
         }

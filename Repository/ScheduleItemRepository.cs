@@ -3,6 +3,7 @@ using Entities;
 using Entities.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Repository
@@ -11,22 +12,27 @@ namespace Repository
     {
         public ScheduleItemRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public void Create_schedule_Item(ScheduleItem scheduleItem)
+        public void CreateScheduleItem(ScheduleItem scheduleItem)
         {
             Create(scheduleItem);
         }
 
-        public void Delete_schedule_Item(ScheduleItem scheduleItem)
+        public void DeleteScheduleItem(ScheduleItem scheduleItem)
         {
             Delete(scheduleItem);
         }
 
-        public IEnumerable<ScheduleItem> Get_By_Schedule(int schedule_id)
+        public ScheduleItem GetById(int item_id)
+        {
+            return FindByCondition(si => si.id == item_id).FirstOrDefault();
+        }
+
+        public IEnumerable<ScheduleItem> GetBySchedule(int schedule_id)
         {
             return FindByCondition(si => si.schedule_id == schedule_id);
         }
 
-        public void Update_schedule_Item(ScheduleItem scheduleItem)
+        public void UpdateScheduleItem(ScheduleItem scheduleItem)
         {
             Update(scheduleItem);
         }
