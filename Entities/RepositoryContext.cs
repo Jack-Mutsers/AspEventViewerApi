@@ -19,5 +19,11 @@ namespace Entities
         public DbSet<ScheduleItem> ScheduleItems { get; set; }
         public DbSet<Stage> Stage { get; set; }
         public DbSet<User> User { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Rating>()
+                .HasKey(r => new { r.event_date_id, r.user_id });
+        }
     }
 }

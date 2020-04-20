@@ -29,7 +29,7 @@ namespace AspEventVieuwerAPI.Controllers
         }
 
         [HttpGet("{id}", Name = "GetEventDateById")]
-        public IActionResult GetById(int id)
+        public IActionResult GetEventDateById(int id)
         {
             try
             {

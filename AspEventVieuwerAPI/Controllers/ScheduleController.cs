@@ -28,7 +28,6 @@ namespace AspEventVieuwerAPI.Controllers
             _mapper = mapper;
         }
 
-        //IEnumerable<Schedule> GetAll();
         [HttpGet]
         public IActionResult GetAllSchedules()
         {
@@ -48,7 +47,6 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        //Schedule GetByStage(int stage_id);
         [HttpGet("{id}", Name = "GetByStage")]
         public IActionResult GetByStage(int id)
         {
@@ -76,7 +74,6 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        //Schedule GetByStageWithDetails(int stage_id);
         [HttpGet("{id}", Name = "GetByStageWithDetails")]
         public IActionResult GetByStageWithDetails(int id)
         {
@@ -104,8 +101,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        //Schedule GetById(int Schedule_id);
-        [HttpGet("{id}", Name = "GetById")]
+        [HttpGet("{id}", Name = "GetScheduleById")]
         public IActionResult GetScheduleById(int id)
         {
             try
@@ -132,7 +128,6 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        //void CreateSchedule(Schedule schedule);
         [HttpPost]
         public IActionResult CreateSchedule([FromBody]ScheduleForCreationDto schedule)
         {
@@ -167,7 +162,6 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        //void UpdateSchedule(Schedule schedule);
         [HttpPut]
         public IActionResult UpdateSchedule([FromBody]ArtistForUpdateDto artist)
         {
@@ -206,7 +200,6 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        //void DeleteSchedule(Schedule schedule);
         [HttpDelete("{id}")]
         public IActionResult DeleteSchedule(int id)
         {

@@ -28,7 +28,7 @@ namespace AspEventVieuwerAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{id}", Name = "GetByEventDate")]
+        [HttpGet("{id}", Name = "GetStageByEventDate")]
         public IActionResult GetStageByEventDate(int id)
         {
             try
@@ -55,7 +55,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
         
-        [HttpGet("{id}", Name = "GetById")]
+        [HttpGet("{id}", Name = "GetStageById")]
         public IActionResult GetStageById(int id)
         {
             try

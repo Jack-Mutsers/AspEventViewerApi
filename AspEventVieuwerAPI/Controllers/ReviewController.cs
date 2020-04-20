@@ -28,8 +28,7 @@ namespace AspEventVieuwerAPI.Controllers
             _mapper = mapper;
         }
 
-        //IEnumerable<Review> GetByEventDate(int event_date_id);
-        [HttpGet("{id}", Name = "GetByEventDate")]
+        [HttpGet("{id}", Name = "GetReviewByEventDate")]
         public IActionResult GetReviewByEventDate(int id)
         {
             try
@@ -56,7 +55,6 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        //IEnumerable<Review> GetAllOpenReviews();
         [HttpGet]
         public IActionResult GetAllReviews()
         {
@@ -76,8 +74,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        //Review GetById(int review_id);
-        [HttpGet("{id}", Name = "GetById")]
+        [HttpGet("{id}", Name = "GetReviewById")]
         public IActionResult GetReviewById(int id)
         {
             try
@@ -103,8 +100,7 @@ namespace AspEventVieuwerAPI.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
-
-        //void CreateReview(Review review);
+        
         [HttpPost]
         public IActionResult CreateReview([FromBody]ReviewForCreationDto review)
         {
@@ -139,7 +135,6 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        //void UpdateReview(Review review);
         [HttpPut]
         public IActionResult UpdateReview([FromBody]ReviewForUpdateDto review)
         {
@@ -178,7 +173,6 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        //void DeleteReview(Review review);
         [HttpDelete("{id}")]
         public IActionResult DeleteReview(int id)
         {

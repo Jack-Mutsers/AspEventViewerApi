@@ -48,7 +48,7 @@ namespace AspEventVieuwerAPI.Controllers
         }
 
         [HttpGet("{id}", Name = "GetGenreById")]
-        public IActionResult GetById(int id)
+        public IActionResult GetGenreById(int id)
         {
             try
             {

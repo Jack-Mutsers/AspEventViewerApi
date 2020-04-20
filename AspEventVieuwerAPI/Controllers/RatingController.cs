@@ -28,7 +28,6 @@ namespace AspEventVieuwerAPI.Controllers
             _mapper = mapper;
         }
 
-        //IEnumerable<Rating> GetByEventDate(int event_date_id);
         [HttpGet("{id}", Name = "GetByEventDate")]
         public IActionResult GetReviewByEventDate(int id)
         {
@@ -56,7 +55,6 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        //void CreateRating(Rating rating);
         [HttpPost]
         public IActionResult CreateRating([FromBody]RatingForCreationDto rating)
         {

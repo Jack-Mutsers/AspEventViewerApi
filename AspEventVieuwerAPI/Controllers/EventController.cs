@@ -28,7 +28,6 @@ namespace AspEventVieuwerAPI.Controllers
             _mapper = mapper;
         }
 
-        //IEnumerable<Event> GetAllEvents();
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -48,9 +47,8 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        //Event GetById(int event_id);
         [HttpGet("{id}", Name = "GetEventById")]
-        public IActionResult GetById(int id)
+        public IActionResult GetEventById(int id)
         {
             try
             {
@@ -76,7 +74,6 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        //void CreateEvent(Event @event);
         [HttpPost]
         public IActionResult CreateEvent([FromBody]EventForCreationDto @event)
         {
@@ -111,7 +108,6 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        //void UpdateEvent(Event @event);
         [HttpPut]
         public IActionResult UpdateEvent([FromBody]EventForUpdateDto @event)
         {
@@ -150,7 +146,6 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        //void DeleteEvent(Event @event);
         [HttpDelete("{id}")]
         public IActionResult DeleteEvent(int id)
         {

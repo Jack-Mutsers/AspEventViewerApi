@@ -56,7 +56,7 @@ namespace AspEventVieuwerAPI.Controllers
         }
 
         [HttpGet("{id}", Name = "GetPreferenceById")]
-        public IActionResult GetById(int id)
+        public IActionResult GetPreferenceById(int id)
         {
             try
             {

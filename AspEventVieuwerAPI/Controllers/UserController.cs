@@ -55,7 +55,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetById")]
+        [HttpGet("{id}", Name = "GetUserById")]
         public IActionResult GetUserById(int id)
         {
             try
