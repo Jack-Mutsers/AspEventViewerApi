@@ -155,6 +155,11 @@ namespace AspEventVieuwerAPI.Controllers
                     datePlanning = _repository.DatePlanning.GetLast(event_id);
                 }
 
+                if (datePlanning == null)
+                {
+                    return null;
+                }
+
                 datePlanning.event_date = _repository.EventDate.GetById(datePlanning.id);
 
                 DatePlanningDto datePlanningDto = _mapper.Map<DatePlanningDto>(datePlanning);
