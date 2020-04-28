@@ -11,6 +11,6 @@ namespace Entities.DataTransferObjects
         public string name { get; set; }
         public string username { get; set; }
         public string password { get; set; }
-        public IEnumerable<Preference> preference { get; set; }
+        public IEnumerable<PreferenceDto> preference { get; set; }
     }
 }

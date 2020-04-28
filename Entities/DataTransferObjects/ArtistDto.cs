@@ -13,5 +13,6 @@ namespace Entities.DataTransferObjects
         public int id { get; set; }
         public string name { get; set; }
         public int genre_id { get; set; }
+        public GenreDto Genre { get; set; }
     }
 }

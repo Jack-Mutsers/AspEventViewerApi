@@ -24,6 +24,8 @@ namespace Logics
             CreateMap<EventForCreationDto, Event>();
             CreateMap<EventForUpdateDto, Event>();
             
+            CreateMap<EventGenre, EventGenreDto>();
+            
             CreateMap<EventDate, EventDateDto>();
             CreateMap<EventDateForCreationDto, EventDate>();
             CreateMap<EventDateForUpdateDto, EventDate>();

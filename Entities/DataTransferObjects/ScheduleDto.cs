@@ -11,6 +11,6 @@ namespace Entities.DataTransferObjects
         public int stage_id { get; set; }
         public int event_id { get; set; }
         public DateTime dateTime { get; set; }
-        public ICollection<ScheduleItem> scheduleItems { get; set; }
+        public IEnumerable<ScheduleItemDto> scheduleItems { get; set; }
     }
 }

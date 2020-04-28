@@ -37,6 +37,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 _logger.LogInfo($"Returned all Events from database.");
 
+                var events = _mapper.Map<IEnumerable<Event>>(@event);
                 var Result = _mapper.Map<IEnumerable<EventDto>>(@event);
                 return Ok(Result);
             }
@@ -63,8 +64,13 @@ namespace AspEventVieuwerAPI.Controllers
                 {
                     _logger.LogInfo($"Returned Event with id: {id}");
 
-                    var Result = _mapper.Map<EventDto>(@event);
-                    return Ok(Result);
+                    EventDto eventDto = _mapper.Map<EventDto>(@event);
+
+                    DatePlanningController datePlanningController = new DatePlanningController(_logger, _repository, _mapper);
+                    eventDto.next = datePlanningController.GetUpcommingEventDate(eventDto.id);
+                    eventDto.finished = datePlanningController.GetFinishedEventDates(eventDto.id);
+
+                    return Ok(eventDto);
                 }
             }
             catch (Exception ex)

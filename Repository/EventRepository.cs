@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,12 +25,12 @@ namespace Repository
 
         public IEnumerable<Event> GetAllEvents()
         {
-            return FindAll();
+            return FindAll().Include(e => e.genre).ThenInclude(g => g.genre);
         }
 
         public Event GetById(int event_id)
         {
-            return FindByCondition(e => e.id == event_id).FirstOrDefault();
+            return FindByCondition(e => e.id == event_id).Include(e => e.genre).ThenInclude(g => g.genre).FirstOrDefault();
         }
 
         public void UpdateEvent(Event @event)

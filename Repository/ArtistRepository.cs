@@ -33,6 +33,11 @@ namespace Repository
             return FindByCondition(g => g.genre_id == genre_id);
         }
 
+        public IEnumerable<Artist> GetArtistsByEventDate(int event_date_id)
+        {
+            return FindByCondition(a => a.ScheduleItem.schedule.stage.event_date_id == event_date_id).Include(a => a.genre).Include(a => a.ScheduleItem).ThenInclude(si => si.schedule).ThenInclude(sc => sc.stage);
+        }
+
         public Artist GetById(int artist_id)
         {
             return FindByCondition(a => a.id == artist_id).FirstOrDefault();

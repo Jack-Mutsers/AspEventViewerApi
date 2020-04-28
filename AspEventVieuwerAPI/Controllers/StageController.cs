@@ -28,6 +28,33 @@ namespace AspEventVieuwerAPI.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet]
+        public IActionResult GetAllStages()
+        {
+            try
+            {
+                var stages = _repository.Stage.GetAll();
+
+                if (stages == null)
+                {
+                    _logger.LogError($"stages with EventDate id: , hasn't been found in db.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.LogInfo($"Returned stages with EventDate id:");
+
+                    var Result = _mapper.Map<IEnumerable<StageDto>>(stages);
+                    return Ok(Result);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetStageByEventDate action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpGet("{id}", Name = "GetStageByEventDate")]
         public IActionResult GetStageByEventDate(int id)
         {
@@ -44,7 +71,7 @@ namespace AspEventVieuwerAPI.Controllers
                 {
                     _logger.LogInfo($"Returned stages with EventDate id: {id}");
 
-                    var Result = _mapper.Map<StageDto>(stages);
+                    var Result = _mapper.Map<IEnumerable<StageDto>>(stages);
                     return Ok(Result);
                 }
             }

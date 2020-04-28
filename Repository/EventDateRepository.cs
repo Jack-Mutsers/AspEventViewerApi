@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace Repository
 
         public EventDate GetById(int event_date_id)
         {
-            return FindByCondition(ed => ed.id == event_date_id).FirstOrDefault();
+            return FindByCondition(ed => ed.id == event_date_id).Include(ed => ed.stages).ThenInclude(s => s.schedule).ThenInclude(sc => sc.scheduleItems).ThenInclude(si => si.artist).FirstOrDefault();
         }
 
         public void UpdateEventDate(EventDate event_date)

@@ -13,7 +13,7 @@ namespace Entities.Models
         public int id { get; set; }
 
         [Required(ErrorMessage = "Event id is required")]
-        public int event_id { get; set; }
+        public int Eventid { get; set; }
 
         [Required(ErrorMessage = "Start datetime is required")]
         public DateTime start { get; set; }
@@ -21,6 +21,6 @@ namespace Entities.Models
         [Required(ErrorMessage = "End datetime is required")]
         public DateTime end { get; set; }
 
-        public ICollection<EventDate> event_dates { get; set; }
+        public EventDate event_date { get; set; }
     }
 }

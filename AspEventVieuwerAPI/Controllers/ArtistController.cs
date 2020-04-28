@@ -197,6 +197,22 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
+        public IEnumerable<ArtistDto> GetArtistsByEventDate(int event_date_id)
+        {
+            try
+            {
+                IEnumerable<Artist> artist = _repository.Artist.GetArtistsByEventDate(event_date_id);
+
+                IEnumerable<ArtistDto> artistDto = _mapper.Map<IEnumerable<ArtistDto>>(artist);
+
+                return artistDto;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside DeleteDatePlanning action: {ex.Message}");
+                return null;
+            }
+        }
 
     }
 }

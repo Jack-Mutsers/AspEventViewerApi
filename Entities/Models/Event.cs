@@ -24,11 +24,7 @@ namespace Entities.Models
         [Required(ErrorMessage = "Poster is required")]
         public string poster { get; set; }
 
-        [Required(ErrorMessage = "Genre id is required")]
-        [ForeignKey(nameof(genre))]
-        public int genre_id { get; set; }
-
-        public Genre genre { get; set; }
+        public ICollection<EventGenre> genre { get; set; }
 
         public ICollection<DatePlanning> event_planning { get; set; }
     }

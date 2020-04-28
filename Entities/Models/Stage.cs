@@ -13,11 +13,13 @@ namespace Entities.Models
         public int id { get; set; }
 
         [Required(ErrorMessage = "Event date id is required")]
+        [ForeignKey(nameof(eventDate))]
         public int event_date_id { get; set; }
 
         [Required(ErrorMessage = "Name is required")]
         public string name { get; set; }
 
         public ICollection<Schedule> schedule { get; set; }
+        public EventDate eventDate { get; set; }
     }
 }

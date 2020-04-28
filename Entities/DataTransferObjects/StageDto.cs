@@ -10,6 +10,6 @@ namespace Entities.DataTransferObjects
         public int id { get; set; }
         public int event_date_id { get; set; }
         public string name { get; set; }
-        public IEnumerable<Schedule> schedule { get; set; }
+        public IEnumerable<ScheduleDto> schedule { get; set; }
     }
 }

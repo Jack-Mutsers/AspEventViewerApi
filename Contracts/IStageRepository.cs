@@ -7,6 +7,7 @@ namespace Contracts
 {
     public interface IStageRepository
     {
+        IEnumerable<Stage> GetAll();
         IEnumerable<Stage> GetAllByEventDate(int event_date_id);
         Stage GetById(int stage_id);
         void CreateStage(Stage stage);

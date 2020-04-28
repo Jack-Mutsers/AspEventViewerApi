@@ -9,6 +9,7 @@ namespace Contracts
     {
         IEnumerable<Artist> GetAllArtists();
         IEnumerable<Artist> GetArtistsByGenre(int genre_id);
+        IEnumerable<Artist> GetArtistsByEventDate(int event_date_id);
         Artist GetById(int artist_id);
         void CreateArtist(Artist artist);
         void UpdateArtist(Artist artist);

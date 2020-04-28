@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,11 @@ namespace Repository
         public void DeleteStage(Stage stage)
         {
             Delete(stage);
+        }
+
+        public IEnumerable<Stage> GetAll()
+        {
+            return FindAll().Include(s=>s.schedule).ThenInclude(sc => sc.scheduleItems).ThenInclude(si => si.artist);
         }
 
         public IEnumerable<Stage> GetAllByEventDate(int event_date_id)

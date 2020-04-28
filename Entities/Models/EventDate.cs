@@ -16,9 +16,12 @@ namespace Entities.Models
         public int event_id { get; set; }
 
         [Required(ErrorMessage = "Planning id is required")]
+        [ForeignKey(nameof(DatePlanning))]
         public int planning_id { get; set; }
 
         public string location { get; set; }
+
+        public string poster { get; set; }
 
         public string images { get; set; }
 
@@ -27,5 +30,8 @@ namespace Entities.Models
         public ICollection<Stage> stages { get; set; }
 
         public ICollection<Review> reviews { get; set; }
+
+        public DatePlanning DatePlanning { get; set; }
+
     }
 }

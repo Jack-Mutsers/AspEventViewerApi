@@ -34,11 +34,11 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var art = _repository.DatePlanning.GetAllByEvent(id);
+                IEnumerable<DatePlanning> datePlannings = _repository.DatePlanning.GetAllByEvent(id);
 
                 _logger.LogInfo($"Returned all Artists from database.");
 
-                var Result = _mapper.Map<IEnumerable<ArtistDto>>(art);
+                var Result = _mapper.Map<IEnumerable<DatePlanningDto>>(datePlannings);
                 return Ok(Result);
             }
             catch (Exception ex)
@@ -144,5 +144,48 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
+        public DatePlanningDto GetUpcommingEventDate(int event_id)
+        {
+            try
+            {
+                DatePlanning datePlanning = _repository.DatePlanning.GetUpcomming(event_id);
+
+                if (datePlanning == null)
+                {
+                    datePlanning = _repository.DatePlanning.GetLast(event_id);
+                }
+
+                datePlanning.event_date = _repository.EventDate.GetById(datePlanning.id);
+
+                DatePlanningDto datePlanningDto = _mapper.Map<DatePlanningDto>(datePlanning);
+
+                ArtistController artistController = new ArtistController(_logger, _repository, _mapper);
+                datePlanningDto.event_date.artists = artistController.GetArtistsByEventDate(datePlanning.event_date.id);
+
+                return datePlanningDto;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside DeleteDatePlanning action: {ex.Message}");
+                return null;
+            }
+        }
+
+        public IEnumerable<DatePlanningDto> GetFinishedEventDates(int event_id)
+        {
+            try
+            {
+                IEnumerable<DatePlanning> datePlanning = _repository.DatePlanning.GetFinishedEventDates(event_id);
+
+                IEnumerable<DatePlanningDto> datePlanningDto = _mapper.Map<IEnumerable<DatePlanningDto>>(datePlanning);
+
+                return datePlanningDto;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside DeleteDatePlanning action: {ex.Message}");
+                return null;
+            }
+        }
     }
 }

@@ -21,5 +21,6 @@ namespace Entities.Models
         public int genre_id { get; set; }
 
         public Genre genre { get; set; }
+        public ScheduleItem ScheduleItem { get; set; }
     }
 }

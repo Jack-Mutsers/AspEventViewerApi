@@ -10,6 +10,7 @@ namespace Entities
         public DbSet<Artist> Artists { get; set; }
         public DbSet<DatePlanning> DatePlanning { get; set; }
         public DbSet<Event> Event { get; set; }
+        public DbSet<EventGenre> EventGenre { get; set; }
         public DbSet<EventDate> EventDate { get; set; }
         public DbSet<Genre> Genre { get; set; }
         public DbSet<Preference> Preference { get; set; }
@@ -24,6 +25,9 @@ namespace Entities
         {
             modelBuilder.Entity<Rating>()
                 .HasKey(r => new { r.event_date_id, r.user_id });
+
+            modelBuilder.Entity<EventGenre>()
+                .HasKey(eg => new { eg.event_id, eg.genre_id });
         }
     }
 }
