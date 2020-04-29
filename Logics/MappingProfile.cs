@@ -34,9 +34,6 @@ namespace Logics
             CreateMap<PreferenceForCreationDto, Preference>();
             CreateMap<PreferenceForUpdateDto, Preference>();
             
-            CreateMap<Rating, RatingDto>();
-            CreateMap<RatingForCreationDto, Rating>();
-            
             CreateMap<Review, ReviewDto>();
             CreateMap<ReviewForCreationDto, Review>();
             CreateMap<ReviewForUpdateDto, Review>();

@@ -60,18 +60,18 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"Event with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned Event with id: {id}");
 
-                    EventDto eventDto = _mapper.Map<EventDto>(@event);
 
-                    DatePlanningController datePlanningController = new DatePlanningController(_logger, _repository, _mapper);
-                    eventDto.next = datePlanningController.GetUpcommingEventDate(eventDto.id);
-                    eventDto.finished = datePlanningController.GetFinishedEventDates(eventDto.id);
+                _logger.LogInfo($"Returned Event with id: {id}");
 
-                    return Ok(eventDto);
-                }
+                EventDto eventDto = _mapper.Map<EventDto>(@event);
+
+                DatePlanningController datePlanningController = new DatePlanningController(_logger, _repository, _mapper);
+                eventDto.next = datePlanningController.GetUpcommingEventDate(eventDto.id);
+                eventDto.finished = datePlanningController.GetFinishedEventDates(eventDto.id);
+
+                return Ok(eventDto);
+
             }
             catch (Exception ex)
             {

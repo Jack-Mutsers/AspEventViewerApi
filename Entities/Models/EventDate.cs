@@ -13,6 +13,7 @@ namespace Entities.Models
         public int id { get; set; }
 
         [Required(ErrorMessage = "Event id is required")]
+        [ForeignKey(nameof(@event))]
         public int event_id { get; set; }
 
         [Required(ErrorMessage = "Planning id is required")]
@@ -32,6 +33,6 @@ namespace Entities.Models
         public ICollection<Review> reviews { get; set; }
 
         public DatePlanning DatePlanning { get; set; }
-
+        public Event @event { get; set; }
     }
 }

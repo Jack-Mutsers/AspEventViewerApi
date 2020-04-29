@@ -12,7 +12,6 @@ namespace Contracts
         IEventRepository Event { get; }
         IGenreRepository Genre { get; }
         IPreferenceRepository Preference { get; }
-        IRatingRepository Rating { get; }
         IReviewRepository Review { get; }
         IScheduleRepository Schedule { get; }
         IScheduleItemRepository ScheduleItem { get; }

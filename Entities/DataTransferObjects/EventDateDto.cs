@@ -14,6 +14,8 @@ namespace Entities.DataTransferObjects
         public string poster { get; set; }
         public string images { get; set; }
         public string videos { get; set; }
+        public DatePlanningDto datePlanning { get; set; }
+        public EventDto @event { get; set; }
         public IEnumerable<StageDto> stages { get; set; }
         public IEnumerable<ReviewDto> reviews { get; set; }
         public IEnumerable<ArtistDto> artists { get; set; }

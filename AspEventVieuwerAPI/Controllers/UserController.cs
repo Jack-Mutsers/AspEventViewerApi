@@ -104,7 +104,7 @@ namespace AspEventVieuwerAPI.Controllers
                 _repository.User.CreateUser(DataEntity);
                 _repository.Save();
 
-                var createdEntity = _mapper.Map<UserDto>(DataEntity);
+                //var createdEntity = _mapper.Map<UserDto>(DataEntity);
 
                 return Ok("User is created");
                 //return CreatedAtRoute("CategoryById", new { id = createdEntity.id }, createdEntity);

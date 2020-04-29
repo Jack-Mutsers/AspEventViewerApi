@@ -14,7 +14,6 @@ namespace Entities
         public DbSet<EventDate> EventDate { get; set; }
         public DbSet<Genre> Genre { get; set; }
         public DbSet<Preference> Preference { get; set; }
-        public DbSet<Rating> Rating { get; set; }
         public DbSet<Review> Review { get; set; }
         public DbSet<Schedule> Schedule { get; set; }
         public DbSet<ScheduleItem> ScheduleItems { get; set; }
@@ -23,9 +22,6 @@ namespace Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Rating>()
-                .HasKey(r => new { r.event_date_id, r.user_id });
-
             modelBuilder.Entity<EventGenre>()
                 .HasKey(eg => new { eg.event_id, eg.genre_id });
         }

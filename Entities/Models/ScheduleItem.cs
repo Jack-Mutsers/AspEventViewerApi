@@ -23,7 +23,10 @@ namespace Entities.Models
         [Required(ErrorMessage = "Artist is required")]
         public Artist artist { get; set; }
 
-        [Required(ErrorMessage = "Date is required")]
+        [Required(ErrorMessage = "start date time is required")]
+        public DateTime start { get; set; }
+
+        [Required(ErrorMessage = "stage time is required")]
         public int stage_time { get; set; }
         public Schedule schedule { get; set; }
     }

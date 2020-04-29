@@ -161,11 +161,13 @@ namespace AspEventVieuwerAPI.Controllers
                 }
 
                 datePlanning.event_date = _repository.EventDate.GetById(datePlanning.id);
+                datePlanning.event_date.DatePlanning = null;
 
                 DatePlanningDto datePlanningDto = _mapper.Map<DatePlanningDto>(datePlanning);
 
                 ArtistController artistController = new ArtistController(_logger, _repository, _mapper);
                 datePlanningDto.event_date.artists = artistController.GetArtistsByEventDate(datePlanning.event_date.id);
+                datePlanningDto.event_date.@event = null;
 
                 return datePlanningDto;
             }
@@ -182,7 +184,17 @@ namespace AspEventVieuwerAPI.Controllers
             {
                 IEnumerable<DatePlanning> datePlanning = _repository.DatePlanning.GetFinishedEventDates(event_id);
 
-                IEnumerable<DatePlanningDto> datePlanningDto = _mapper.Map<IEnumerable<DatePlanningDto>>(datePlanning);
+                List<DatePlanning> correctDatePlanning = new List<DatePlanning>();
+                foreach (DatePlanning date in datePlanning)
+                {
+                    if (date.event_date.DatePlanning != null)
+                    {
+                        date.event_date.DatePlanning = null;
+                    }
+                    correctDatePlanning.Add(date);
+                }
+
+                IEnumerable<DatePlanningDto> datePlanningDto = _mapper.Map<IEnumerable<DatePlanningDto>>(correctDatePlanning);
 
                 return datePlanningDto;
             }

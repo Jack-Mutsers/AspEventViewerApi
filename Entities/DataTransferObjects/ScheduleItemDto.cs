@@ -10,6 +10,7 @@ namespace Entities.DataTransferObjects
         public int id { get; set; }
         public int schedule_id { get; set; }
         public int artist_id { get; set; }
+        public DateTime start { get; set; }
         public int stage_time { get; set; }
         public ArtistDto artist { get; set; }
     }

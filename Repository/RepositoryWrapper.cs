@@ -15,7 +15,6 @@ namespace Repository
         private IEventRepository _event;
         private IGenreRepository _genre;
         private IPreferenceRepository _preference;
-        private IRatingRepository _rating;
         private IReviewRepository _review;
         private IScheduleRepository _schedule;
         private IScheduleItemRepository _scheduleItem;
@@ -102,19 +101,6 @@ namespace Repository
                 }
 
                 return _preference;
-            }
-        }
-
-        public IRatingRepository Rating
-        {
-            get
-            {
-                if (_rating == null)
-                {
-                    _rating = new RatingRepository(_repoContext);
-                }
-
-                return _rating;
             }
         }
 
