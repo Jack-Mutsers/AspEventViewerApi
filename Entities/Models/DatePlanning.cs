@@ -22,5 +22,6 @@ namespace Entities.Models
         public DateTime end { get; set; }
 
         public EventDate event_date { get; set; }
+        public Event @event { get; set; }
     }
 }

@@ -28,6 +28,54 @@ namespace AspEventVieuwerAPI.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet]
+        [Route("GetAllDates")]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                IEnumerable<DatePlanning> datePlannings = _repository.DatePlanning.GetAll();
+
+                _logger.LogInfo($"Returned all Artists from database.");
+
+                List<DatePlanning> plannings = new List<DatePlanning>();
+                foreach (DatePlanning datePlanning in datePlannings)
+                {
+                    datePlanning.event_date.DatePlanning = null;
+                    plannings.Add(datePlanning);
+                }
+
+                var Result = _mapper.Map<IEnumerable<DatePlanningDto>>(plannings);
+                return Ok(Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetAll action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet(Name = "GetNextEvent")]
+        [Route("GetNextEvent")]
+        public IActionResult GetNextEvent()
+        {
+            try
+            {
+                DatePlanning datePlanning = _repository.DatePlanning.GetNextEvent();
+
+                _logger.LogInfo($"Returned all Artists from database.");
+
+                datePlanning.event_date.DatePlanning = null;
+
+                var Result = _mapper.Map<DatePlanningDto>(datePlanning);
+                return Ok(Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetNextEvent action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
 
         [HttpGet("{id}")]
         public IActionResult GetAllByEvent(int id)
@@ -144,6 +192,8 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
+        [HttpGet(Name = "GetUpcommingEvent")]
+        [Route("GetUpcommingEvent")]
         public DatePlanningDto GetUpcommingEventDate(int event_id)
         {
             try
@@ -178,6 +228,8 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
+        [HttpGet(Name = "GetFinishedEvent")]
+        [Route("GetFinishedEvent")]
         public IEnumerable<DatePlanningDto> GetFinishedEventDates(int event_id)
         {
             try

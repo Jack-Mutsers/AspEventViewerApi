@@ -28,6 +28,8 @@ namespace Entities.Models
 
         public string videos { get; set; }
 
+        public string order_link { get; set; }
+
         public ICollection<Stage> stages { get; set; }
 
         public ICollection<Review> reviews { get; set; }

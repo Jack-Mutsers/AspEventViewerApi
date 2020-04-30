@@ -23,6 +23,11 @@ namespace Repository
             Delete(date_planning);
         }
 
+        public IEnumerable<DatePlanning> GetAll()
+        {
+            return FindAll().Include(dp => dp.@event).ThenInclude(e => e.genre).ThenInclude(eg => eg.genre).Include(dp => dp.event_date);
+        }
+
         public IEnumerable<DatePlanning> GetAllByEvent(int event_id)
         {
             return FindByCondition(dp => dp.Eventid == event_id);
@@ -41,6 +46,11 @@ namespace Repository
         public DatePlanning GetLast(int event_id)
         {
             return FindByCondition(dp => dp.Eventid == event_id && dp.start < DateTime.Now).OrderByDescending(dp => dp.start).FirstOrDefault();
+        }
+
+        public DatePlanning GetNextEvent()
+        {
+            return FindByCondition(dp => dp.start > DateTime.Now).OrderBy(dp => dp.start).Include(dp => dp.@event).ThenInclude(e => e.genre).ThenInclude(eg => eg.genre).Include(dp => dp.event_date).FirstOrDefault();
         }
 
         public DatePlanning GetUpcomming(int event_id)

@@ -14,5 +14,6 @@ namespace Entities.DataTransferObjects
         public string poster { get; set; }
         public string images { get; set; }
         public string videos { get; set; }
+        public string order_link { get; set; }
     }
 }
