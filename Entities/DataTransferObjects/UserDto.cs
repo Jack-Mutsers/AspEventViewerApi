@@ -9,5 +9,7 @@ namespace Entities.DataTransferObjects
     {
         public string name { get; set; }
         public IEnumerable<PreferenceDto> preference { get; set; }
+        public int right_id { get; set; }
+        public UserRightDto right { get; set; }
     }
 }

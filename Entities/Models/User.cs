@@ -21,6 +21,12 @@ namespace Entities.Models
         [Required(ErrorMessage = "Password is required")]
         public string password { get; set; }
 
+        [Required(ErrorMessage = "user right is required")]
+        [ForeignKey(nameof(right))]
+        public int right_id { get; set; }
+
+        public UserRight right { get; set; }
+
         public ICollection<Preference> preference { get; set; }
     }
 }

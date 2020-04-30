@@ -28,25 +28,24 @@ namespace AspEventVieuwerAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{username,password}", Name = "Login")]
-        public IActionResult GetUserByLogin(string username, string password)
+        [HttpPost(Name = "Login")]
+        [Route("Login")]
+        public IActionResult GetUserByLogin([FromBody]UserForCreationDto user)
         {
             try
             {
-                var user = _repository.User.GetUserByLogin(username, password);
+                var userData = _repository.User.GetUserByLogin(user.username, user.password);
 
-                if (user == null)
+                if (userData == null)
                 {
-                    _logger.LogError($"Failed loggin attempt with username: {username} and password: {password}");
-                    return NotFound();
+                    _logger.LogError($"Failed loggin attempt with username: {user.username} and password: {user.password}");
+                    return NotFound(false);
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned User with id: {user.id}");
 
-                    var Result = _mapper.Map<UserDto>(user);
-                    return Ok(Result);
-                }
+                _logger.LogInfo($"Returned User with id: {userData.id}");
+
+                var Result = _mapper.Map<UserDto>(userData);
+                return Ok(Result);
             }
             catch (Exception ex)
             {
@@ -67,13 +66,12 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"User with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned User with id: {id}");
 
-                    var Result = _mapper.Map<UserDto>(user);
-                    return Ok(Result);
-                }
+                _logger.LogInfo($"Returned User with id: {id}");
+
+                var Result = _mapper.Map<UserDto>(user);
+                return Ok(Result);
+
             }
             catch (Exception ex)
             {
