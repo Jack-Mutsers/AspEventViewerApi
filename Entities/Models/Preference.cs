@@ -13,6 +13,7 @@ namespace Entities.Models
         public int id { get; set; }
 
         [Required(ErrorMessage = "User id is required")]
+        [ForeignKey(nameof(user))]
         public int user_id { get; set; }
         
         [Required(ErrorMessage = "User id is required")]
@@ -21,5 +22,6 @@ namespace Entities.Models
 
         [Required(ErrorMessage = "Genre is required")]
         public Genre genre { get; set; }
+        public User user { get; set; }
     }
 }

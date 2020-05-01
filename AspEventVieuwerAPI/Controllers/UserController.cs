@@ -81,6 +81,7 @@ namespace AspEventVieuwerAPI.Controllers
         }
 
         [HttpPost]
+        [Route("Register")]
         public IActionResult CreateUser([FromBody]UserForCreationDto user)
         {
             try
@@ -104,8 +105,8 @@ namespace AspEventVieuwerAPI.Controllers
 
                 //var createdEntity = _mapper.Map<UserDto>(DataEntity);
 
-                return Ok("User is created");
-                //return CreatedAtRoute("CategoryById", new { id = createdEntity.id }, createdEntity);
+                //return Ok("User is created");
+                return GetUserById(DataEntity.id);
             }
             catch (Exception ex)
             {
