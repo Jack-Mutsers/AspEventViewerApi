@@ -40,13 +40,11 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"Preferences with user id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned Preferences with user id: {id}");
+                 
+                _logger.LogInfo($"Returned Preferences with user id: {id}");
 
-                    var Result = _mapper.Map<IEnumerable<PreferenceDto >> (preference);
-                    return Ok(Result);
-                }
+                var Result = _mapper.Map<IEnumerable<PreferenceDto >> (preference);
+                return Ok(Result);
             }
             catch (Exception ex)
             {
@@ -67,13 +65,11 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"Preference with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned Preference with id: {id}");
+                
+                _logger.LogInfo($"Returned Preference with id: {id}");
 
-                    var Result = _mapper.Map<PreferenceDto>(preference);
-                    return Ok(Result);
-                }
+                var Result = _mapper.Map<PreferenceDto>(preference);
+                return Ok(Result);
             }
             catch (Exception ex)
             {

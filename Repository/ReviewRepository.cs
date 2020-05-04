@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,8 @@ namespace Repository
 
         public IEnumerable<Review> GetByEventDate(int event_date_id)
         {
-            return FindByCondition(r => r.event_date_id == event_date_id && r.validated == true);
+            return FindByCondition(r => r.event_date_id == event_date_id && r.validated == true)
+                .Include(r => r.user);
         }
 
         public Review GetById(int review_id)

@@ -27,6 +27,11 @@ namespace Repository
             return this.RepositoryContext.Set<T>().Where(expression).AsNoTracking();
         }
 
+        public IQueryable<T> FindByRawQuery(string query)
+        {
+            return this.RepositoryContext.Set<T>().FromSqlRaw(query).AsNoTracking();
+        }
+
         public void Create(T entity)
         {
             this.RepositoryContext.Set<T>().Add(entity);

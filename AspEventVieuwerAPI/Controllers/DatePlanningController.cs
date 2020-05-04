@@ -28,8 +28,7 @@ namespace AspEventVieuwerAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        [Route("GetAllDates")]
+        [HttpGet("GetAllDates")]
         public IActionResult GetAll()
         {
             try
@@ -38,14 +37,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 _logger.LogInfo($"Returned all Artists from database.");
 
-                List<DatePlanning> plannings = new List<DatePlanning>();
-                foreach (DatePlanning datePlanning in datePlannings)
-                {
-                    datePlanning.event_date.DatePlanning = null;
-                    plannings.Add(datePlanning);
-                }
-
-                var Result = _mapper.Map<IEnumerable<DatePlanningDto>>(plannings);
+                var Result = _mapper.Map<IEnumerable<DatePlanningDto>>(datePlannings);
                 return Ok(Result);
             }
             catch (Exception ex)
@@ -55,8 +47,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet(Name = "GetNextEvent")]
-        [Route("GetNextEvent")]
+        [HttpGet("GetNextEvent", Name = "GetNextEvent")]
         public IActionResult GetNextEvent()
         {
             try
@@ -64,8 +55,6 @@ namespace AspEventVieuwerAPI.Controllers
                 DatePlanning datePlanning = _repository.DatePlanning.GetNextEvent();
 
                 _logger.LogInfo($"Returned all Artists from database.");
-
-                datePlanning.event_date.DatePlanning = null;
 
                 var Result = _mapper.Map<DatePlanningDto>(datePlanning);
                 return Ok(Result);
@@ -77,7 +66,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetByEvent/{id}", Name = "GetByEvent")]
         public IActionResult GetAllByEvent(int id)
         {
             try
@@ -87,6 +76,32 @@ namespace AspEventVieuwerAPI.Controllers
                 _logger.LogInfo($"Returned all Artists from database.");
 
                 var Result = _mapper.Map<IEnumerable<DatePlanningDto>>(datePlannings);
+                return Ok(Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetAll action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+        
+        [HttpGet("GetById/{id}", Name = "GetById")]
+        public IActionResult GetDatePlanningByEventDate(int id)
+        {
+            try
+            {
+                DatePlanning datePlanning = _repository.DatePlanning.GetById(id);
+
+                _logger.LogInfo($"Returned all Artists from database.");
+
+                var Result = _mapper.Map<DatePlanningDto>(datePlanning);
+
+                ReviewController reviewController = new ReviewController(_logger, _repository, _mapper);
+                Result.event_date.reviews = reviewController.GetByEventDate(Result.event_date.id);
+
+                ArtistController artistController = new ArtistController(_logger, _repository, _mapper);
+                Result.event_date.artists = artistController.GetArtistsByEventDate(Result.id);
+
                 return Ok(Result);
             }
             catch (Exception ex)
@@ -217,7 +232,6 @@ namespace AspEventVieuwerAPI.Controllers
 
                 ArtistController artistController = new ArtistController(_logger, _repository, _mapper);
                 datePlanningDto.event_date.artists = artistController.GetArtistsByEventDate(datePlanning.event_date.id);
-                datePlanningDto.event_date.@event = null;
 
                 return datePlanningDto;
             }

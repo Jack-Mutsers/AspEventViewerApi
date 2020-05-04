@@ -59,13 +59,11 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"Schedules with stage id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned Schedules with stage id: {id}");
+                 
+                _logger.LogInfo($"Returned Schedules with stage id: {id}");
 
-                    var Result = _mapper.Map<IEnumerable<ScheduleDto>>(schedule);
-                    return Ok(Result);
-                }
+                var Result = _mapper.Map<IEnumerable<ScheduleDto>>(schedule);
+                return Ok(Result);
             }
             catch (Exception ex)
             {
@@ -86,13 +84,11 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"Schedules with stage id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned Schedules with stage id: {id}");
 
-                    var Result = _mapper.Map<IEnumerable<ScheduleDto>>(schedule);
-                    return Ok(Result);
-                }
+                _logger.LogInfo($"Returned Schedules with stage id: {id}");
+
+                var Result = _mapper.Map<IEnumerable<ScheduleDto>>(schedule);
+                return Ok(Result);
             }
             catch (Exception ex)
             {
@@ -113,13 +109,11 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"Schedule with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned Schedule with id: {id}");
 
-                    var Result = _mapper.Map<ScheduleDto>(schedule);
-                    return Ok(Result);
-                }
+                _logger.LogInfo($"Returned Schedule with id: {id}");
+
+                var Result = _mapper.Map<ScheduleDto>(schedule);
+                return Ok(Result);
             }
             catch (Exception ex)
             {

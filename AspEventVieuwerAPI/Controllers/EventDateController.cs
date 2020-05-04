@@ -40,19 +40,15 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"EventDate with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned EventDate with id: {id}");
 
-                    eventDate.DatePlanning.event_date = null;
+                _logger.LogInfo($"Returned EventDate with id: {id}");
 
-                    var Result = _mapper.Map<EventDateDto>(eventDate);
+                var Result = _mapper.Map<EventDateDto>(eventDate);
 
-                    ArtistController artistController = new ArtistController(_logger, _repository, _mapper);
-                    Result.artists = artistController.GetArtistsByEventDate(Result.id);
+                ArtistController artistController = new ArtistController(_logger, _repository, _mapper);
+                Result.artists = artistController.GetArtistsByEventDate(Result.id);
 
-                    return Ok(Result);
-                }
+                return Ok(Result);
             }
             catch (Exception ex)
             {

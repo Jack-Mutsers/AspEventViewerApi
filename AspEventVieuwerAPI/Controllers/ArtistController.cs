@@ -59,13 +59,11 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"Artist with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned Artist with id: {id}");
 
-                    var Result = _mapper.Map<ArtistDto>(art);
-                    return Ok(Result);
-                }
+                _logger.LogInfo($"Returned Artist with id: {id}");
+
+                var Result = _mapper.Map<ArtistDto>(art);
+                return Ok(Result);
             }
             catch (Exception ex)
             {
@@ -86,13 +84,11 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"Artost with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned Artist with id: {id}");
 
-                    var Result = _mapper.Map<IEnumerable<ArtistDto>>(art);
-                    return Ok(Result);
-                }
+                _logger.LogInfo($"Returned Artist with id: {id}");
+
+                var Result = _mapper.Map<IEnumerable<ArtistDto>>(art);
+                return Ok(Result);
             }
             catch (Exception ex)
             {

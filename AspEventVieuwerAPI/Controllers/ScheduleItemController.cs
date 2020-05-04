@@ -41,13 +41,11 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"ScheduleItems with schedule id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned ScheduleItem with schedule id: {id}");
+                 
+                _logger.LogInfo($"Returned ScheduleItem with schedule id: {id}");
 
-                    var Result = _mapper.Map<ScheduleItemDto>(scheduleItems);
-                    return Ok(Result);
-                }
+                var Result = _mapper.Map<ScheduleItemDto>(scheduleItems);
+                return Ok(Result);
             }
             catch (Exception ex)
             {
@@ -68,13 +66,11 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"ScheduleItem with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned ScheduleItem with id: {id}");
+                 
+                _logger.LogInfo($"Returned ScheduleItem with id: {id}");
 
-                    var Result = _mapper.Map<ScheduleItemDto>(scheduleItem);
-                    return Ok(Result);
-                }
+                var Result = _mapper.Map<ScheduleItemDto>(scheduleItem);
+                return Ok(Result);
             }
             catch (Exception ex)
             {

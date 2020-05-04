@@ -6574,6 +6574,8 @@
     ".NETStandard,Version=v2.0": [
       "Contracts >= 1.0.0",
       "Entities >= 1.0.0",
+      "Microsoft.EntityFrameworkCore >= 3.1.3",
+      "Microsoft.EntityFrameworkCore.Relational >= 3.1.3",
       "NETStandard.Library >= 2.0.3"
     ]
   },
@@ -6626,6 +6628,14 @@
     "frameworks": {
       "netstandard2.0": {
         "dependencies": {
+          "Microsoft.EntityFrameworkCore": {
+            "target": "Package",
+            "version": "[3.1.3, )"
+          },
+          "Microsoft.EntityFrameworkCore.Relational": {
+            "target": "Package",
+            "version": "[3.1.3, )"
+          },
           "NETStandard.Library": {
             "suppressParent": "All",
             "target": "Package",

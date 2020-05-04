@@ -26,10 +26,9 @@ namespace Repository
         public EventDate GetById(int event_date_id)
         {
             return FindByCondition(ed => ed.id == event_date_id)
-                .Include(ed => ed.@event).ThenInclude(e => e.genre).ThenInclude(g => g.genre)
-                .Include(ed => ed.DatePlanning)
+                .Include(ed => ed.DatePlanning).ThenInclude(dp => dp.@event).ThenInclude(e => e.genre).ThenInclude(g => g.genre)
                 .Include(ed => ed.stages).ThenInclude(s => s.schedule).ThenInclude(sc => sc.scheduleItems).ThenInclude(si => si.artist)
-                .Include(ed => ed.reviews).ThenInclude(r => r.user)
+                .Include(ed => ed.reviews.Where(r => r.validated == true)).ThenInclude(r => r.user)
                 .FirstOrDefault();
         }
 

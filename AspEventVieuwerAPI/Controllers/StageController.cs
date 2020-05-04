@@ -40,13 +40,11 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"stages with EventDate id: , hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned stages with EventDate id:");
 
-                    var Result = _mapper.Map<IEnumerable<StageDto>>(stages);
-                    return Ok(Result);
-                }
+                _logger.LogInfo($"Returned stages with EventDate id:");
+
+                var Result = _mapper.Map<IEnumerable<StageDto>>(stages);
+                return Ok(Result);
             }
             catch (Exception ex)
             {
@@ -67,13 +65,11 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"stages with EventDate id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned stages with EventDate id: {id}");
 
-                    var Result = _mapper.Map<IEnumerable<StageDto>>(stages);
-                    return Ok(Result);
-                }
+                _logger.LogInfo($"Returned stages with EventDate id: {id}");
+
+                var Result = _mapper.Map<IEnumerable<StageDto>>(stages);
+                return Ok(Result);
             }
             catch (Exception ex)
             {
@@ -94,13 +90,11 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"Stage with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned Stage with id: {id}");
 
-                    var Result = _mapper.Map<StageDto>(stage);
-                    return Ok(Result);
-                }
+                _logger.LogInfo($"Returned Stage with id: {id}");
+
+                var Result = _mapper.Map<StageDto>(stage);
+                return Ok(Result);
             }
             catch (Exception ex)
             {

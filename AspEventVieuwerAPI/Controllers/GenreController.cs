@@ -59,13 +59,10 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"Genre with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned Genre with id: {id}");
+                _logger.LogInfo($"Returned Genre with id: {id}");
 
-                    var Result = _mapper.Map<GenreDto>(art);
-                    return Ok(Result);
-                }
+                var Result = _mapper.Map<GenreDto>(art);
+                return Ok(Result);
             }
             catch (Exception ex)
             {

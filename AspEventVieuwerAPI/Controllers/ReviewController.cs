@@ -40,13 +40,11 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"Reviews with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned Reviews with id: {id}");
+                
+                _logger.LogInfo($"Returned Reviews with id: {id}");
 
-                    var Result = _mapper.Map<IEnumerable<ReviewDto>>(reviews);
-                    return Ok(Result);
-                }
+                var Result = _mapper.Map<IEnumerable<ReviewDto>>(reviews);
+                return Ok(Result);
             }
             catch (Exception ex)
             {
@@ -86,13 +84,11 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError($"Review with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                else
-                {
-                    _logger.LogInfo($"Returned Review with id: {id}");
 
-                    var Result = _mapper.Map<ReviewDto>(review);
-                    return Ok(Result);
-                }
+                _logger.LogInfo($"Returned Review with id: {id}");
+
+                var Result = _mapper.Map<ReviewDto>(review);
+                return Ok(Result);
             }
             catch (Exception ex)
             {
@@ -125,7 +121,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 var createdEntity = _mapper.Map<ReviewDto>(DataEntity);
 
-                return Ok("Review is created");
+                return Ok(true);
                 //return CreatedAtRoute("CategoryById", new { id = createdEntity.id }, createdEntity);
             }
             catch (Exception ex)
@@ -197,5 +193,27 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
+        public IEnumerable<ReviewDto> GetByEventDate(int event_date_id)
+        {
+            try
+            {
+                var reviews = _repository.Review.GetByEventDate(event_date_id);
+
+                if (reviews == null)
+                {
+                    _logger.LogError($"Reviews with id: {event_date_id}, hasn't been found in db.");
+                    return null;
+                }
+
+                _logger.LogInfo($"Returned Reviews with id: {event_date_id}");
+
+                return _mapper.Map<IEnumerable<ReviewDto>>(reviews);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetReviewByEventDate action: {ex.Message}");
+                return null;
+            }
+        }
     }
 }
