@@ -33,12 +33,11 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var @event = _repository.Event.GetAllEvents();
+                IEnumerable<Event> @event = _repository.Event.GetAllEvents();
 
                 _logger.LogInfo($"Returned all Events from database.");
 
-                var events = _mapper.Map<IEnumerable<Event>>(@event);
-                var Result = _mapper.Map<IEnumerable<EventDto>>(@event);
+                IEnumerable<EventDto> Result = _mapper.Map<IEnumerable<EventDto>>(@event);
                 return Ok(Result);
             }
             catch (Exception ex)
@@ -176,5 +175,30 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
+        [HttpGet(Name = "getDataTable")]
+        [Route("getDataTable")]
+        public IActionResult GetDataTableEvents()
+        {
+            try
+            {
+                IEnumerable<Event> @event = _repository.Event.GetAllEvents();
+
+                _logger.LogInfo($"Returned all Events from database.");
+
+                IEnumerable<EventDto> Result = _mapper.Map<IEnumerable<EventDto>>(@event);
+
+                DataTableResponse dataTable = new DataTableResponse();
+                dataTable.data = Result;
+                dataTable.total = _repository.Event.GetAllEvents().Count();
+                dataTable.totalfilter = Result.Count();
+
+                return Ok(dataTable);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetAll action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }

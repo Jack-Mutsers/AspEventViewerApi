@@ -90,7 +90,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                DatePlanning datePlanning = _repository.DatePlanning.GetById(id);
+                DatePlanning datePlanning = _repository.DatePlanning.GetByIdWithDetails(id);
 
                 _logger.LogInfo($"Returned all Artists from database.");
 

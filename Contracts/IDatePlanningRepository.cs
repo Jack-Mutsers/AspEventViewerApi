@@ -11,6 +11,7 @@ namespace Contracts
         IEnumerable<DatePlanning> GetAll();
         IEnumerable<DatePlanning> GetAllByEvent(int event_id);
         DatePlanning GetById(int planning_id);
+        DatePlanning GetByIdWithDetails(int planning_id);
         DatePlanning GetUpcomming(int event_id);
         DatePlanning GetLast(int event_id);
         IEnumerable<DatePlanning> GetFinishedEventDates(int event_id);

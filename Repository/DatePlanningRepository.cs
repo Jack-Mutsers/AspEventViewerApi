@@ -37,6 +37,11 @@ namespace Repository
 
         public DatePlanning GetById(int planning_id)
         {
+            return FindByCondition(dp => dp.id == planning_id).FirstOrDefault();
+        }
+
+        public DatePlanning GetByIdWithDetails(int planning_id)
+        {
             //return FindByCondition(dp => dp.id == planning_id)
             //    .Include(dp => dp.@event).ThenInclude(e => e.genre).ThenInclude(eg => eg.genre)
             //    .Include(dp => dp.event_date).ThenInclude(ed => ed.stages).ThenInclude(st => st.schedule).ThenInclude(sc => sc.scheduleItems).ThenInclude(si => si.artist)
