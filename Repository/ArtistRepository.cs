@@ -47,5 +47,10 @@ namespace Repository
         {
             Update(artist);
         }
+
+        public Artist GetByIdWithDetails(int artist_id)
+        {
+            return FindByCondition(a => a.id == artist_id).Include(a => a.genre).FirstOrDefault();
+        }
     }
 }

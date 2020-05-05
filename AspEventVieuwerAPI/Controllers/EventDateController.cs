@@ -28,12 +28,38 @@ namespace AspEventVieuwerAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{id}", Name = "GetEventDateById")]
+        [HttpGet("GetEventDateById/{id}")]
         public IActionResult GetEventDateById(int id)
         {
             try
             {
                 var eventDate = _repository.EventDate.GetById(id);
+
+                if (eventDate == null)
+                {
+                    _logger.LogError($"EventDate with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+
+                _logger.LogInfo($"Returned EventDate with id: {id}");
+
+                var Result = _mapper.Map<EventDateDto>(eventDate);
+
+                return Ok(Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetEventDateById action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("GetByIdWithDetails/{id}")]
+        public IActionResult GetEventDateByIdWithDetails(int id)
+        {
+            try
+            {
+                var eventDate = _repository.EventDate.GetByIdWithDetails(id);
 
                 if (eventDate == null)
                 {

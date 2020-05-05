@@ -37,7 +37,7 @@ namespace Repository
 
         public DatePlanning GetById(int planning_id)
         {
-            return FindByCondition(dp => dp.id == planning_id).FirstOrDefault();
+            return FindByCondition(dp => dp.id == planning_id).Include(dp => dp.event_date).FirstOrDefault();
         }
 
         public DatePlanning GetByIdWithDetails(int planning_id)

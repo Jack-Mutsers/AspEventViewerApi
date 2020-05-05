@@ -30,6 +30,11 @@ namespace Repository
 
         public Event GetById(int event_id)
         {
+            return FindByCondition(e => e.id == event_id).FirstOrDefault();
+        }
+
+        public Event GetByIdWithDetails(int event_id)
+        {
             return FindByCondition(e => e.id == event_id).Include(e => e.genre).ThenInclude(g => g.genre).FirstOrDefault();
         }
 

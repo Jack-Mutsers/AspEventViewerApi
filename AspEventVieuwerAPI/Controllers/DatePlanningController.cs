@@ -47,12 +47,18 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("GetNextEvent", Name = "GetNextEvent")]
+        [HttpGet("GetNextEvent")]
         public IActionResult GetNextEvent()
         {
             try
             {
                 DatePlanning datePlanning = _repository.DatePlanning.GetNextEvent();
+
+                if (datePlanning == null)
+                {
+                    _logger.LogError($"no future date Planning has been found in db.");
+                    return NotFound();
+                }
 
                 _logger.LogInfo($"Returned all Artists from database.");
 
@@ -66,12 +72,18 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("GetByEvent/{id}", Name = "GetByEvent")]
+        [HttpGet("GetByEvent/{id}")]
         public IActionResult GetAllByEvent(int id)
         {
             try
             {
                 IEnumerable<DatePlanning> datePlannings = _repository.DatePlanning.GetAllByEvent(id);
+
+                if (datePlannings == null)
+                {
+                    _logger.LogError($"date Planning with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
 
                 _logger.LogInfo($"Returned all Artists from database.");
 
@@ -85,12 +97,44 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
         
-        [HttpGet("GetById/{id}", Name = "GetById")]
-        public IActionResult GetDatePlanningByEventDate(int id)
+        [HttpGet("GetById/{id}")]
+        public IActionResult GetDatePlanningByid(int id)
+        {
+            try
+            {
+                DatePlanning datePlanning = _repository.DatePlanning.GetById(id);
+
+                if (datePlanning == null)
+                {
+                    _logger.LogError($"date Planning with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+
+                _logger.LogInfo($"Returned all Artists from database.");
+
+                var Result = _mapper.Map<DatePlanningDto>(datePlanning);
+
+                return Ok(Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetAll action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+        
+        [HttpGet("GetByIdWithDetails/{id}")]
+        public IActionResult GetDatePlanningByidWithDetails(int id)
         {
             try
             {
                 DatePlanning datePlanning = _repository.DatePlanning.GetByIdWithDetails(id);
+
+                if (datePlanning == null)
+                {
+                    _logger.LogError($"date Planning with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
 
                 _logger.LogInfo($"Returned all Artists from database.");
 
@@ -163,6 +207,7 @@ namespace AspEventVieuwerAPI.Controllers
                 }
 
                 var DataEntity = _repository.DatePlanning.GetById(datePlanning.id);
+
                 if (DataEntity == null)
                 {
                     _logger.LogError($"date planning with id: {datePlanning.id}, hasn't been found in db.");
@@ -207,8 +252,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet(Name = "GetUpcommingEvent")]
-        [Route("GetUpcommingEvent")]
+        [HttpGet("GetUpcommingEvent")]
         public DatePlanningDto GetUpcommingEventDate(int event_id)
         {
             try
@@ -242,8 +286,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet(Name = "GetFinishedEvent")]
-        [Route("GetFinishedEvent")]
+        [HttpGet("GetFinishedEvent")]
         public IEnumerable<DatePlanningDto> GetFinishedEventDates(int event_id)
         {
             try

@@ -47,7 +47,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetArtistById")]
+        [HttpGet("GetArtistById/{id}")]
         public IActionResult GetArtistById(int id)
         {
             try
@@ -72,7 +72,32 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "ArtistByGenre")]
+        [HttpGet("GetByIdWithDetails/{id}")]
+        public IActionResult GetArtistByIdWithDetails(int id)
+        {
+            try
+            {
+                var art = _repository.Artist.GetByIdWithDetails(id);
+
+                if (art == null)
+                {
+                    _logger.LogError($"Artist with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+
+                _logger.LogInfo($"Returned Artist with id: {id}");
+
+                var Result = _mapper.Map<ArtistDto>(art);
+                return Ok(Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetArtistById action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("ArtistByGenre/{id}")]
         public IActionResult GetArtistByGenre(int id)
         {
             try

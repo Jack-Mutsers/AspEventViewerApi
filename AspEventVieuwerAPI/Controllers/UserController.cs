@@ -28,33 +28,7 @@ namespace AspEventVieuwerAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost(Name = "Login")]
-        [Route("Login")]
-        public IActionResult GetUserByLogin([FromBody]UserForCreationDto user)
-        {
-            try
-            {
-                var userData = _repository.User.GetUserByLogin(user.username, user.password);
-
-                if (userData == null)
-                {
-                    _logger.LogError($"Failed loggin attempt with username: {user.username} and password: {user.password}");
-                    return NotFound(false);
-                }
-
-                _logger.LogInfo($"Returned User with id: {userData.id}");
-
-                var Result = _mapper.Map<UserDto>(userData);
-                return Ok(Result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something went wrong inside GetUserByLogin action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
-            }
-        }
-
-        [HttpGet("{id}", Name = "GetUserById")]
+        [HttpGet("{id}")]
         public IActionResult GetUserById(int id)
         {
             try
@@ -80,8 +54,32 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("Register")]
+        [HttpPost("Login")]
+        public IActionResult GetUserByLogin([FromBody]UserForCreationDto user)
+        {
+            try
+            {
+                var userData = _repository.User.GetUserByLogin(user.username, user.password);
+
+                if (userData == null)
+                {
+                    _logger.LogError($"Failed loggin attempt with username: {user.username} and password: {user.password}");
+                    return NotFound(false);
+                }
+
+                _logger.LogInfo($"Returned User with id: {userData.id}");
+
+                var Result = _mapper.Map<UserDto>(userData);
+                return Ok(Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetUserByLogin action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPost("Register")]
         public IActionResult CreateUser([FromBody]UserForCreationDto user)
         {
             try

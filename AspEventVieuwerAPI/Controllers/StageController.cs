@@ -53,7 +53,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetStageByEventDate")]
+        [HttpGet("GetStageByEventDate/{id}")]
         public IActionResult GetStageByEventDate(int id)
         {
             try
@@ -78,7 +78,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
         
-        [HttpGet("{id}", Name = "GetStageById")]
+        [HttpGet("GetById/{id}")]
         public IActionResult GetStageById(int id)
         {
             try

@@ -28,7 +28,7 @@ namespace AspEventVieuwerAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet("GetAllEvents")]
         public IActionResult GetAll()
         {
             try
@@ -47,7 +47,39 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetEventById")]
+        [HttpGet("GetByIdWithDetails/{id}")]
+        public IActionResult GetByIdWithDetails(int id)
+        {
+            try
+            {
+                var @event = _repository.Event.GetByIdWithDetails(id);
+
+                if (@event == null)
+                {
+                    _logger.LogError($"Event with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+
+
+                _logger.LogInfo($"Returned Event with id: {id}");
+
+                EventDto eventDto = _mapper.Map<EventDto>(@event);
+
+                DatePlanningController datePlanningController = new DatePlanningController(_logger, _repository, _mapper);
+                eventDto.next = datePlanningController.GetUpcommingEventDate(eventDto.id);
+                eventDto.finished = datePlanningController.GetFinishedEventDates(eventDto.id);
+
+                return Ok(eventDto);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetEventById action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("GetEventById/{id}")]
         public IActionResult GetEventById(int id)
         {
             try
@@ -64,10 +96,6 @@ namespace AspEventVieuwerAPI.Controllers
                 _logger.LogInfo($"Returned Event with id: {id}");
 
                 EventDto eventDto = _mapper.Map<EventDto>(@event);
-
-                DatePlanningController datePlanningController = new DatePlanningController(_logger, _repository, _mapper);
-                eventDto.next = datePlanningController.GetUpcommingEventDate(eventDto.id);
-                eventDto.finished = datePlanningController.GetFinishedEventDates(eventDto.id);
 
                 return Ok(eventDto);
 
@@ -175,8 +203,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet(Name = "getDataTable")]
-        [Route("getDataTable")]
+        [HttpGet("getDataTable")]
         public IActionResult GetDataTableEvents()
         {
             try

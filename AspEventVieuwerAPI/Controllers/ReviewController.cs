@@ -28,7 +28,7 @@ namespace AspEventVieuwerAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{id}", Name = "GetReviewByEventDate")]
+        [HttpGet("{id}")]
         public IActionResult GetReviewByEventDate(int id)
         {
             try
@@ -72,7 +72,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetReviewById")]
+        [HttpGet("{id}")]
         public IActionResult GetReviewById(int id)
         {
             try

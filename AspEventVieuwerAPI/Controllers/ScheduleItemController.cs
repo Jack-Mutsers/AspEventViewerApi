@@ -29,7 +29,7 @@ namespace AspEventVieuwerAPI.Controllers
         }
 
 
-        [HttpGet("{id}", Name = "GetBySchedule")]
+        [HttpGet("GetBySchedule/{id}")]
         public IActionResult GetScheduleItemBySchedule(int id)
         {
             try
@@ -54,12 +54,37 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetScheduleItemById")]
+        [HttpGet("GetById/{id}")]
         public IActionResult GetScheduleItemById(int id)
         {
             try
             {
                 var scheduleItem = _repository.ScheduleItem.GetById(id);
+
+                if (scheduleItem == null)
+                {
+                    _logger.LogError($"ScheduleItem with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+                 
+                _logger.LogInfo($"Returned ScheduleItem with id: {id}");
+
+                var Result = _mapper.Map<ScheduleItemDto>(scheduleItem);
+                return Ok(Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetScheduleItemById action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("GetByIdWithDetails/{id}")]
+        public IActionResult GetScheduleItemByIdWithDetails(int id)
+        {
+            try
+            {
+                var scheduleItem = _repository.ScheduleItem.GetByIdWithDetails(id);
 
                 if (scheduleItem == null)
                 {

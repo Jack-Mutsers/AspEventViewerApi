@@ -28,7 +28,7 @@ namespace AspEventVieuwerAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{id}", Name = "GetPreferenceByUser")]
+        [HttpGet("{id}")]
         public IActionResult GetByUser(int id)
         {
             try
@@ -53,7 +53,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetPreferenceById")]
+        [HttpGet("{id}")]
         public IActionResult GetPreferenceById(int id)
         {
             try

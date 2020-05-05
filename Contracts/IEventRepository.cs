@@ -8,6 +8,7 @@ namespace Contracts
     public interface IEventRepository
     {
         IEnumerable<Event> GetAllEvents();
+        Event GetByIdWithDetails(int event_id);
         Event GetById(int event_id);
         void CreateEvent(Event @event);
         void UpdateEvent(Event @event);

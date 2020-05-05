@@ -47,7 +47,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetByStage")]
+        [HttpGet("GetByStage/{id}")]
         public IActionResult GetByStage(int id)
         {
             try
@@ -72,7 +72,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetByStageWithDetails")]
+        [HttpGet("GetByStageWithDetails/{id}")]
         public IActionResult GetByStageWithDetails(int id)
         {
             try
@@ -97,7 +97,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetScheduleById")]
+        [HttpGet("GetScheduleById/{id}")]
         public IActionResult GetScheduleById(int id)
         {
             try
