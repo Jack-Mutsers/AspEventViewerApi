@@ -16,6 +16,10 @@ namespace AspEventVieuwerAPI
             CreateMap<ArtistForCreationDto, Artist>();
             CreateMap<ArtistForUpdateDto, Artist>();
 
+            CreateMap<ArtistGenre, ArtistGenreDto>();
+            CreateMap<ArtistGenreForCreationDto, ArtistGenre>();
+            CreateMap<ArtistGenreForUpdateDto, ArtistGenre>();
+
             CreateMap<DatePlanning, DatePlanningDto>();
             CreateMap<DatePlanningForCreationDto, DatePlanning>();
             CreateMap<DatePlanningForUpdateDto, DatePlanning>();
@@ -25,6 +29,7 @@ namespace AspEventVieuwerAPI
             CreateMap<EventForUpdateDto, Event>();
 
             CreateMap<EventGenre, EventGenreDto>();
+            CreateMap<EventGenreForCreationDto, EventGenre>();
 
             CreateMap<EventDate, EventDateDto>();
             CreateMap<EventDateForCreationDto, EventDate>();

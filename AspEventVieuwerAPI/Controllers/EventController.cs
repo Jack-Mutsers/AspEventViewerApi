@@ -9,6 +9,8 @@ using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using static Logics.ObjectSorter;
 
 namespace AspEventVieuwerAPI.Controllers
 {
@@ -33,11 +35,34 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Event> @event = _repository.Event.GetAllEvents();
+                IEnumerable<Event> @events = _repository.Event.GetAllEvents();
 
                 _logger.LogInfo($"Returned all Events from database.");
 
-                IEnumerable<EventDto> Result = _mapper.Map<IEnumerable<EventDto>>(@event);
+                IEnumerable<EventDto> Result = _mapper.Map<IEnumerable<EventDto>>(@events);
+
+                return Ok(Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetAll action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPost("GetAllInOrder")]
+        public IActionResult GetAllInOrder([FromBody] OrderRequest orderRequest)
+        {
+            try
+            {
+                IEnumerable<Event> @events = _repository.Event.GetAllEvents();
+
+                IEnumerable<Event> sorted_events = @events.AsQueryable().OrderByField(orderRequest);
+
+                _logger.LogInfo($"Returned all Events from database.");
+
+                IEnumerable<EventDto> Result = _mapper.Map<IEnumerable<EventDto>>(sorted_events);
+
                 return Ok(Result);
             }
             catch (Exception ex)
@@ -66,8 +91,6 @@ namespace AspEventVieuwerAPI.Controllers
                 EventDto eventDto = _mapper.Map<EventDto>(@event);
 
                 DatePlanningController datePlanningController = new DatePlanningController(_logger, _repository, _mapper);
-                eventDto.next = datePlanningController.GetUpcommingEventDate(eventDto.id);
-                eventDto.finished = datePlanningController.GetFinishedEventDates(eventDto.id);
 
                 return Ok(eventDto);
 
@@ -79,7 +102,7 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("GetEventById/{id}")]
+        [HttpGet("GetById/{id}")]
         public IActionResult GetEventById(int id)
         {
             try
@@ -131,7 +154,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 var createdEntity = _mapper.Map<EventDto>(DataEntity);
 
-                return Ok("Event is created");
+                return Ok(true);
                 //return CreatedAtRoute("CategoryById", new { id = createdEntity.id }, createdEntity);
             }
             catch (Exception ex)
@@ -194,7 +217,7 @@ namespace AspEventVieuwerAPI.Controllers
                 _repository.Event.DeleteEvent(@event);
                 _repository.Save();
 
-                return Ok("Event is delted");
+                return Ok(true);
             }
             catch (Exception ex)
             {
@@ -203,29 +226,5 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("getDataTable")]
-        public IActionResult GetDataTableEvents()
-        {
-            try
-            {
-                IEnumerable<Event> @event = _repository.Event.GetAllEvents();
-
-                _logger.LogInfo($"Returned all Events from database.");
-
-                IEnumerable<EventDto> Result = _mapper.Map<IEnumerable<EventDto>>(@event);
-
-                DataTableResponse dataTable = new DataTableResponse();
-                dataTable.data = Result;
-                dataTable.total = _repository.Event.GetAllEvents().Count();
-                dataTable.totalfilter = Result.Count();
-
-                return Ok(dataTable);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something went wrong inside GetAll action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
-            }
-        }
     }
 }

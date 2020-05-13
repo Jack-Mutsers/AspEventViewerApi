@@ -30,7 +30,8 @@ namespace Repository
 
         public IEnumerable<Stage> GetAllByEventDate(int event_date_id)
         {
-            return FindByCondition(s => s.event_date_id == event_date_id);
+            return FindByCondition(s => s.event_date_id == event_date_id)
+                .Include(s => s.schedule).ThenInclude(sc => sc.scheduleItems).ThenInclude(si => si.artist);
         }
 
         public Stage GetById(int stage_id)

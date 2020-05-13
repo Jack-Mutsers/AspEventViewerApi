@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ArtistGenreRepository.cs~RF8a126f.TMP" />
     <None Remove="EventDateRepository.cs~RF475d2a.TMP" />
   </ItemGroup>
 

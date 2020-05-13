@@ -14,5 +14,9 @@ namespace Entities.Models
 
         [Required(ErrorMessage = "Name is required")]
         public string name { get; set; }
+
+        public EventGenre eventGenre { get; set; }
+
+        public ArtistGenre artistGenre { get; set; }
     }
 }

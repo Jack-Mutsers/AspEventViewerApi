@@ -10,9 +10,11 @@ namespace Repository
     {
         private RepositoryContext _repoContext;
         private IArtistRepository _artist;
+        private IArtistGenreRepository _artistgenre;
         private IDatePlanningRepository _dateplanning;
         private IEventDateRepository _evendate;
         private IEventRepository _event;
+        private IEventGenreRepository _eventGenre;
         private IGenreRepository _genre;
         private IPreferenceRepository _preference;
         private IReviewRepository _review;
@@ -36,6 +38,19 @@ namespace Repository
                 }
 
                 return _artist;
+            }
+        }
+
+        public IArtistGenreRepository ArtistGenre
+        {
+            get
+            {
+                if(_artistgenre == null)
+                {
+                    _artistgenre = new ArtistGenreRepository(_repoContext);
+                }
+
+                return _artistgenre;
             }
         }
 
@@ -75,6 +90,19 @@ namespace Repository
                 }
 
                 return _event;
+            }
+        }
+
+        public IEventGenreRepository EventGenre
+        {
+            get
+            {
+                if (_eventGenre == null)
+                {
+                    _eventGenre = new EventGenreRepository(_repoContext);
+                }
+
+                return _eventGenre;
             }
         }
 

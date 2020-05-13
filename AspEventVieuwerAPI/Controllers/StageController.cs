@@ -53,22 +53,22 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("GetStageByEventDate/{id}")]
-        public IActionResult GetStageByEventDate(int id)
+        [HttpGet("GetStageByEventDate/{event_date_id}")]
+        public IActionResult GetStageByEventDate(int event_date_id)
         {
             try
             {
-                var stages = _repository.Stage.GetAllByEventDate(id);
+                IEnumerable<Stage> stages = _repository.Stage.GetAllByEventDate(event_date_id);
 
                 if (stages == null)
                 {
-                    _logger.LogError($"stages with EventDate id: {id}, hasn't been found in db.");
+                    _logger.LogError($"stages with EventDate id: {event_date_id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned stages with EventDate id: {id}");
+                _logger.LogInfo($"Returned stages with EventDate id: {event_date_id}");
 
-                var Result = _mapper.Map<IEnumerable<StageDto>>(stages);
+                IEnumerable<StageDto> Result = _mapper.Map<IEnumerable<StageDto>>(stages);
                 return Ok(Result);
             }
             catch (Exception ex)

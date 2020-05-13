@@ -11,5 +11,6 @@ namespace Entities.DataTransferObjects
         public int Eventid { get; set; }
         public DateTime start { get; set; }
         public DateTime end { get; set; }
+        public EventDateForCreationDto event_date { get; set; }
     }
 }

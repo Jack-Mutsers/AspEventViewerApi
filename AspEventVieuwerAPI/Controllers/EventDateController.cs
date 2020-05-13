@@ -72,7 +72,7 @@ namespace AspEventVieuwerAPI.Controllers
                 var Result = _mapper.Map<EventDateDto>(eventDate);
 
                 ArtistController artistController = new ArtistController(_logger, _repository, _mapper);
-                Result.artists = artistController.GetArtistsByEventDate(Result.id);
+                //Result.artists = artistController.GetArtistsByEventDate(Result.id);
 
                 return Ok(Result);
             }

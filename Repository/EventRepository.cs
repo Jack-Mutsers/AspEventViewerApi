@@ -35,7 +35,9 @@ namespace Repository
 
         public Event GetByIdWithDetails(int event_id)
         {
-            return FindByCondition(e => e.id == event_id).Include(e => e.genre).ThenInclude(g => g.genre).FirstOrDefault();
+            return FindByCondition(e => e.id == event_id)
+                //.Include(e => e.genre).ThenInclude(g => g.genre)
+                .FirstOrDefault();
         }
 
         public void UpdateEvent(Event @event)

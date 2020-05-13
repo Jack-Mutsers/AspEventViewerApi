@@ -32,12 +32,15 @@ namespace Repository
 
         public IEnumerable<DatePlanning> GetAllByEvent(int event_id)
         {
-            return FindByCondition(dp => dp.Eventid == event_id);
+            return FindByCondition(dp => dp.Eventid == event_id)
+                .Include(dp => dp.event_date);
         }
 
         public DatePlanning GetById(int planning_id)
         {
-            return FindByCondition(dp => dp.id == planning_id).Include(dp => dp.event_date).FirstOrDefault();
+            return FindByCondition(dp => dp.id == planning_id)
+                .Include(dp => dp.event_date)
+                .FirstOrDefault();
         }
 
         public DatePlanning GetByIdWithDetails(int planning_id)
@@ -50,8 +53,7 @@ namespace Repository
 
             return FindByCondition(dp => dp.id == planning_id)
                 .Include(dp => dp.@event).ThenInclude(e => e.genre).ThenInclude(eg => eg.genre)
-                .Include(dp => dp.event_date).ThenInclude(ed => ed.stages).ThenInclude(st => st.schedule).ThenInclude(sc => sc.scheduleItems).ThenInclude(si => si.artist)
-                .Include(dp => dp.event_date)
+                .Include(dp => dp.event_date)//.ThenInclude(ed => ed.stages).ThenInclude(st => st.schedule).ThenInclude(sc => sc.scheduleItems).ThenInclude(si => si.artist)
                 .FirstOrDefault();
 
         }

@@ -8,6 +8,7 @@ namespace Entities
         public RepositoryContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Artist> Artists { get; set; }
+        public DbSet<ArtistGenre> artistGenre { get; set; }
         public DbSet<DatePlanning> DatePlanning { get; set; }
         public DbSet<Event> Event { get; set; }
         public DbSet<EventGenre> EventGenre { get; set; }
@@ -24,6 +25,9 @@ namespace Entities
         {
             modelBuilder.Entity<EventGenre>()
                 .HasKey(eg => new { eg.event_id, eg.genre_id });
+
+            modelBuilder.Entity<ArtistGenre>()
+                .HasKey(eg => new { eg.artist_id, eg.genre_id });
         }
     }
 }

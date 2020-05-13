@@ -97,30 +97,30 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("ArtistByGenre/{id}")]
-        public IActionResult GetArtistByGenre(int id)
-        {
-            try
-            {
-                var art = _repository.Artist.GetArtistsByGenre(id);
+        //[HttpGet("ArtistByGenre/{id}")]
+        //public IActionResult GetArtistByGenre(int id)
+        //{
+        //    try
+        //    {
+        //        var art = _repository.Artist.GetArtistsByGenre(id);
 
-                if (art == null)
-                {
-                    _logger.LogError($"Artost with id: {id}, hasn't been found in db.");
-                    return NotFound();
-                }
+        //        if (art == null)
+        //        {
+        //            _logger.LogError($"Artost with id: {id}, hasn't been found in db.");
+        //            return NotFound();
+        //        }
 
-                _logger.LogInfo($"Returned Artist with id: {id}");
+        //        _logger.LogInfo($"Returned Artist with id: {id}");
 
-                var Result = _mapper.Map<IEnumerable<ArtistDto>>(art);
-                return Ok(Result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something went wrong inside GetArtistById action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
-            }
-        }
+        //        var Result = _mapper.Map<IEnumerable<ArtistDto>>(art);
+        //        return Ok(Result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError($"Something went wrong inside GetArtistById action: {ex.Message}");
+        //        return StatusCode(500, "Internal server error");
+        //    }
+        //}
 
         [HttpPost]
         public IActionResult CreateArtist([FromBody]ArtistForCreationDto artist)
@@ -218,20 +218,28 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        public IEnumerable<ArtistDto> GetArtistsByEventDate(int event_date_id)
+        [HttpGet("GetArtistsByEventDate/{event_date_id}")]
+        public IActionResult GetArtistsByEventDate(int event_date_id)
         {
             try
             {
-                IEnumerable<Artist> artist = _repository.Artist.GetArtistsByEventDate(event_date_id);
+                IEnumerable<Artist> artists = _repository.Artist.GetArtistsByEventDate(event_date_id);
 
-                IEnumerable<ArtistDto> artistDto = _mapper.Map<IEnumerable<ArtistDto>>(artist);
+                if (artists == null)
+                {
+                    _logger.LogError($"Artost with id: {artists}, hasn't been found in db.");
+                    return NotFound();
+                }
 
-                return artistDto;
+                _logger.LogInfo($"Returned Artist with id: {event_date_id}");
+
+                var Result = _mapper.Map<IEnumerable<ArtistDto>>(artists);
+                return Ok(Result);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside DeleteDatePlanning action: {ex.Message}");
-                return null;
+                _logger.LogError($"Something went wrong inside GetArtistById action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
 

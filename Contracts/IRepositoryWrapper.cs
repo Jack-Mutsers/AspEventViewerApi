@@ -7,9 +7,11 @@ namespace Contracts
     public interface IRepositoryWrapper
     {
         IArtistRepository Artist { get; }
+        IArtistGenreRepository ArtistGenre { get; }
         IDatePlanningRepository DatePlanning { get; }
         IEventDateRepository EventDate { get; }
         IEventRepository Event { get; }
+        IEventGenreRepository EventGenre { get; }
         IGenreRepository Genre { get; }
         IPreferenceRepository Preference { get; }
         IReviewRepository Review { get; }

@@ -8,6 +8,7 @@ namespace Entities.DataTransferObjects
     public class EventDateDto
     {
         public int id { get; set; }
+        public bool active { get; set; }
         //public int event_id { get; set; }
         public int planning_id { get; set; }
         public string location { get; set; }

@@ -15,12 +15,8 @@ namespace Entities.Models
         [Required(ErrorMessage = "Name is required")]
         public string name { get; set; }
 
+        public ICollection<ArtistGenre> genre { get; set; }
 
-        [Required(ErrorMessage = "genre id is required")]
-        [ForeignKey(nameof(genre))]
-        public int genre_id { get; set; }
-
-        public Genre genre { get; set; }
         public ScheduleItem ScheduleItem { get; set; }
     }
 }

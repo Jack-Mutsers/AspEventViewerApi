@@ -11,6 +11,7 @@ namespace Entities.Models
     public class EventDate
     {
         public int id { get; set; }
+        public bool active { get; set; }
 
         //[Required(ErrorMessage = "Event id is required")]
         //[ForeignKey(nameof(@event))]

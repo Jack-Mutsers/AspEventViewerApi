@@ -8,6 +8,8 @@ namespace Contracts
     public interface IGenreRepository
     {
         IEnumerable<Genre> GetAllGenres();
+        IEnumerable<Genre> GetByEvent(int event_id);
+        IEnumerable<Genre> GetByArtist(int artist_id);
         Genre GetById(int genre_id);
     }
 }
