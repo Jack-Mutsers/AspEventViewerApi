@@ -190,10 +190,16 @@ namespace AspEventVieuwerAPI.Controllers
 
                 _mapper.Map(@event, DataEntity);
 
+                IEnumerable<EventGenre> eventGenres = _repository.EventGenre.GetByEvent(DataEntity.id);
+                foreach (EventGenre eventGenre in eventGenres)
+                {
+                    _repository.EventGenre.DeleteByEvent(eventGenre);
+                }
+
                 _repository.Event.UpdateEvent(DataEntity);
                 _repository.Save();
 
-                return Ok("Event is updated");
+                return Ok(true);
             }
             catch (Exception ex)
             {

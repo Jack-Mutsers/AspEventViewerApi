@@ -12,6 +12,6 @@ namespace Entities.DataTransferObjects
         public string name { get; set; }
         public string description { get; set; }
         public string poster { get; set; }
-        public int[] genre_id { get; set; }
+        public IEnumerable<EventGenreForCreationDto> genre { get; set; }
     }
 }

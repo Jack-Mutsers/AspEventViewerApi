@@ -10,5 +10,6 @@ namespace Contracts
         IEnumerable<EventGenre> GetByEvent(int event_id);
         IEnumerable<EventGenre> GetByEventWithDetails(int event_id);
         IEnumerable<EventGenre> GetByGenre(int genre_id);
+        void DeleteByEvent(EventGenre eventGenre);
     }
 }

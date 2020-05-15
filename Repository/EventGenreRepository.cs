@@ -28,5 +28,10 @@ namespace Repository
             return FindByCondition(eg => eg.event_id == event_id)
                 .Include(eg => eg.genre);
         }
+
+        public void DeleteByEvent(EventGenre eventGenre)
+        {
+            Delete(eventGenre);
+        }
     }
 }
