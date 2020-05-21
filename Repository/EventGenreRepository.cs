@@ -29,7 +29,7 @@ namespace Repository
                 .Include(eg => eg.genre);
         }
 
-        public void DeleteByEvent(EventGenre eventGenre)
+        public void DeleteEventGenre(EventGenre eventGenre)
         {
             Delete(eventGenre);
         }

@@ -47,6 +47,31 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
+        [HttpGet("GetArtistsByEventDate/{event_date_id}")]
+        public IActionResult GetArtistsByEventDate(int event_date_id)
+        {
+            try
+            {
+                IEnumerable<Artist> artists = _repository.Artist.GetArtistsByEventDate(event_date_id);
+
+                if (artists == null)
+                {
+                    _logger.LogError($"Artost with id: {artists}, hasn't been found in db.");
+                    return NotFound();
+                }
+
+                _logger.LogInfo($"Returned Artist with id: {event_date_id}");
+
+                var Result = _mapper.Map<IEnumerable<ArtistDto>>(artists);
+                return Ok(Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetArtistById action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpGet("GetArtistById/{id}")]
         public IActionResult GetArtistById(int id)
         {
@@ -218,30 +243,6 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("GetArtistsByEventDate/{event_date_id}")]
-        public IActionResult GetArtistsByEventDate(int event_date_id)
-        {
-            try
-            {
-                IEnumerable<Artist> artists = _repository.Artist.GetArtistsByEventDate(event_date_id);
-
-                if (artists == null)
-                {
-                    _logger.LogError($"Artost with id: {artists}, hasn't been found in db.");
-                    return NotFound();
-                }
-
-                _logger.LogInfo($"Returned Artist with id: {event_date_id}");
-
-                var Result = _mapper.Map<IEnumerable<ArtistDto>>(artists);
-                return Ok(Result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something went wrong inside GetArtistById action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
-            }
-        }
 
     }
 }

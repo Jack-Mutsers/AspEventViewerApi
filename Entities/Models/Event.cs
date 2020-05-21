@@ -26,6 +26,5 @@ namespace Entities.Models
 
         public ICollection<EventGenre> genre { get; set; }
 
-        public ICollection<DatePlanning> event_planning { get; set; }
     }
 }

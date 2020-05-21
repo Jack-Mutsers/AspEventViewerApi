@@ -193,7 +193,7 @@ namespace AspEventVieuwerAPI.Controllers
                 IEnumerable<EventGenre> eventGenres = _repository.EventGenre.GetByEvent(DataEntity.id);
                 foreach (EventGenre eventGenre in eventGenres)
                 {
-                    _repository.EventGenre.DeleteByEvent(eventGenre);
+                    _repository.EventGenre.DeleteEventGenre(eventGenre);
                 }
 
                 _repository.Event.UpdateEvent(DataEntity);

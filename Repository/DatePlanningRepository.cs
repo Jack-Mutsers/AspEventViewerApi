@@ -26,7 +26,7 @@ namespace Repository
         public IEnumerable<DatePlanning> GetAll()
         {
             return FindAll()
-                .Include(dp => dp.@event).ThenInclude(e => e.genre).ThenInclude(eg => eg.genre)
+                .Include(dp => dp.@event)//.ThenInclude(e => e.genre).ThenInclude(eg => eg.genre)
                 .Include(dp => dp.event_date);
         }
 
