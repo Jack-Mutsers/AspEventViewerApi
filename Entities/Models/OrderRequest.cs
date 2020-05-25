@@ -8,5 +8,6 @@ namespace Entities.Models
     {
         public string FieldName { get; set; }
         public bool Ascending { get; set; }
+        public int GenreId { get; set; } = 0;
     }
 }

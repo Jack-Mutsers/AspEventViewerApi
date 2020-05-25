@@ -25,6 +25,6 @@ namespace Entities.Models
         public string poster { get; set; }
 
         public ICollection<EventGenre> genre { get; set; }
-
+        public ICollection<DatePlanning> datePlannings { get; set; }
     }
 }

@@ -29,6 +29,14 @@ namespace Repository
                 .Include(eg => eg.genre);
         }
 
+        public IEnumerable<Event> GetEventsByGenre(int Genre_id)
+        {
+            return FindByCondition(eg => eg.genre_id == Genre_id)
+                .Include(eg => eg.@event).ThenInclude(e => e.datePlannings)
+                .Include(eg => eg.@event).ThenInclude(e => e.genre).ThenInclude(eg => eg.genre)
+                .Select(eg => eg.@event);
+        }
+
         public void DeleteEventGenre(EventGenre eventGenre)
         {
             Delete(eventGenre);

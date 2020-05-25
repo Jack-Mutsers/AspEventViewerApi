@@ -10,7 +10,7 @@ using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using static Logics.ObjectSorter;
+using static Logics.EventSorter;
 
 namespace AspEventVieuwerAPI.Controllers
 {
@@ -50,14 +50,18 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpPost("GetAllInOrder")]
-        public IActionResult GetAllInOrder([FromBody] OrderRequest orderRequest)
+        [HttpPost("SortEventData")]
+        public IActionResult SortEventData([FromBody] OrderRequest orderRequest)
         {
             try
             {
-                IEnumerable<Event> @events = _repository.Event.GetAllEvents();
+                IEnumerable<Event> @events = orderRequest.GenreId == 0 ?
+                    _repository.Event.GetAllEvents():
+                    _repository.EventGenre.GetEventsByGenre(orderRequest.GenreId);
 
-                IEnumerable<Event> sorted_events = @events.AsQueryable().OrderByField(orderRequest);
+                IEnumerable<Event> sorted_events = null;
+                sorted_events = orderRequest.FieldName == "name" ? OrderByName(@events, orderRequest) : sorted_events;
+                sorted_events = orderRequest.FieldName == "start" ? sorted_events = OrderByStartDate(@events, orderRequest) : sorted_events;
 
                 _logger.LogInfo($"Returned all Events from database.");
 
@@ -126,6 +130,46 @@ namespace AspEventVieuwerAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Something went wrong inside GetEventById action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("GetAllByGenre/{id}")]
+        public IActionResult GetAllByGenre(int genre_id)
+        {
+            try
+            {
+                IEnumerable<Event> @events = _repository.EventGenre.GetEventsByGenre(genre_id);
+
+                _logger.LogInfo($"Returned all Events with genre id: {genre_id} from database.");
+
+                IEnumerable<EventDto> Result = _mapper.Map<IEnumerable<EventDto>>(@events);
+
+                return Ok(Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetAllByGenre action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+        
+        [HttpGet("GetbyName/{name}")]
+        public IActionResult GetByName(string name)
+        {
+            try
+            {
+                IEnumerable<Event> events = _repository.Event.GetByName(name);
+
+                _logger.LogInfo($"Returned all Events with names that contain: {name} from database.");
+
+                IEnumerable<EventDto> Result = _mapper.Map<IEnumerable<EventDto>>(events);
+
+                return Ok(Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetByName action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }

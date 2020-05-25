@@ -25,7 +25,9 @@ namespace Repository
 
         public IEnumerable<Event> GetAllEvents()
         {
-            return FindAll().Include(e => e.genre).ThenInclude(g => g.genre);
+            return FindAll()
+                .Include(e => e.genre).ThenInclude(g => g.genre)
+                .Include(e => e.datePlannings);
         }
 
         public Event GetById(int event_id)
@@ -38,6 +40,13 @@ namespace Repository
             return FindByCondition(e => e.id == event_id)
                 //.Include(e => e.genre).ThenInclude(g => g.genre)
                 .FirstOrDefault();
+        }
+
+        public IEnumerable<Event> GetByName(string name)
+        {
+            return FindByCondition(e => e.name.Contains(name))
+                .Include(e => e.genre).ThenInclude(g => g.genre)
+                .Include(e => e.datePlannings);
         }
 
         public void UpdateEvent(Event @event)
