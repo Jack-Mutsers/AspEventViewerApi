@@ -28,6 +28,14 @@ namespace Entities
 
             modelBuilder.Entity<ArtistGenre>()
                 .HasKey(eg => new { eg.artist_id, eg.genre_id });
+
+
+            modelBuilder.Entity<User>().ToTable("User").Property(p => p.id).HasColumnName("Id").ValueGeneratedOnAdd();
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasIndex(u => u.username).IsUnique();
+            });
         }
+
     }
 }

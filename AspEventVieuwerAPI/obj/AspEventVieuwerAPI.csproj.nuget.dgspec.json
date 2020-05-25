@@ -382,6 +382,10 @@
       "frameworks": {
         "netstandard2.0": {
           "dependencies": {
+            "BCrypt-Official": {
+              "target": "Package",
+              "version": "[0.1.109, )"
+            },
             "NETStandard.Library": {
               "suppressParent": "All",
               "target": "Package",

@@ -33,7 +33,7 @@ namespace Repository
 
         public User GetUserByLogin(string username, string password)
         {
-            return FindByCondition(u => u.username == username && u.password == password)
+            return FindByCondition(u => u.username == username /*&& u.password == password*/)
                 .Include(u => u.right)
                 .Include(u => u.preference).ThenInclude(p => p.genre)
                 .FirstOrDefault();

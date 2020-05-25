@@ -7,6 +7,7 @@ using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Logics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -63,7 +64,15 @@ namespace AspEventVieuwerAPI.Controllers
 
                 if (userData == null)
                 {
-                    _logger.LogError($"Failed loggin attempt with username: {user.username} and password: {user.password}");
+                    _logger.LogError($"Failed loggin attempt with username: {user.username}");
+                    return NotFound(false);
+                }
+
+                Hasher hasher = new Hasher();
+                bool valid = hasher.ValidatePassword(userData, user.password);
+                if (valid == false)
+                {
+                    _logger.LogError($"Incorect password for account with username: {user.username}");
                     return NotFound(false);
                 }
 
@@ -95,6 +104,16 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError("Invalid User object sent from client.");
                     return BadRequest("Invalid model object");
                 }
+
+                User userCheck = _repository.User.GetUserByLogin(user.username, "");
+                if (userCheck != null)
+                {
+                    _logger.LogError("Username is already in use");
+                    return Problem("Username already exists");
+                }
+
+                Hasher hasher = new Hasher();
+                user.password = hasher.HashPassword(user.password);
 
                 var DataEntity = _mapper.Map<User>(user);
 
@@ -129,6 +148,9 @@ namespace AspEventVieuwerAPI.Controllers
                     _logger.LogError("Invalid User object sent from client.");
                     return BadRequest("Invalid model object");
                 }
+
+                Hasher hasher = new Hasher();
+                user.password = hasher.HashPassword(user.password);
 
                 var DataEntity = _repository.User.GetById(user.id);
                 if (DataEntity == null)
