@@ -13,14 +13,11 @@ namespace Repository
     {
         public EventRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public void CreateEvent(Event @event)
+        public IEnumerable<Event> GetAllActiveEvents()
         {
-            Create(@event);
-        }
-
-        public void DeleteEvent(Event @event)
-        {
-            Delete(@event);
+            return FindByCondition(e => e.active == true)
+                .Include(e => e.genre).ThenInclude(g => g.genre)
+                .Include(e => e.datePlannings);
         }
 
         public IEnumerable<Event> GetAllEvents()
@@ -44,9 +41,19 @@ namespace Repository
 
         public IEnumerable<Event> GetByName(string name)
         {
-            return FindByCondition(e => e.name.Contains(name))
+            return FindByCondition(e => e.active == true && e.name.IndexOf(name, StringComparison.OrdinalIgnoreCase) != -1)
                 .Include(e => e.genre).ThenInclude(g => g.genre)
                 .Include(e => e.datePlannings);
+        }
+
+        public void CreateEvent(Event @event)
+        {
+            Create(@event);
+        }
+
+        public void DeleteEvent(Event @event)
+        {
+            Delete(@event);
         }
 
         public void UpdateEvent(Event @event)

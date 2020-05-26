@@ -50,6 +50,26 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
+        [HttpGet("GetAllActiveEvents")]
+        public IActionResult GetAllActiveEvents()
+        {
+            try
+            {
+                IEnumerable<Event> @events = _repository.Event.GetAllActiveEvents();
+
+                _logger.LogInfo($"Returned all active Events from database.");
+
+                IEnumerable<EventDto> Result = _mapper.Map<IEnumerable<EventDto>>(@events);
+
+                return Ok(Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetAllActiveEvents action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpPost("SortEventData")]
         public IActionResult SortEventData([FromBody] OrderRequest orderRequest)
         {
@@ -61,7 +81,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 IEnumerable<Event> sorted_events = null;
                 sorted_events = orderRequest.FieldName == "name" ? OrderByName(@events, orderRequest) : sorted_events;
-                sorted_events = orderRequest.FieldName == "start" ? sorted_events = OrderByStartDate(@events, orderRequest) : sorted_events;
+                sorted_events = orderRequest.FieldName == "startdate" ? sorted_events = OrderByStartDate(@events, orderRequest) : sorted_events;
 
                 _logger.LogInfo($"Returned all Events from database.");
 
@@ -134,12 +154,14 @@ namespace AspEventVieuwerAPI.Controllers
             }
         }
 
-        [HttpGet("GetAllByGenre/{id}")]
+        [HttpGet("GetAllByGenre/{genre_id}")]
         public IActionResult GetAllByGenre(int genre_id)
         {
             try
             {
-                IEnumerable<Event> @events = _repository.EventGenre.GetEventsByGenre(genre_id);
+                IEnumerable<Event> @events = genre_id > 0 ? 
+                    _repository.EventGenre.GetEventsByGenre(genre_id) : 
+                    _repository.Event.GetAllActiveEvents();
 
                 _logger.LogInfo($"Returned all Events with genre id: {genre_id} from database.");
 
@@ -159,7 +181,9 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Event> events = _repository.Event.GetByName(name);
+                IEnumerable<Event> events = name == "" ? 
+                    _repository.Event.GetAllActiveEvents() :
+                    _repository.Event.GetByName(name);
 
                 _logger.LogInfo($"Returned all Events with names that contain: {name} from database.");
 
