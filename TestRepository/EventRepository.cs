@@ -7,11 +7,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Repository
+namespace TestRepository
 {
-    public class EventRepository : RepositoryBase<Event>, IEventRepository
+    public class EventRepository : IEventRepository
     {
-        public EventRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
+        RepositoryCollection collection = new RepositoryCollection();
+        private readonly List<Event> _events;
+
+        public EventRepository()
+        {
+            _events = collection.events;
+        }
 
         public IEnumerable<Event> GetAllActiveEvents()
         {
@@ -58,7 +64,9 @@ namespace Repository
 
         public void UpdateEvent(Event @event)
         {
-            Update(@event);
+            Event @event2 = _events.FirstOrDefault(e => e.id == @event.id);
+            if (@event2 != null)
+                @event2 = @event;
         }
 
         public IEnumerable<Event> GetSortedByName(bool ascending)
@@ -75,5 +83,3 @@ namespace Repository
         }
     }
 }
-//"FromSqlRaw or FromSqlInterpolated was called with non-composable SQL and with a query composing over it. 
-// Consider calling `AsEnumerable` after the FromSqlRaw or FromSqlInterpolated method to perform the composition on the client side."

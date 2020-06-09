@@ -7,23 +7,23 @@ using System.Text;
 
 namespace Logics
 {
-    public static class EventSorter
+    public class EventSorter
     {
-        public static IEnumerable<Event> OrderByName(IEnumerable<Event> events, OrderRequest orderRequest)
+        public IEnumerable<Event> OrderByName(IEnumerable<Event> events, OrderRequest orderRequest)
         {
             return orderRequest.Ascending ?
                 events.OrderBy(e => e.name) :
                 events.OrderByDescending(e => e.name);
         }
 
-        public static IEnumerable<Event> OrderByStartDate(IEnumerable<Event> events, OrderRequest orderRequest)
+        public IEnumerable<Event> OrderByStartDate(IEnumerable<Event> events, OrderRequest orderRequest)
         {
             return orderRequest.Ascending ? 
                 OrderByStartDateAscending(events.ToList()) :
                 OrderByStartDateDescending(events.ToList());
         }
 
-        private static IEnumerable<Event> OrderByStartDateAscending(List<Event> events)
+        private IEnumerable<Event> OrderByStartDateAscending(List<Event> events)
         {
             ICollection<Event> exclusions = new List<Event>();
 
@@ -59,7 +59,7 @@ namespace Logics
             return events;
         }
 
-        private static IEnumerable<Event> OrderByStartDateDescending(List<Event> events)
+        private IEnumerable<Event> OrderByStartDateDescending(List<Event> events)
         {
             ICollection<Event> exclusions = new List<Event>();
 

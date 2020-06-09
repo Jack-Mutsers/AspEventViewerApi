@@ -7,6 +7,7 @@ using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Logics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -75,13 +76,13 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Event> @events = orderRequest.GenreId == 0 ?
-                    _repository.Event.GetAllEvents():
-                    _repository.EventGenre.GetEventsByGenre(orderRequest.GenreId);
-
                 IEnumerable<Event> sorted_events = null;
-                sorted_events = orderRequest.FieldName == "name" ? OrderByName(@events, orderRequest) : sorted_events;
-                sorted_events = orderRequest.FieldName == "startdate" ? sorted_events = OrderByStartDate(@events, orderRequest) : sorted_events;
+
+                if(orderRequest.FieldName == "name")
+                    sorted_events =_repository.Event.GetSortedByName(orderRequest.Ascending);
+
+                else if (orderRequest.FieldName == "startdate")
+                    sorted_events = GetEventByStartDate(orderRequest.Ascending);
 
                 _logger.LogInfo($"Returned all Events from database.");
 
@@ -195,6 +196,31 @@ namespace AspEventVieuwerAPI.Controllers
             {
                 _logger.LogError($"Something went wrong inside GetByName action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
+            }
+        }
+
+        public IEnumerable<Event> GetEventByStartDate(bool ascending)
+        {
+            try
+            {
+                IEnumerable<Event> @events = _repository.Event.GetSortedByStartDate(ascending);
+
+                _logger.LogInfo($"Returned all Events from database.");
+
+                List<Event> eventsList = new List<Event>();
+                foreach(Event @event in @events.ToList())
+                {
+                    IEnumerable<EventGenre> eventGenres = _repository.EventGenre.GetByEventWithDetails(@event.id);
+                    @event.genre = _mapper.Map<ICollection<EventGenre>>(eventGenres);
+                    eventsList.Add(@event);
+                }
+
+                return eventsList;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetAll action: {ex.Message}");
+                return new List<Event>();
             }
         }
 
