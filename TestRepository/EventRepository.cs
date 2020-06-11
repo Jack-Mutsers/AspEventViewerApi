@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities;
 using Entities.Models;
+using Logics;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -21,45 +22,85 @@ namespace TestRepository
 
         public IEnumerable<Event> GetAllActiveEvents()
         {
-            return FindByCondition(e => e.active == true)
-                .Include(e => e.genre).ThenInclude(g => g.genre)
-                .Include(e => e.datePlannings);
+            List<Event> events = _events.Where(e => e.active == true).ToList();
+
+            foreach (Event @event in events)
+            {
+                @event.datePlannings = collection.datePlannings.Where(dp => dp.Eventid == @event.id).ToList();
+                @event.genre = collection.eventGenres.Where(eg => eg.event_id == @event.id).ToList();
+
+                foreach (EventGenre eventGenre in @event.genre)
+                {
+                    eventGenre.genre = collection.genres.Where(g => g.id == eventGenre.genre_id).FirstOrDefault();
+                }
+            }
+
+            return events;
         }
 
         public IEnumerable<Event> GetAllEvents()
         {
-            return FindAll()
-                .Include(e => e.genre).ThenInclude(g => g.genre)
-                .Include(e => e.datePlannings);
+            List<Event> events = _events;
+
+            foreach (Event @event in events)
+            {
+                @event.datePlannings = collection.datePlannings.Where(dp => dp.Eventid == @event.id).ToList();
+                @event.genre = collection.eventGenres.Where(eg => eg.event_id == @event.id).ToList();
+
+                foreach (EventGenre eventGenre in @event.genre)
+                {
+                    eventGenre.genre = collection.genres.Where(g => g.id == eventGenre.genre_id).FirstOrDefault();
+                }
+            }
+
+            return events;
         }
 
         public Event GetById(int event_id)
         {
-            return FindByCondition(e => e.id == event_id).FirstOrDefault();
+            return _events.Where(e => e.id == event_id).FirstOrDefault();
         }
 
         public Event GetByIdWithDetails(int event_id)
         {
-            return FindByCondition(e => e.id == event_id)
-                //.Include(e => e.genre).ThenInclude(g => g.genre)
-                .FirstOrDefault();
+            Event @event = _events.Where(e => e.id == event_id).FirstOrDefault();
+
+            @event.genre = collection.eventGenres.Where(eg => eg.event_id == @event.id).ToList();
+
+            foreach (EventGenre eventGenre in @event.genre)
+            {
+                eventGenre.genre = collection.genres.Where(g => g.id == eventGenre.genre_id).FirstOrDefault();
+            }
+
+            return @event;
         }
 
         public IEnumerable<Event> GetByName(string name)
         {
-            return FindByCondition(e => e.active == true && e.name.IndexOf(name, StringComparison.OrdinalIgnoreCase) != -1)
-                .Include(e => e.genre).ThenInclude(g => g.genre)
-                .Include(e => e.datePlannings);
+            List<Event> events = _events.Where(e => e.active == true && e.name.IndexOf(name, StringComparison.OrdinalIgnoreCase) != -1).ToList();
+
+            foreach (Event @event in events)
+            {
+                @event.datePlannings = collection.datePlannings.Where(dp => dp.Eventid == @event.id).ToList();
+                @event.genre = collection.eventGenres.Where(eg => eg.event_id == @event.id).ToList();
+
+                foreach (EventGenre eventGenre in @event.genre)
+                {
+                    eventGenre.genre = collection.genres.Where(g => g.id == eventGenre.genre_id).FirstOrDefault();
+                }
+            }
+
+            return events;
         }
 
         public void CreateEvent(Event @event)
         {
-            Create(@event);
+            _events.Add(@event);
         }
 
         public void DeleteEvent(Event @event)
         {
-            Delete(@event);
+            _events.Remove(@event);
         }
 
         public void UpdateEvent(Event @event)
@@ -71,15 +112,31 @@ namespace TestRepository
 
         public IEnumerable<Event> GetSortedByName(bool ascending)
         {
-            if(ascending)
-                return FindAll().OrderBy(e => e.name).Include(e => e.genre).ThenInclude(eg => eg.genre);
+            List<Event> events;
+            if (ascending)
+                events = _events.OrderBy(e => e.name).ToList();
             else
-                return FindAll().OrderByDescending(e => e.name).Include(e => e.genre).ThenInclude(eg => eg.genre);
+                events = _events.OrderByDescending(e => e.name).ToList();
+
+            foreach (Event @event in events)
+            {
+                @event.genre = collection.eventGenres.Where(eg => eg.event_id == @event.id).ToList();
+
+                foreach (EventGenre eventGenre in @event.genre)
+                {
+                    eventGenre.genre = collection.genres.Where(g => g.id == eventGenre.genre_id).FirstOrDefault();
+                }
+            }
+
+            return events;
         }
 
         public IEnumerable<Event> GetSortedByStartDate(bool ascending)
         {
-            return FindByRawQuery("CALL GetAllEventsOrderedByStart(" + ascending + ");");
+            List<Event> events = GetAllActiveEvents().ToList();
+
+            EventSorter sorter = new EventSorter();
+            return sorter.OrderByStartDate(events, ascending);
         }
     }
 }

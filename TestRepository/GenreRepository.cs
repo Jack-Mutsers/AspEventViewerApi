@@ -21,24 +21,36 @@ namespace TestRepository
 
         public IEnumerable<Genre> GetAllGenres()
         {
-            return FindAll();
+            return _genres;
         }
 
         public IEnumerable<Genre> GetByArtist(int artist_id)
         {
-            return FindByCondition(e => e.artistGenre.artist_id == artist_id)
-                .Include(e => e.artistGenre);
+            List<Genre> genres = _genres;
+
+            foreach (Genre genre in genres)
+            {
+                genre.artistGenre = collection.artistGenres.Where(ag => ag.artist_id == artist_id && ag.genre_id == genre.id).FirstOrDefault();
+            }
+
+            return genres.Where(e => e.eventGenre.event_id == artist_id);
         }
 
         public IEnumerable<Genre> GetByEvent(int event_id)
         {
-            return FindByCondition(e => e.eventGenre.event_id == event_id)
-                .Include(e => e.eventGenre);
+            List<Genre> genres = _genres;
+
+            foreach (Genre genre in genres)
+            {
+                genre.eventGenre = collection.eventGenres.Where(eg => eg.event_id == event_id && eg.genre_id == genre.id).FirstOrDefault();
+            }
+
+            return genres.Where(e => e.eventGenre.event_id == event_id);
         }
 
         public Genre GetById(int genre_id)
         {
-            return FindByCondition(g => g.id == genre_id).FirstOrDefault();
+            return _genres.Where(g => g.id == genre_id).FirstOrDefault();
         }
     }
 }

@@ -21,28 +21,61 @@ namespace TestRepository
 
         public void CreateStage(Stage stage)
         {
-            Create(stage);
+            _stages.Add(stage);
         }
 
         public void DeleteStage(Stage stage)
         {
-            Delete(stage);
+            _stages.Remove(stage);
         }
 
         public IEnumerable<Stage> GetAll()
         {
-            return FindAll().Include(s=>s.schedule).ThenInclude(sc => sc.scheduleItems).ThenInclude(si => si.artist);
+            List<Stage> stages = _stages;
+
+            foreach (Stage stage in stages)
+            {
+                stage.schedule = collection.schedules.Where(s => s.stage_id == stage.id).ToList();
+
+                foreach (Schedule schedule in stage.schedule)
+                {
+                    schedule.scheduleItems = collection.scheduleItems.Where(si => si.schedule_id == schedule.id).ToList();
+
+                    foreach (ScheduleItem scheduleItem in schedule.scheduleItems)
+                    {
+                        scheduleItem.artist = collection.artists.Where(a => a.id == scheduleItem.artist_id).FirstOrDefault();
+                    }
+                }
+            }
+
+            return stages;
         }
 
         public IEnumerable<Stage> GetAllByEventDate(int event_date_id)
         {
-            return FindByCondition(s => s.event_date_id == event_date_id)
-                .Include(s => s.schedule).ThenInclude(sc => sc.scheduleItems).ThenInclude(si => si.artist);
+            List<Stage> stages = _stages.Where(s => s.event_date_id == event_date_id).ToList();
+
+            foreach (Stage stage in stages)
+            {
+                stage.schedule = collection.schedules.Where(s => s.stage_id == stage.id).ToList();
+
+                foreach (Schedule schedule in stage.schedule)
+                {
+                    schedule.scheduleItems = collection.scheduleItems.Where(si => si.schedule_id == schedule.id).ToList();
+
+                    foreach (ScheduleItem scheduleItem in schedule.scheduleItems)
+                    {
+                        scheduleItem.artist = collection.artists.Where(a => a.id == scheduleItem.artist_id).FirstOrDefault();
+                    }
+                }
+            }
+
+            return stages;
         }
 
         public Stage GetById(int stage_id)
         {
-            return FindByCondition(s => s.id == stage_id).FirstOrDefault();
+            return _stages.Where(s => s.id == stage_id).FirstOrDefault();
         }
 
         public void UpdateStage(Stage stage)

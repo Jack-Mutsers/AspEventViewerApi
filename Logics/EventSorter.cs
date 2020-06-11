@@ -16,9 +16,9 @@ namespace Logics
                 events.OrderByDescending(e => e.name);
         }
 
-        public IEnumerable<Event> OrderByStartDate(IEnumerable<Event> events, OrderRequest orderRequest)
+        public IEnumerable<Event> OrderByStartDate(IEnumerable<Event> events, bool Ascending)
         {
-            return orderRequest.Ascending ? 
+            return Ascending ? 
                 OrderByStartDateAscending(events.ToList()) :
                 OrderByStartDateDescending(events.ToList());
         }

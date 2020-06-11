@@ -21,32 +21,51 @@ namespace TestRepository
 
         public void CreateSchedule(Schedule schedule)
         {
-            Create(schedule);
+            _schedules.Add(schedule);
         }
 
         public void DeleteSchedule(Schedule schedule)
         {
-            Delete(schedule);
+            _schedules.Remove(schedule);
         }
 
         public IEnumerable<Schedule> GetAll()
         {
-            return FindAll().Include(ac => ac.stage).Include(ac => ac.@event);
+            List<Schedule> schedules = _schedules;
+
+            foreach (Schedule schedule in schedules)
+            {
+                schedule.stage = collection.stages.Where(s => s.id == schedule.stage_id).FirstOrDefault();
+                schedule.@event = collection.events.Where(e => e.id == schedule.event_id).FirstOrDefault();
+            }
+
+            return schedules;
         }
 
         public Schedule GetById(int schedule_id)
         {
-            return FindByCondition(s => s.id == schedule_id).FirstOrDefault();
+            return _schedules.Where(s => s.id == schedule_id).FirstOrDefault();
         }
 
         public Schedule GetByStage(int stage_id)
         {
-            return FindByCondition(s => s.stage_id == stage_id).Include(ac => ac.stage).Include(ac => ac.@event).FirstOrDefault();
+            Schedule schedule = _schedules.Where(s => s.stage_id == stage_id).FirstOrDefault();
+
+            schedule.stage = collection.stages.Where(s => s.id == schedule.stage_id).FirstOrDefault();
+            schedule.@event = collection.events.Where(e => e.id == schedule.event_id).FirstOrDefault();
+
+            return schedule;
         }
 
         public Schedule GetByStageWithDetails(int stage_id)
         {
-            return FindByCondition(s => s.stage_id == stage_id).Include(ac => ac.scheduleItems).Include(ac => ac.stage).Include(ac => ac.@event).FirstOrDefault();
+            Schedule schedule = _schedules.Where(s => s.stage_id == stage_id).FirstOrDefault();
+
+            schedule.scheduleItems = collection.scheduleItems.Where(si => si.schedule_id == schedule.id).ToList();
+            schedule.stage = collection.stages.Where(s => s.id == schedule.stage_id).FirstOrDefault();
+            schedule.@event = collection.events.Where(e => e.id == schedule.event_id).FirstOrDefault();
+
+            return schedule;
         }
 
         public void UpdateSchedule(Schedule schedule)

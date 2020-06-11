@@ -20,22 +20,22 @@ namespace TestRepository
 
         public void CreatePreference(Preference preference)
         {
-            Create(preference);
+            _preferences.Add(preference);
         }
 
         public void DeletePreference(Preference preference)
         {
-            Delete(preference);
+            _preferences.Remove(preference);
         }
 
         public Preference GetById(int preference_id)
         {
-            return FindByCondition(p => p.id == preference_id).FirstOrDefault();
+            return _preferences.Where(p => p.id == preference_id).FirstOrDefault();
         }
 
         public IEnumerable<Preference> GetPreferenceByUser(int user_id)
         {
-            return FindByCondition(p => p.user_id == user_id);
+            return _preferences.Where(p => p.user_id == user_id);
         }
 
         public void UpdatePreference(Preference preference)

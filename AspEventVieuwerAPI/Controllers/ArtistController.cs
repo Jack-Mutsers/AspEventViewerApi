@@ -33,7 +33,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var art = _repository.Artist.GetAllArtists();
+                IEnumerable<Artist> art = _repository.Artist.GetAllArtists();
 
                 _logger.LogInfo($"Returned all Artists from database.");
 

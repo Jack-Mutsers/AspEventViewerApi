@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Tests\ArtistControllerTest.cs~RFb1bc8c.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="xunit" Version="2.4.0" />
@@ -16,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AspEventVieuwerAPI\AspEventVieuwerAPI.csproj" />
+    <ProjectReference Include="..\TestRepository\TestRepository.csproj" />
   </ItemGroup>
 
 </Project>

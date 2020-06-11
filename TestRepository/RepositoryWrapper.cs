@@ -8,7 +8,6 @@ namespace TestRepository
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {
-        private RepositoryContext _repoContext;
         private IArtistRepository _artist;
         private IArtistGenreRepository _artistgenre;
         private IDatePlanningRepository _dateplanning;
@@ -23,18 +22,13 @@ namespace TestRepository
         private IStageRepository _stage;
         private IUserRepository _user;
 
-        public RepositoryWrapper(RepositoryContext repositoryContext)
-        {
-            _repoContext = repositoryContext;
-        }
-
         public IArtistRepository Artist
         {
             get
             {
                 if(_artist == null)
                 {
-                    _artist = new ArtistRepository(_repoContext);
+                    _artist = new ArtistRepository();
                 }
 
                 return _artist;
@@ -47,7 +41,7 @@ namespace TestRepository
             {
                 if(_artistgenre == null)
                 {
-                    _artistgenre = new ArtistGenreRepository(_repoContext);
+                    _artistgenre = new ArtistGenreRepository();
                 }
 
                 return _artistgenre;
@@ -60,7 +54,7 @@ namespace TestRepository
             {
                 if (_dateplanning == null)
                 {
-                    _dateplanning = new DatePlanningRepository(_repoContext);
+                    _dateplanning = new DatePlanningRepository();
                 }
 
                 return _dateplanning;
@@ -73,7 +67,7 @@ namespace TestRepository
             {
                 if (_evendate == null)
                 {
-                    _evendate = new EventDateRepository(_repoContext);
+                    _evendate = new EventDateRepository();
                 }
 
                 return _evendate;
@@ -86,7 +80,7 @@ namespace TestRepository
             {
                 if (_event == null)
                 {
-                    _event = new EventRepository(_repoContext);
+                    _event = new EventRepository();
                 }
 
                 return _event;
@@ -99,7 +93,7 @@ namespace TestRepository
             {
                 if (_eventGenre == null)
                 {
-                    _eventGenre = new EventGenreRepository(_repoContext);
+                    _eventGenre = new EventGenreRepository();
                 }
 
                 return _eventGenre;
@@ -112,7 +106,7 @@ namespace TestRepository
             {
                 if (_genre == null)
                 {
-                    _genre = new GenreRepository(_repoContext);
+                    _genre = new GenreRepository();
                 }
 
                 return _genre;
@@ -125,7 +119,7 @@ namespace TestRepository
             {
                 if (_preference == null)
                 {
-                    _preference = new PreferenceRepository(_repoContext);
+                    _preference = new PreferenceRepository();
                 }
 
                 return _preference;
@@ -138,7 +132,7 @@ namespace TestRepository
             {
                 if (_review == null)
                 {
-                    _review = new ReviewRepository(_repoContext);
+                    _review = new ReviewRepository();
                 }
 
                 return _review;
@@ -151,7 +145,7 @@ namespace TestRepository
             {
                 if (_schedule == null)
                 {
-                    _schedule = new ScheduleRepository(_repoContext);
+                    _schedule = new ScheduleRepository();
                 }
 
                 return _schedule;
@@ -164,7 +158,7 @@ namespace TestRepository
             {
                 if (_scheduleItem == null)
                 {
-                    _scheduleItem = new ScheduleItemRepository(_repoContext);
+                    _scheduleItem = new ScheduleItemRepository();
                 }
 
                 return _scheduleItem;
@@ -177,7 +171,7 @@ namespace TestRepository
             {
                 if (_stage == null)
                 {
-                    _stage = new StageRepository(_repoContext);
+                    _stage = new StageRepository();
                 }
 
                 return _stage;
@@ -190,16 +184,13 @@ namespace TestRepository
             {
                 if (_user == null)
                 {
-                    _user = new UserRepository(_repoContext);
+                    _user = new UserRepository();
                 }
 
                 return _user;
             }
         }
 
-        public void Save()
-        {
-            _repoContext.SaveChanges();
-        }
+        public void Save(){}
     }
 }

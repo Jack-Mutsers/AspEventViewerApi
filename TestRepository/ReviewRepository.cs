@@ -21,28 +21,34 @@ namespace TestRepository
 
         public void CreateReview(Review review)
         {
-            Create(review);
+            _reviews.Add(review);
         }
 
         public void DeleteReview(Review review)
         {
-            Delete(review);
+            _reviews.Remove(review);
         }
 
         public IEnumerable<Review> GetAllOpenReviews()
         {
-            return FindByCondition(r => r.validated == false);
+            return _reviews.Where(r => r.validated == false);
         }
 
         public IEnumerable<Review> GetByEventDate(int event_date_id)
         {
-            return FindByCondition(r => r.event_date_id == event_date_id && r.validated == true)
-                .Include(r => r.user);
+            List<Review> reviews = _reviews.Where(r => r.event_date_id == event_date_id && r.validated == true).ToList();
+
+            foreach (Review review in reviews)
+            {
+                review.user = collection.users.Where(u=>u.id == review.user_id).FirstOrDefault();
+            }
+
+            return reviews;
         }
 
         public Review GetById(int review_id)
         {
-            return FindByCondition(r => r.id == review_id).FirstOrDefault();
+            return _reviews.Where(r => r.id == review_id).FirstOrDefault();
         }
 
         public void UpdateReview(Review review)

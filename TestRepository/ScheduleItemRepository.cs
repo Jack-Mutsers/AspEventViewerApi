@@ -21,27 +21,31 @@ namespace TestRepository
 
         public void CreateScheduleItem(ScheduleItem scheduleItem)
         {
-            Create(scheduleItem);
+            _scheduleItems.Add(scheduleItem);
         }
 
         public void DeleteScheduleItem(ScheduleItem scheduleItem)
         {
-            Delete(scheduleItem);
+            _scheduleItems.Remove(scheduleItem);
         }
 
         public ScheduleItem GetById(int item_id)
         {
-            return FindByCondition(si => si.id == item_id).FirstOrDefault();
+            return _scheduleItems.Where(si => si.id == item_id).FirstOrDefault();
         }
 
         public ScheduleItem GetByIdWithDetails(int item_id)
         {
-            return FindByCondition(si => si.id == item_id).Include(si => si.artist).FirstOrDefault();
+            ScheduleItem scheduleItem = _scheduleItems.Where(si => si.id == item_id).FirstOrDefault();
+
+            scheduleItem.artist = collection.artists.Where(a => a.id == scheduleItem.artist_id).FirstOrDefault();
+
+            return scheduleItem;
         }
 
         public IEnumerable<ScheduleItem> GetBySchedule(int schedule_id)
         {
-            return FindByCondition(si => si.schedule_id == schedule_id);
+            return _scheduleItems.Where(si => si.schedule_id == schedule_id);
         }
 
         public void UpdateScheduleItem(ScheduleItem scheduleItem)

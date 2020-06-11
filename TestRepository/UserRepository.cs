@@ -21,28 +21,42 @@ namespace TestRepository
 
         public void CreateUser(User user)
         {
-            Create(user);
+            _users.Add(user);
         }
 
         public void DeleteUser(User user)
         {
-            Delete(user);
+            _users.Remove(user);
         }
 
         public User GetById(int User_id)
         {
-            return FindByCondition(u => u.id == User_id)
-                .Include(u => u.right)
-                .Include(u => u.preference).ThenInclude(p => p.genre)
-                .FirstOrDefault();
+            User user = _users.Where(u => u.id == User_id).FirstOrDefault();
+
+            user.right = collection.rights.Where(r => r.id == user.right_id).FirstOrDefault();
+            user.preference = collection.preferences.Where(p => p.user_id == user.id).ToList();
+
+            foreach (Preference preference in user.preference)
+            {
+                preference.genre = collection.genres.Where(g=>g.id == preference.genre_id).FirstOrDefault();
+            }
+
+            return user;
         }
 
         public User GetUserByLogin(string username, string password)
         {
-            return FindByCondition(u => u.username == username /*&& u.password == password*/)
-                .Include(u => u.right)
-                .Include(u => u.preference).ThenInclude(p => p.genre)
-                .FirstOrDefault();
+            User user = _users.Where(u => u.username == username).FirstOrDefault();
+
+            user.right = collection.rights.Where(r => r.id == user.right_id).FirstOrDefault();
+            user.preference = collection.preferences.Where(p => p.user_id == user.id).ToList();
+
+            foreach (Preference preference in user.preference)
+            {
+                preference.genre = collection.genres.Where(g => g.id == preference.genre_id).FirstOrDefault();
+            }
+
+            return user;
         }
 
         public void UpdateUser(User user)
