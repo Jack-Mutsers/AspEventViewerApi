@@ -1,4 +1,5 @@
 using AspEventVieuwerAPI.Controllers;
+using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -11,11 +12,12 @@ namespace XUnitTest.Tests
     {
         private ControllerRequrements requrements;
         private ArtistController _controller;
+        private static object isInitialized = false;
 
         public ArtistControllerTest()
         {
             requrements = new ControllerRequrements();
-            _controller = new ArtistController(requrements.logger, requrements.repository, requrements.mapper);
+            _controller = new ArtistController(logger: requrements.logger, repository: requrements.repository, mapper: requrements.mapper);
         }
 
         [Fact]
@@ -30,40 +32,11 @@ namespace XUnitTest.Tests
         public void GetAll_ReturnsAllItems()
         {
             // Act
-            OkObjectResult okResult = _controller.GetAll() as OkObjectResult;
+            var okResult = _controller.GetAll() as OkObjectResult;
 
             // Assert
-            List<Artist> items = Assert.IsType<List<Artist>>(okResult.Value);
-            Assert.Equal(3, items.Count);
+            List<ArtistDto> items = Assert.IsType<List<ArtistDto>>(okResult.Value);
+            Assert.Equal(4, items.Count);
         }
     }
 }
-
-/*
-{
-    "Error mapping types.
-
-    Mapping types:
-    List`1 -> IEnumerable`1
-    System.Collections.Generic.List`1
-    [
-        [
-            Entities.Models.Artist, 
-            Entities, 
-            Version=1.0.0.0, 
-            Culture=neutral, 
-            PublicKeyToken=null
-        ]
-    ] -> System.Collections.Generic.IEnumerable`1
-    [
-        [
-            Entities.DataTransferObjects.ArtistDto,
-            Entities,
-            Version=1.0.0.0,
-            Culture=neutral,
-            PublicKeyToken=null
-        ]
-    ]"
-}
-
-*/

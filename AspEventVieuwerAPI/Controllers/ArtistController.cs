@@ -33,11 +33,11 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Artist> art = _repository.Artist.GetAllArtists();
+                IEnumerable<Artist> artist = _repository.Artist.GetAllArtists();
 
                 _logger.LogInfo($"Returned all Artists from database.");
 
-                var Result = _mapper.Map<IEnumerable<ArtistDto>>(art);
+                var Result = _mapper.Map<IEnumerable<ArtistDto>>(artist);
                 return Ok(Result);
             }
             catch (Exception ex)

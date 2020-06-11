@@ -17,8 +17,12 @@ namespace XUnitTest.Resources
 
         public ControllerRequrements()
         {
-            var config = new MapperConfiguration(cfg => new MappingProfile());
-            mapper = config.CreateMapper();
+            var mockMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new MappingProfile());
+            });
+            mapper = mockMapper.CreateMapper();
+
             logger = new LoggerManager();
             repository = new RepositoryWrapper();
         }
