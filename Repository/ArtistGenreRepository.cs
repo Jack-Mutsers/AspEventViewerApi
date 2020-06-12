@@ -28,5 +28,6 @@ namespace Repository
         {
             return FindByCondition(eg => eg.genre_id == genre_id);
         }
+
     }
 }

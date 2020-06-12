@@ -9,12 +9,12 @@ using System.Text;
 
 namespace TestRepository
 {
-    public class EventGenreRepository : IEventGenreRepository
+    public class EventGenreRepository : RepositoryBase, IEventGenreRepository
     {
         RepositoryCollection collection = new RepositoryCollection();
         private readonly List<EventGenre> _eventGenres;
 
-        public EventGenreRepository() 
+        public EventGenreRepository(RepositoryContext repositoryContext = null) : base(repositoryContext)
         {
             _eventGenres = collection.eventGenres;
         }
@@ -60,9 +60,19 @@ namespace TestRepository
             return eventGenres.Select(eg => eg.@event);
         }
 
-        public void DeleteEventGenre(EventGenre eventGenre)
+        public void Delete(EventGenre eventGenre)
         {
             _eventGenres.Remove(eventGenre);
+        }
+
+        public void Create(EventGenre model)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void Update(EventGenre model)
+        {
+            //throw new NotImplementedException();
         }
     }
 }

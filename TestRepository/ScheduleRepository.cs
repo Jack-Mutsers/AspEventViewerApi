@@ -9,22 +9,22 @@ using System.Text;
 
 namespace TestRepository
 {
-    public class ScheduleRepository : IScheduleRepository
+    public class ScheduleRepository : RepositoryBase, IScheduleRepository
     {
         RepositoryCollection collection = new RepositoryCollection();
         private readonly List<Schedule> _schedules;
 
-        public ScheduleRepository() 
+        public ScheduleRepository(RepositoryContext repositoryContext = null) : base(repositoryContext)
         {
             _schedules = collection.schedules;
         }
 
-        public void CreateSchedule(Schedule schedule)
+        public void Create(Schedule schedule)
         {
             _schedules.Add(schedule);
         }
 
-        public void DeleteSchedule(Schedule schedule)
+        public void Delete(Schedule schedule)
         {
             _schedules.Remove(schedule);
         }
@@ -68,11 +68,12 @@ namespace TestRepository
             return schedule;
         }
 
-        public void UpdateSchedule(Schedule schedule)
+        public void Update(Schedule schedule)
         {
             Schedule schedule1 = _schedules.FirstOrDefault(s => s.id == schedule.id);
             if (schedule1 != null)
                 schedule1 = schedule;
         }
+
     }
 }

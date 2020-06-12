@@ -12,12 +12,11 @@ namespace XUnitTest.Tests
     {
         private ControllerRequrements requrements;
         private ArtistController _controller;
-        private static object isInitialized = false;
 
         public ArtistControllerTest()
         {
             requrements = new ControllerRequrements();
-            _controller = new ArtistController(logger: requrements.logger, repository: requrements.repository, mapper: requrements.mapper);
+            _controller = new ArtistController(logger: requrements.logger, repository: requrements.repository.Artist, mapper: requrements.mapper);
         }
 
         [Fact]

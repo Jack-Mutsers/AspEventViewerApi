@@ -18,10 +18,10 @@ namespace AspEventVieuwerAPI.Controllers
     public class ScheduleItemController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IRepositoryWrapper _repository;
+        private IScheduleItemRepository _repository;
         private IMapper _mapper;
 
-        public ScheduleItemController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
+        public ScheduleItemController(ILoggerManager logger, IScheduleItemRepository repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
@@ -34,7 +34,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var scheduleItems = _repository.ScheduleItem.GetBySchedule(id);
+                var scheduleItems = _repository.GetBySchedule(id);
 
                 if (scheduleItems == null)
                 {
@@ -59,7 +59,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var scheduleItem = _repository.ScheduleItem.GetById(id);
+                var scheduleItem = _repository.GetById(id);
 
                 if (scheduleItem == null)
                 {
@@ -84,7 +84,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var scheduleItem = _repository.ScheduleItem.GetByIdWithDetails(id);
+                var scheduleItem = _repository.GetByIdWithDetails(id);
 
                 if (scheduleItem == null)
                 {
@@ -123,7 +123,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 var DataEntity = _mapper.Map<ScheduleItem>(scheduleItem);
 
-                _repository.ScheduleItem.CreateScheduleItem(DataEntity);
+                _repository.Create(DataEntity);
                 _repository.Save();
 
                 var createdEntity = _mapper.Map<ArtistDto>(DataEntity);
@@ -155,7 +155,7 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.ScheduleItem.GetById(scheduleItem.id);
+                var DataEntity = _repository.GetById(scheduleItem.id);
                 if (DataEntity == null)
                 {
                     _logger.LogError($"ScheduleItem with id: {scheduleItem.id}, hasn't been found in db.");
@@ -164,7 +164,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 _mapper.Map(scheduleItem, DataEntity);
 
-                _repository.ScheduleItem.UpdateScheduleItem(DataEntity);
+                _repository.Update(DataEntity);
                 _repository.Save();
 
                 return Ok("ScheduleItem is updated");
@@ -181,14 +181,14 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var scheduleItem = _repository.ScheduleItem.GetById(id);
+                var scheduleItem = _repository.GetById(id);
                 if (scheduleItem == null)
                 {
                     _logger.LogError($"ScheduleItem with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _repository.ScheduleItem.DeleteScheduleItem(scheduleItem);
+                _repository.Delete(scheduleItem);
                 _repository.Save();
 
                 return Ok("ScheduleItem is delted");

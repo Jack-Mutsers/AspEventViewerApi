@@ -18,10 +18,10 @@ namespace AspEventVieuwerAPI.Controllers
     public class ReviewController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IRepositoryWrapper _repository;
+        private IReviewRepository _repository;
         private IMapper _mapper;
 
-        public ReviewController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
+        public ReviewController(ILoggerManager logger, IReviewRepository repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
@@ -33,7 +33,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var reviews = _repository.Review.GetByEventDate(id);
+                var reviews = _repository.GetByEventDate(id);
 
                 if (reviews == null)
                 {
@@ -58,7 +58,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var reviews = _repository.Review.GetAllOpenReviews();
+                var reviews = _repository.GetAllOpenReviews();
 
                 _logger.LogInfo($"Returned all Reviews from database.");
 
@@ -77,7 +77,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var review = _repository.Review.GetById(id);
+                var review = _repository.GetById(id);
 
                 if (review == null)
                 {
@@ -116,7 +116,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 var DataEntity = _mapper.Map<Review>(review);
 
-                _repository.Review.CreateReview(DataEntity);
+                _repository.Create(DataEntity);
                 _repository.Save();
 
                 var createdEntity = _mapper.Map<ReviewDto>(DataEntity);
@@ -148,7 +148,7 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.Review.GetById(review.id);
+                var DataEntity = _repository.GetById(review.id);
                 if (DataEntity == null)
                 {
                     _logger.LogError($"Review with id: {review.id}, hasn't been found in db.");
@@ -157,7 +157,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 _mapper.Map(review, DataEntity);
 
-                _repository.Review.UpdateReview(DataEntity);
+                _repository.Update(DataEntity);
                 _repository.Save();
 
                 return Ok("Review is updated");
@@ -174,14 +174,14 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var review = _repository.Review.GetById(id);
+                var review = _repository.GetById(id);
                 if (review == null)
                 {
                     _logger.LogError($"Review with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _repository.Review.DeleteReview(review);
+                _repository.Delete(review);
                 _repository.Save();
 
                 return Ok("Review is delted");

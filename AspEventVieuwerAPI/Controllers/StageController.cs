@@ -18,10 +18,10 @@ namespace AspEventVieuwerAPI.Controllers
     public class StageController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IRepositoryWrapper _repository;
+        private IStageRepository _repository;
         private IMapper _mapper;
 
-        public StageController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
+        public StageController(ILoggerManager logger, IStageRepository repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
@@ -33,7 +33,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var stages = _repository.Stage.GetAll();
+                var stages = _repository.GetAll();
 
                 if (stages == null)
                 {
@@ -58,7 +58,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Stage> stages = _repository.Stage.GetAllByEventDate(event_date_id);
+                IEnumerable<Stage> stages = _repository.GetAllByEventDate(event_date_id);
 
                 if (stages == null)
                 {
@@ -83,7 +83,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var stage = _repository.Stage.GetById(id);
+                var stage = _repository.GetById(id);
 
                 if (stage == null)
                 {
@@ -122,7 +122,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 var DataEntity = _mapper.Map<Stage>(stage);
 
-                _repository.Stage.CreateStage(DataEntity);
+                _repository.Create(DataEntity);
                 _repository.Save();
 
                 var createdEntity = _mapper.Map<StageDto>(DataEntity);
@@ -154,7 +154,7 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.Stage.GetById(stage.id);
+                var DataEntity = _repository.GetById(stage.id);
                 if (DataEntity == null)
                 {
                     _logger.LogError($"Stage with id: {stage.id}, hasn't been found in db.");
@@ -163,7 +163,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 _mapper.Map(stage, DataEntity);
 
-                _repository.Stage.UpdateStage(DataEntity);
+                _repository.Update(DataEntity);
                 _repository.Save();
 
                 return Ok("Stage is updated");
@@ -180,14 +180,14 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var stage = _repository.Stage.GetById(id);
+                var stage = _repository.GetById(id);
                 if (stage == null)
                 {
                     _logger.LogError($"Stage with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _repository.Stage.DeleteStage(stage);
+                _repository.Delete(stage);
                 _repository.Save();
 
                 return Ok("Stage is delted");

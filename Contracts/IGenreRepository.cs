@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Contracts
 {
-    public interface IGenreRepository
+    public interface IGenreRepository : IUniversalRepository<Genre>
     {
         IEnumerable<Genre> GetAllGenres();
         IEnumerable<Genre> GetByEvent(int event_id);

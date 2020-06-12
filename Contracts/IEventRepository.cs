@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Contracts
 {
-    public interface IEventRepository
+    public interface IEventRepository : IUniversalRepository<Event>
     {
         IEnumerable<Event> GetAllEvents();
         IEnumerable<Event> GetAllActiveEvents();
@@ -14,8 +14,5 @@ namespace Contracts
         IEnumerable<Event> GetSortedByStartDate(bool ascending);
         Event GetByIdWithDetails(int event_id);
         Event GetById(int event_id);
-        void CreateEvent(Event @event);
-        void UpdateEvent(Event @event);
-        void DeleteEvent(Event @event);
     }
 }

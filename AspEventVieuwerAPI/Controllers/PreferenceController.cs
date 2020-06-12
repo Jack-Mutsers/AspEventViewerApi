@@ -18,10 +18,10 @@ namespace AspEventVieuwerAPI.Controllers
     public class PreferenceController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IRepositoryWrapper _repository;
+        private IPreferenceRepository _repository;
         private IMapper _mapper;
 
-        public PreferenceController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
+        public PreferenceController(ILoggerManager logger, IPreferenceRepository repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
@@ -33,7 +33,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var preference = _repository.Preference.GetPreferenceByUser(id);
+                var preference = _repository.GetPreferenceByUser(id);
 
                 if (preference == null)
                 {
@@ -58,7 +58,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var preference = _repository.Preference.GetById(id);
+                var preference = _repository.GetById(id);
 
                 if (preference == null)
                 {
@@ -97,7 +97,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 var DataEntity = _mapper.Map<Preference>(preference);
 
-                _repository.Preference.CreatePreference(DataEntity);
+                _repository.Create(DataEntity);
                 _repository.Save();
 
                 var createdEntity = _mapper.Map<PreferenceDto>(DataEntity);
@@ -129,7 +129,7 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.Preference.GetById(preference.id);
+                var DataEntity = _repository.GetById(preference.id);
                 if (DataEntity == null)
                 {
                     _logger.LogError($"Preference with id: {preference.id}, hasn't been found in db.");
@@ -138,7 +138,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 _mapper.Map(preference, DataEntity);
 
-                _repository.Preference.UpdatePreference(DataEntity);
+                _repository.Update(DataEntity);
                 _repository.Save();
 
                 return Ok("Preference is updated");
@@ -155,14 +155,14 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var preference = _repository.Preference.GetById(id);
+                var preference = _repository.GetById(id);
                 if (preference == null)
                 {
                     _logger.LogError($"Preference with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _repository.Preference.DeletePreference(preference);
+                _repository.Update(preference);
                 _repository.Save();
 
                 return Ok("Preference is delted");

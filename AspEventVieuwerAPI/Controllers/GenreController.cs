@@ -18,13 +18,17 @@ namespace AspEventVieuwerAPI.Controllers
     public class GenreController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IRepositoryWrapper _repository;
+        private IGenreRepository _GenreRepository;
+        private IEventGenreRepository _EventGenreRepository;
+        private IArtistGenreRepository _ArtistGenreRepository;
         private IMapper _mapper;
 
-        public GenreController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
+        public GenreController(ILoggerManager logger, IGenreRepository genreRepository, IEventGenreRepository eventGenreRepository, IArtistGenreRepository artistGenreRepository, IMapper mapper)
         {
             _logger = logger;
-            _repository = repository;
+            _GenreRepository = genreRepository;
+            _EventGenreRepository = eventGenreRepository;
+            _ArtistGenreRepository = artistGenreRepository;
             _mapper = mapper;
         }
 
@@ -33,7 +37,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var art = _repository.Genre.GetAllGenres();
+                var art = _GenreRepository.GetAllGenres();
 
                 _logger.LogInfo($"Returned all Genre from database.");
 
@@ -52,7 +56,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var art = _repository.Genre.GetById(id);
+                var art = _GenreRepository.GetById(id);
 
                 if (art == null)
                 {
@@ -76,7 +80,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<EventGenre> genres = _repository.EventGenre.GetByEvent(event_id);
+                IEnumerable<EventGenre> genres = _EventGenreRepository.GetByEvent(event_id);
 
                 if (genres == null)
                 {
@@ -103,7 +107,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<EventGenre> genres = _repository.EventGenre.GetByEventWithDetails(event_id);
+                IEnumerable<EventGenre> genres = _EventGenreRepository.GetByEventWithDetails(event_id);
 
                 if (genres == null)
                 {
@@ -130,7 +134,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Genre> genres = _repository.Genre.GetByArtist(artist_id);
+                IEnumerable<Genre> genres = _GenreRepository.GetByArtist(artist_id);
 
                 if (genres == null)
                 {

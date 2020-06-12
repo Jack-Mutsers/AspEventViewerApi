@@ -10,25 +10,14 @@ using System.Text;
 
 namespace TestRepository
 {
-    public class ArtistRepository : IArtistRepository
+    public class ArtistRepository : RepositoryBase, IArtistRepository
     {
         RepositoryCollection collection = new RepositoryCollection();
         private readonly List<Artist> _artists;
 
-        public ArtistRepository() 
+        public ArtistRepository(RepositoryContext repositoryContext = null) : base(repositoryContext)
         {
             _artists = collection.artists;
-        }
-
-        public void CreateArtist(Artist artist)
-        {
-            artist.id = (_artists.Count() + 1);
-            _artists.Add(artist);
-        }
-
-        public void DeleteArtist(Artist artist)
-        {
-            _artists.Remove(artist);
         }
 
         public IEnumerable<Artist> GetAllArtists()
@@ -46,20 +35,32 @@ namespace TestRepository
             return _artists.Where(a => a.id == artist_id).FirstOrDefault();
         }
 
-        public void UpdateArtist(Artist artist)
-        {
-            Artist obj = _artists.FirstOrDefault(a => a.id == artist.id);
-            if (obj != null) 
-                obj = artist;
-
-            var test = 1;
-        }
-
         public Artist GetByIdWithDetails(int artist_id)
         {
             Artist artist = _artists.Where(a => a.id == artist_id).FirstOrDefault();
             artist.genre = collection.artistGenres.Where(ag => ag.artist_id == artist.id).ToList();
             return artist;
         }
+
+        public void Create(Artist model)
+        {
+            model.id = (_artists.Count() + 1);
+            _artists.Add(model);
+        }
+
+        public void Update(Artist model)
+        {
+            Artist obj = _artists.FirstOrDefault(a => a.id == model.id);
+            if (obj != null)
+                obj = model;
+
+            var test = 1;
+        }
+
+        public void Delete(Artist model)
+        {
+            _artists.Remove(model);
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,13 +18,15 @@ namespace AspEventVieuwerAPI.Controllers
     public class DatePlanningController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IRepositoryWrapper _repository;
+        private IDatePlanningRepository _repository;
+        private IEventDateRepository _EventDateRepository;
         private IMapper _mapper;
 
-        public DatePlanningController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
+        public DatePlanningController(ILoggerManager logger, IDatePlanningRepository repository, IEventDateRepository eventDateRepository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
+            _EventDateRepository = eventDateRepository;
             _mapper = mapper;
         }
 
@@ -33,7 +35,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<DatePlanning> datePlannings = _repository.DatePlanning.GetAll();
+                IEnumerable<DatePlanning> datePlannings = _repository.GetAll();
 
                 _logger.LogInfo($"Returned all Artists from database.");
 
@@ -52,7 +54,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                DatePlanning datePlanning = _repository.DatePlanning.GetNextEvent();
+                DatePlanning datePlanning = _repository.GetNextEvent();
 
                 if (datePlanning == null)
                 {
@@ -77,7 +79,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<DatePlanning> datePlannings = _repository.DatePlanning.GetAllByEvent(id);
+                IEnumerable<DatePlanning> datePlannings = _repository.GetAllByEvent(id);
 
                 if (datePlannings == null)
                 {
@@ -102,7 +104,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                DatePlanning datePlanning = _repository.DatePlanning.GetById(id);
+                DatePlanning datePlanning = _repository.GetById(id);
 
                 if (datePlanning == null)
                 {
@@ -128,7 +130,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                DatePlanning datePlanning = _repository.DatePlanning.GetByIdWithDetails(id);
+                DatePlanning datePlanning = _repository.GetByIdWithDetails(id);
 
                 if (datePlanning == null)
                 {
@@ -140,7 +142,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 var Result = _mapper.Map<DatePlanningDto>(datePlanning);
 
-                ReviewController reviewController = new ReviewController(_logger, _repository, _mapper);
+                //ReviewController reviewController = new ReviewController(_logger, _repository, _mapper);
                 //Result.event_date.reviews = reviewController.GetByEventDate(Result.event_date.id);
 
                 //ArtistController artistController = new ArtistController(_logger, _repository, _mapper);
@@ -160,11 +162,11 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                DatePlanning datePlanning = _repository.DatePlanning.GetUpcomming(event_id);
+                DatePlanning datePlanning = _repository.GetUpcomming(event_id);
 
                 if (datePlanning == null)
                 {
-                    datePlanning = _repository.DatePlanning.GetLast(event_id);
+                    datePlanning = _repository.GetLast(event_id);
                 }
 
                 if (datePlanning == null)
@@ -172,7 +174,7 @@ namespace AspEventVieuwerAPI.Controllers
                     return NotFound();
                 }
 
-                datePlanning.event_date = _repository.EventDate.GetById(datePlanning.id);
+                datePlanning.event_date = _EventDateRepository.GetById(datePlanning.id);
                 datePlanning.event_date.DatePlanning = null;
 
                 DatePlanningDto datePlanningDto = _mapper.Map<DatePlanningDto>(datePlanning);
@@ -194,7 +196,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<DatePlanning> datePlanning = _repository.DatePlanning.GetFinishedEventDates(event_id);
+                IEnumerable<DatePlanning> datePlanning = _repository.GetFinishedEventDates(event_id);
 
                 List<DatePlanning> correctDatePlanning = new List<DatePlanning>();
                 foreach (DatePlanning date in datePlanning)
@@ -236,7 +238,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 var DataEntity = _mapper.Map<DatePlanning>(datePlanning);
 
-                _repository.DatePlanning.CreateDatePlanning(DataEntity);
+                _repository.Create(DataEntity);
                 _repository.Save();
 
                 var createdEntity = _mapper.Map<DatePlanningDto>(DataEntity);
@@ -268,7 +270,7 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.DatePlanning.GetById(datePlanning.id);
+                var DataEntity = _repository.GetById(datePlanning.id);
 
                 if (DataEntity == null)
                 {
@@ -278,7 +280,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 _mapper.Map(datePlanning, DataEntity);
 
-                _repository.DatePlanning.UpdateDatePlanning(DataEntity);
+                _repository.Update(DataEntity);
                 _repository.Save();
 
                 return Ok("date planning is updated");
@@ -295,14 +297,14 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var datePlanning = _repository.DatePlanning.GetById(id);
+                var datePlanning = _repository.GetById(id);
                 if (datePlanning == null)
                 {
                     _logger.LogError($"Date Planning with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _repository.DatePlanning.DeleteDatePlanning(datePlanning);
+                _repository.Delete(datePlanning);
                 _repository.Save();
 
                 return Ok("Date Planning is delted");

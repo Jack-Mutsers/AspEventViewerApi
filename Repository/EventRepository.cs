@@ -46,21 +46,6 @@ namespace Repository
                 .Include(e => e.datePlannings);
         }
 
-        public void CreateEvent(Event @event)
-        {
-            Create(@event);
-        }
-
-        public void DeleteEvent(Event @event)
-        {
-            Delete(@event);
-        }
-
-        public void UpdateEvent(Event @event)
-        {
-            Update(@event);
-        }
-
         public IEnumerable<Event> GetSortedByName(bool ascending)
         {
             if(ascending)

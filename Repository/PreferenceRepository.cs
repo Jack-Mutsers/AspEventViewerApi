@@ -12,16 +12,6 @@ namespace Repository
     {
         public PreferenceRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public void CreatePreference(Preference preference)
-        {
-            Create(preference);
-        }
-
-        public void DeletePreference(Preference preference)
-        {
-            Delete(preference);
-        }
-
         public Preference GetById(int preference_id)
         {
             return FindByCondition(p => p.id == preference_id).FirstOrDefault();
@@ -32,9 +22,5 @@ namespace Repository
             return FindByCondition(p => p.user_id == user_id);
         }
 
-        public void UpdatePreference(Preference preference)
-        {
-            Update(preference);
-        }
     }
 }

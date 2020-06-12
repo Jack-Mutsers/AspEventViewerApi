@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Contracts
 {
-    public interface IDatePlanningRepository
+    public interface IDatePlanningRepository : IUniversalRepository<DatePlanning>
     {
         IEnumerable<DatePlanning> GetAll();
         IEnumerable<DatePlanning> GetAllByEvent(int event_id);
@@ -15,8 +15,5 @@ namespace Contracts
         DatePlanning GetByIdWithDetails(int planning_id);
         DatePlanning GetUpcomming(int event_id);
         DatePlanning GetLast(int event_id);
-        void CreateDatePlanning(DatePlanning date_planning);
-        void UpdateDatePlanning(DatePlanning date_planning);
-        void DeleteDatePlanning(DatePlanning date_planning);
     }
 }

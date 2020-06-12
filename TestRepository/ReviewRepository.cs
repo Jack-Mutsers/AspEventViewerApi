@@ -9,22 +9,22 @@ using System.Text;
 
 namespace TestRepository
 {
-    public class ReviewRepository : IReviewRepository
+    public class ReviewRepository : RepositoryBase, IReviewRepository
     {
         RepositoryCollection collection = new RepositoryCollection();
         private readonly List<Review> _reviews;
 
-        public ReviewRepository() 
+        public ReviewRepository(RepositoryContext repositoryContext = null) : base(repositoryContext)
         {
             _reviews = collection.reviews;
         }
 
-        public void CreateReview(Review review)
+        public void Create(Review review)
         {
             _reviews.Add(review);
         }
 
-        public void DeleteReview(Review review)
+        public void Delete(Review review)
         {
             _reviews.Remove(review);
         }
@@ -51,11 +51,12 @@ namespace TestRepository
             return _reviews.Where(r => r.id == review_id).FirstOrDefault();
         }
 
-        public void UpdateReview(Review review)
+        public void Update(Review review)
         {
             Review review1 = _reviews.FirstOrDefault(r => r.id == review.id);
             if (review1 != null)
                 review1 = review;
         }
+
     }
 }

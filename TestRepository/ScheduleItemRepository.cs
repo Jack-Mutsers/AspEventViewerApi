@@ -9,22 +9,22 @@ using System.Text;
 
 namespace TestRepository
 {
-    public class ScheduleItemRepository : IScheduleItemRepository
+    public class ScheduleItemRepository : RepositoryBase, IScheduleItemRepository
     {
         RepositoryCollection collection = new RepositoryCollection();
         private readonly List<ScheduleItem> _scheduleItems;
 
-        public ScheduleItemRepository() 
+        public ScheduleItemRepository(RepositoryContext repositoryContext = null) : base(repositoryContext)
         {
             _scheduleItems = collection.scheduleItems;
         }
 
-        public void CreateScheduleItem(ScheduleItem scheduleItem)
+        public void Create(ScheduleItem scheduleItem)
         {
             _scheduleItems.Add(scheduleItem);
         }
 
-        public void DeleteScheduleItem(ScheduleItem scheduleItem)
+        public void Delete(ScheduleItem scheduleItem)
         {
             _scheduleItems.Remove(scheduleItem);
         }
@@ -48,11 +48,12 @@ namespace TestRepository
             return _scheduleItems.Where(si => si.schedule_id == schedule_id);
         }
 
-        public void UpdateScheduleItem(ScheduleItem scheduleItem)
+        public void Update(ScheduleItem scheduleItem)
         {
             ScheduleItem scheduleItem1 = _scheduleItems.FirstOrDefault(s => s.id == scheduleItem.id);
             if (scheduleItem1 != null)
                 scheduleItem1 = scheduleItem;
         }
+
     }
 }

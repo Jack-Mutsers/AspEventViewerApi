@@ -12,7 +12,7 @@ namespace XUnitTest.Tests
         public DatePlanningControllerTest()
         {
             requrements = new ControllerRequrements();
-            _controller = new DatePlanningController(requrements.logger, requrements.repository, requrements.mapper);
+            _controller = new DatePlanningController(requrements.logger, requrements.repository.DatePlanning, requrements.repository.EventDate, requrements.mapper);
         }
 
         [Fact]

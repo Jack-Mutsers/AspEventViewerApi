@@ -12,7 +12,7 @@ namespace XUnitTest.Tests
         public EventDateControllerTest()
         {
             requrements = new ControllerRequrements();
-            _controller = new EventDateController(requrements.logger, requrements.repository, requrements.mapper);
+            _controller = new EventDateController(requrements.logger, requrements.repository.EventDate, requrements.mapper);
         }
 
         [Fact]

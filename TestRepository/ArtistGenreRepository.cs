@@ -9,12 +9,13 @@ using System.Text;
 
 namespace TestRepository
 {
-    public class ArtistGenreRepository : IArtistGenreRepository
+    public class ArtistGenreRepository : RepositoryBase, IArtistGenreRepository
     {
         RepositoryCollection collection = new RepositoryCollection();
         private readonly List<ArtistGenre> _artistGenres;
 
-        public ArtistGenreRepository() 
+
+        public ArtistGenreRepository(RepositoryContext repositoryContext = null) :base(repositoryContext)
         {
             _artistGenres = collection.artistGenres;
         }
@@ -39,6 +40,21 @@ namespace TestRepository
         public IEnumerable<ArtistGenre> GetByGenre(int genre_id)
         {
             return _artistGenres.Where(eg => eg.genre_id == genre_id);
+        }
+
+        public void Create(ArtistGenre model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(ArtistGenre model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(ArtistGenre model)
+        {
+            throw new NotImplementedException();
         }
     }
 }

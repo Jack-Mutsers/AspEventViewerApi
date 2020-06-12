@@ -13,16 +13,6 @@ namespace Repository
     {
         public ScheduleRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public void CreateSchedule(Schedule schedule)
-        {
-            Create(schedule);
-        }
-
-        public void DeleteSchedule(Schedule schedule)
-        {
-            Delete(schedule);
-        }
-
         public IEnumerable<Schedule> GetAll()
         {
             return FindAll().Include(ac => ac.stage).Include(ac => ac.@event);
@@ -43,9 +33,5 @@ namespace Repository
             return FindByCondition(s => s.stage_id == stage_id).Include(ac => ac.scheduleItems).Include(ac => ac.stage).Include(ac => ac.@event).FirstOrDefault();
         }
 
-        public void UpdateSchedule(Schedule schedule)
-        {
-            Update(schedule);
-        }
     }
 }

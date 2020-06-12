@@ -9,22 +9,22 @@ using System.Text;
 
 namespace TestRepository
 {
-    public class StageRepository : IStageRepository
+    public class StageRepository : RepositoryBase, IStageRepository
     {
         RepositoryCollection collection = new RepositoryCollection();
         private readonly List<Stage> _stages;
 
-        public StageRepository()
+        public StageRepository(RepositoryContext repositoryContext = null) : base(repositoryContext)
         {
             _stages = collection.stages;
         }
 
-        public void CreateStage(Stage stage)
+        public void Create(Stage stage)
         {
             _stages.Add(stage);
         }
 
-        public void DeleteStage(Stage stage)
+        public void Delete(Stage stage)
         {
             _stages.Remove(stage);
         }
@@ -78,11 +78,12 @@ namespace TestRepository
             return _stages.Where(s => s.id == stage_id).FirstOrDefault();
         }
 
-        public void UpdateStage(Stage stage)
+        public void Update(Stage stage)
         {
             Stage stage1 = _stages.FirstOrDefault(s => s.id == stage.id);
             if (stage1 != null)
                 stage1 = stage;
         }
+
     }
 }

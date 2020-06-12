@@ -9,22 +9,22 @@ using System.Text;
 
 namespace TestRepository
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : RepositoryBase, IUserRepository
     {
         RepositoryCollection collection = new RepositoryCollection();
         private readonly List<User> _users;
 
-        public UserRepository() 
+        public UserRepository(RepositoryContext repositoryContext = null) : base(repositoryContext)
         {
             _users = collection.users;
         }
 
-        public void CreateUser(User user)
+        public void Create(User user)
         {
             _users.Add(user);
         }
 
-        public void DeleteUser(User user)
+        public void Delete(User user)
         {
             _users.Remove(user);
         }
@@ -59,11 +59,12 @@ namespace TestRepository
             return user;
         }
 
-        public void UpdateUser(User user)
+        public void Update(User user)
         {
             User user1 = _users.FirstOrDefault(u => u.id == user.id);
             if (user1 != null)
                 user1 = user;
         }
+
     }
 }

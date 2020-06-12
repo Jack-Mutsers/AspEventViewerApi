@@ -13,16 +13,6 @@ namespace Repository
     {
         public UserRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public void CreateUser(User user)
-        {
-            Create(user);
-        }
-
-        public void DeleteUser(User user)
-        {
-            Delete(user);
-        }
-
         public User GetById(int User_id)
         {
             return FindByCondition(u => u.id == User_id)
@@ -39,9 +29,5 @@ namespace Repository
                 .FirstOrDefault();
         }
 
-        public void UpdateUser(User user)
-        {
-            Update(user);
-        }
     }
 }

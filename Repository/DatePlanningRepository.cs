@@ -13,16 +13,6 @@ namespace Repository
     {
         public DatePlanningRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public void CreateDatePlanning(DatePlanning date_planning)
-        {
-            Create(date_planning);
-        }
-
-        public void DeleteDatePlanning(DatePlanning date_planning)
-        {
-            Delete(date_planning);
-        }
-
         public IEnumerable<DatePlanning> GetAll()
         {
             return FindAll()
@@ -45,17 +35,10 @@ namespace Repository
 
         public DatePlanning GetByIdWithDetails(int planning_id)
         {
-            //return FindByCondition(dp => dp.id == planning_id)
-            //    .Include(dp => dp.@event).ThenInclude(e => e.genre).ThenInclude(eg => eg.genre)
-            //    .Include(dp => dp.event_date).ThenInclude(ed => ed.stages).ThenInclude(st => st.schedule).ThenInclude(sc => sc.scheduleItems).ThenInclude(si => si.artist)
-            //    .Include(dp => dp.event_date).ThenInclude(ed => ed.reviews.Where(r => r.validated == true)).ThenInclude(r => r.user)
-            //    .FirstOrDefault();
-
             return FindByCondition(dp => dp.id == planning_id)
                 .Include(dp => dp.@event).ThenInclude(e => e.genre).ThenInclude(eg => eg.genre)
-                .Include(dp => dp.event_date)//.ThenInclude(ed => ed.stages).ThenInclude(st => st.schedule).ThenInclude(sc => sc.scheduleItems).ThenInclude(si => si.artist)
+                .Include(dp => dp.event_date)
                 .FirstOrDefault();
-
         }
 
         public IEnumerable<DatePlanning> GetFinishedEventDates(int event_id)
@@ -88,9 +71,5 @@ namespace Repository
                 .FirstOrDefault();
         }
 
-        public void UpdateDatePlanning(DatePlanning date_planning)
-        {
-            Update(date_planning);
-        }
     }
 }

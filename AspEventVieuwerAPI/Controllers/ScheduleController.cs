@@ -18,10 +18,10 @@ namespace AspEventVieuwerAPI.Controllers
     public class ScheduleController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IRepositoryWrapper _repository;
+        private IScheduleRepository _repository;
         private IMapper _mapper;
 
-        public ScheduleController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
+        public ScheduleController(ILoggerManager logger, IScheduleRepository repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
@@ -33,7 +33,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var schedules = _repository.Schedule.GetAll();
+                var schedules = _repository.GetAll();
 
                 _logger.LogInfo($"Returned all Schedules from database.");
 
@@ -52,7 +52,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var schedule = _repository.Schedule.GetByStage(id);
+                var schedule = _repository.GetByStage(id);
 
                 if (schedule == null)
                 {
@@ -77,7 +77,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var schedule = _repository.Schedule.GetByStageWithDetails(id);
+                var schedule = _repository.GetByStageWithDetails(id);
 
                 if (schedule == null)
                 {
@@ -102,7 +102,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var schedule = _repository.Schedule.GetById(id);
+                var schedule = _repository.GetById(id);
 
                 if (schedule == null)
                 {
@@ -141,7 +141,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 var DataEntity = _mapper.Map<Schedule>(schedule);
 
-                _repository.Schedule.CreateSchedule(DataEntity);
+                _repository.Create(DataEntity);
                 _repository.Save();
 
                 var createdEntity = _mapper.Map<ArtistDto>(DataEntity);
@@ -157,11 +157,11 @@ namespace AspEventVieuwerAPI.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateSchedule([FromBody]ArtistForUpdateDto artist)
+        public IActionResult UpdateSchedule([FromBody]ScheduleForUpdateDto schedule) 
         {
             try
             {
-                if (artist == null)
+                if (schedule == null)
                 {
                     _logger.LogError("Schedule object sent from client is null.");
                     return BadRequest("Schedule object is null");
@@ -173,16 +173,16 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.Artist.GetById(artist.id);
+                var DataEntity = _repository.GetById(schedule.id);
                 if (DataEntity == null)
                 {
-                    _logger.LogError($"Schedule with id: {artist.id}, hasn't been found in db.");
+                    _logger.LogError($"Schedule with id: {schedule.id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _mapper.Map(artist, DataEntity);
+                _mapper.Map(schedule, DataEntity);
 
-                _repository.Artist.UpdateArtist(DataEntity);
+                _repository.Update(DataEntity);
                 _repository.Save();
 
                 return Ok("Schedule is updated");
@@ -199,14 +199,14 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var artist = _repository.Artist.GetById(id);
-                if (artist == null)
+                var schedule = _repository.GetById(id);
+                if (schedule == null)
                 {
                     _logger.LogError($"Schedule with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _repository.Artist.DeleteArtist(artist);
+                _repository.Delete(schedule);
                 _repository.Save();
 
                 return Ok("Schedule is delted");

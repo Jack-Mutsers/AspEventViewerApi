@@ -37,9 +37,5 @@ namespace Repository
                 .Select(eg => eg.@event);
         }
 
-        public void DeleteEventGenre(EventGenre eventGenre)
-        {
-            Delete(eventGenre);
-        }
     }
 }

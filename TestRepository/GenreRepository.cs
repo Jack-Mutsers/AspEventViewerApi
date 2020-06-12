@@ -9,12 +9,12 @@ using System.Text;
 
 namespace TestRepository
 {
-    public class GenreRepository : IGenreRepository
+    public class GenreRepository : RepositoryBase, IGenreRepository
     {
         RepositoryCollection collection = new RepositoryCollection();
         private readonly List<Genre> _genres;
 
-        public GenreRepository() 
+        public GenreRepository(RepositoryContext repositoryContext = null) : base(repositoryContext)
         {
             _genres = collection.genres;
         }
@@ -52,5 +52,21 @@ namespace TestRepository
         {
             return _genres.Where(g => g.id == genre_id).FirstOrDefault();
         }
+
+        public void Create(Genre model)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void Update(Genre model)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void Delete(Genre model)
+        {
+            //throw new NotImplementedException();
+        }
+
     }
 }

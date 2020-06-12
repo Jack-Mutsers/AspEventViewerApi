@@ -10,12 +10,12 @@ using System.Text;
 
 namespace TestRepository
 {
-    public class EventRepository : IEventRepository
+    public class EventRepository : RepositoryBase, IEventRepository
     {
         RepositoryCollection collection = new RepositoryCollection();
         private readonly List<Event> _events;
 
-        public EventRepository()
+        public EventRepository(RepositoryContext repositoryContext = null) : base(repositoryContext)
         {
             _events = collection.events;
         }
@@ -93,17 +93,17 @@ namespace TestRepository
             return events;
         }
 
-        public void CreateEvent(Event @event)
+        public void Create(Event @event)
         {
             _events.Add(@event);
         }
 
-        public void DeleteEvent(Event @event)
+        public void Delete(Event @event)
         {
             _events.Remove(@event);
         }
 
-        public void UpdateEvent(Event @event)
+        public void Update(Event @event)
         {
             Event @event2 = _events.FirstOrDefault(e => e.id == @event.id);
             if (@event2 != null)
@@ -138,5 +138,6 @@ namespace TestRepository
             EventSorter sorter = new EventSorter();
             return sorter.OrderByStartDate(events, ascending);
         }
+
     }
 }

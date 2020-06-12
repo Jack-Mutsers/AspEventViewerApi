@@ -18,10 +18,10 @@ namespace AspEventVieuwerAPI.Controllers
     public class ArtistController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IRepositoryWrapper _repository;
+        private IArtistRepository _repository;
         private IMapper _mapper;
 
-        public ArtistController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
+        public ArtistController(ILoggerManager logger, IArtistRepository repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
@@ -33,7 +33,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Artist> artist = _repository.Artist.GetAllArtists();
+                IEnumerable<Artist> artist = _repository.GetAllArtists();
 
                 _logger.LogInfo($"Returned all Artists from database.");
 
@@ -52,7 +52,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Artist> artists = _repository.Artist.GetArtistsByEventDate(event_date_id);
+                IEnumerable<Artist> artists = _repository.GetArtistsByEventDate(event_date_id);
 
                 if (artists == null)
                 {
@@ -77,7 +77,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var art = _repository.Artist.GetById(id);
+                var art = _repository.GetById(id);
 
                 if (art == null)
                 {
@@ -102,7 +102,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var art = _repository.Artist.GetByIdWithDetails(id);
+                var art = _repository.GetByIdWithDetails(id);
 
                 if (art == null)
                 {
@@ -166,7 +166,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 var DataEntity = _mapper.Map<Artist>(artist);
 
-                _repository.Artist.CreateArtist(DataEntity);
+                _repository.Create(DataEntity);
                 _repository.Save();
 
                 var createdEntity = _mapper.Map<ArtistDto>(DataEntity);
@@ -198,7 +198,7 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.Artist.GetById(artist.id);
+                var DataEntity = _repository.GetById(artist.id);
                 if (DataEntity == null)
                 {
                     _logger.LogError($"Artist with id: {artist.id}, hasn't been found in db.");
@@ -207,7 +207,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 _mapper.Map(artist, DataEntity);
 
-                _repository.Artist.UpdateArtist(DataEntity);
+                _repository.Update(DataEntity);
                 _repository.Save();
 
                 return Ok("Artist is updated");
@@ -224,14 +224,14 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var artist = _repository.Artist.GetById(id);
+                var artist = _repository.GetById(id);
                 if (artist == null)
                 {
                     _logger.LogError($"Artist with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _repository.Artist.DeleteArtist(artist);
+                _repository.Delete(artist);
                 _repository.Save();
 
                 return Ok("Artist is delted");

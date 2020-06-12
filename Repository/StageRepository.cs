@@ -13,16 +13,6 @@ namespace Repository
     {
         public StageRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public void CreateStage(Stage stage)
-        {
-            Create(stage);
-        }
-
-        public void DeleteStage(Stage stage)
-        {
-            Delete(stage);
-        }
-
         public IEnumerable<Stage> GetAll()
         {
             return FindAll().Include(s=>s.schedule).ThenInclude(sc => sc.scheduleItems).ThenInclude(si => si.artist);
@@ -39,9 +29,5 @@ namespace Repository
             return FindByCondition(s => s.id == stage_id).FirstOrDefault();
         }
 
-        public void UpdateStage(Stage stage)
-        {
-            Update(stage);
-        }
     }
 }

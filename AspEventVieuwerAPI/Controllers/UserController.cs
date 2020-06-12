@@ -19,10 +19,10 @@ namespace AspEventVieuwerAPI.Controllers
     public class UserController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IRepositoryWrapper _repository;
+        private IUserRepository _repository;
         private IMapper _mapper;
 
-        public UserController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
+        public UserController(ILoggerManager logger, IUserRepository repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
@@ -34,7 +34,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var user = _repository.User.GetById(id);
+                var user = _repository.GetById(id);
 
                 if (user == null)
                 {
@@ -60,7 +60,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var userData = _repository.User.GetUserByLogin(user.username, user.password);
+                var userData = _repository.GetUserByLogin(user.username, user.password);
 
                 if (userData == null)
                 {
@@ -105,7 +105,7 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                User userCheck = _repository.User.GetUserByLogin(user.username, "");
+                User userCheck = _repository.GetUserByLogin(user.username, "");
                 if (userCheck != null)
                 {
                     _logger.LogError("Username is already in use");
@@ -117,7 +117,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 var DataEntity = _mapper.Map<User>(user);
 
-                _repository.User.CreateUser(DataEntity);
+                _repository.Create(DataEntity);
                 _repository.Save();
 
                 //var createdEntity = _mapper.Map<UserDto>(DataEntity);
@@ -152,7 +152,7 @@ namespace AspEventVieuwerAPI.Controllers
                 Hasher hasher = new Hasher();
                 user.password = hasher.HashPassword(user.password);
 
-                var DataEntity = _repository.User.GetById(user.id);
+                var DataEntity = _repository.GetById(user.id);
                 if (DataEntity == null)
                 {
                     _logger.LogError($"User with id: {user.id}, hasn't been found in db.");
@@ -161,7 +161,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 _mapper.Map(user, DataEntity);
 
-                _repository.User.UpdateUser(DataEntity);
+                _repository.Update(DataEntity);
                 _repository.Save();
 
                 return Ok("User is updated");
@@ -178,14 +178,14 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var user = _repository.User.GetById(id);
+                var user = _repository.GetById(id);
                 if (user == null)
                 {
                     _logger.LogError($"User with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _repository.User.DeleteUser(user);
+                _repository.Delete(user);
                 _repository.Save();
 
                 return Ok("User is delted");

@@ -9,22 +9,22 @@ using System.Text;
 
 namespace TestRepository
 {
-    public class DatePlanningRepository : IDatePlanningRepository
+    public class DatePlanningRepository : RepositoryBase, IDatePlanningRepository
     {
         RepositoryCollection collection = new RepositoryCollection();
         private readonly List<DatePlanning> _datePlannings;
 
-        public DatePlanningRepository()
+        public DatePlanningRepository(RepositoryContext repositoryContext = null) : base(repositoryContext)
         {
             _datePlannings = collection.datePlannings;
         }
 
-        public void CreateDatePlanning(DatePlanning date_planning)
+        public void Create(DatePlanning date_planning)
         {
             _datePlannings.Add(date_planning);
         }
 
-        public void DeleteDatePlanning(DatePlanning date_planning)
+        public void Delete(DatePlanning date_planning)
         {
             _datePlannings.Remove(date_planning);
         }
@@ -117,11 +117,12 @@ namespace TestRepository
             return datePlanning;
         }
 
-        public void UpdateDatePlanning(DatePlanning date_planning)
+        public void Update(DatePlanning date_planning)
         {
             DatePlanning datePlanning = _datePlannings.FirstOrDefault(dp => dp.id == date_planning.id);
             if (datePlanning != null)
                 datePlanning = date_planning;
         }
+
     }
 }

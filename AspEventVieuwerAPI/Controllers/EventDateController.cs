@@ -9,6 +9,7 @@ using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Repository;
 
 namespace AspEventVieuwerAPI.Controllers
 {
@@ -18,10 +19,10 @@ namespace AspEventVieuwerAPI.Controllers
     public class EventDateController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IRepositoryWrapper _repository;
+        private IEventDateRepository _repository;
         private IMapper _mapper;
 
-        public EventDateController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
+        public EventDateController(ILoggerManager logger, IEventDateRepository repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
@@ -33,7 +34,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var eventDate = _repository.EventDate.GetById(id);
+                var eventDate = _repository.GetById(id);
 
                 if (eventDate == null)
                 {
@@ -59,7 +60,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var eventDate = _repository.EventDate.GetByIdWithDetails(id);
+                var eventDate = _repository.GetByIdWithDetails(id);
 
                 if (eventDate == null)
                 {
@@ -71,7 +72,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 var Result = _mapper.Map<EventDateDto>(eventDate);
 
-                ArtistController artistController = new ArtistController(_logger, _repository, _mapper);
+                ArtistController artistController = new ArtistController(_logger, new ArtistRepository(_repository.RepositoryContext), _mapper);
                 //Result.artists = artistController.GetArtistsByEventDate(Result.id);
 
                 return Ok(Result);
@@ -102,7 +103,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 var DataEntity = _mapper.Map<EventDate>(eventDate);
 
-                _repository.EventDate.CreateEventDate(DataEntity);
+                _repository.Create(DataEntity);
                 _repository.Save();
 
                 var createdEntity = _mapper.Map<EventDateDto>(DataEntity);
@@ -134,7 +135,7 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.EventDate.GetById(eventDate.id);
+                var DataEntity = _repository.GetById(eventDate.id);
                 if (DataEntity == null)
                 {
                     _logger.LogError($"EventDate with id: {eventDate.id}, hasn't been found in db.");
@@ -143,7 +144,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 _mapper.Map(eventDate, DataEntity);
 
-                _repository.EventDate.UpdateEventDate(DataEntity);
+                _repository.Update(DataEntity);
                 _repository.Save();
 
                 return Ok("EventDate is updated");
@@ -160,14 +161,14 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var eventDate = _repository.EventDate.GetById(id);
+                var eventDate = _repository.GetById(id);
                 if (eventDate == null)
                 {
                     _logger.LogError($"EventDate with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _repository.EventDate.DeleteEventDate(eventDate);
+                _repository.Delete(eventDate);
                 _repository.Save();
 
                 return Ok("EventDate is delted");

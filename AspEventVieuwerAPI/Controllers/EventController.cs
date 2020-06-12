@@ -21,13 +21,15 @@ namespace AspEventVieuwerAPI.Controllers
     public class EventController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IRepositoryWrapper _repository;
+        private IEventRepository _repository;
+        private IEventGenreRepository _EventGenreRepository;
         private IMapper _mapper;
 
-        public EventController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
+        public EventController(ILoggerManager logger, IEventRepository repository, IEventGenreRepository eventGenreRepository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
+            _EventGenreRepository = eventGenreRepository;
             _mapper = mapper;
         }
 
@@ -36,7 +38,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Event> @events = _repository.Event.GetAllEvents();
+                IEnumerable<Event> @events = _repository.GetAllEvents();
 
                 _logger.LogInfo($"Returned all Events from database.");
 
@@ -56,7 +58,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Event> @events = _repository.Event.GetAllActiveEvents();
+                IEnumerable<Event> @events = _repository.GetAllActiveEvents();
 
                 _logger.LogInfo($"Returned all active Events from database.");
 
@@ -79,7 +81,7 @@ namespace AspEventVieuwerAPI.Controllers
                 IEnumerable<Event> sorted_events = null;
 
                 if(orderRequest.FieldName == "name")
-                    sorted_events =_repository.Event.GetSortedByName(orderRequest.Ascending);
+                    sorted_events =_repository.GetSortedByName(orderRequest.Ascending);
 
                 else if (orderRequest.FieldName == "startdate")
                     sorted_events = GetEventByStartDate(orderRequest.Ascending);
@@ -102,7 +104,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var @event = _repository.Event.GetByIdWithDetails(id);
+                var @event = _repository.GetByIdWithDetails(id);
 
                 if (@event == null)
                 {
@@ -115,7 +117,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 EventDto eventDto = _mapper.Map<EventDto>(@event);
 
-                DatePlanningController datePlanningController = new DatePlanningController(_logger, _repository, _mapper);
+                //DatePlanningController datePlanningController = new DatePlanningController(_logger, _repository, _mapper);
 
                 return Ok(eventDto);
 
@@ -132,7 +134,7 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var @event = _repository.Event.GetById(id);
+                var @event = _repository.GetById(id);
 
                 if (@event == null)
                 {
@@ -160,9 +162,9 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Event> @events = genre_id > 0 ? 
-                    _repository.EventGenre.GetEventsByGenre(genre_id) : 
-                    _repository.Event.GetAllActiveEvents();
+                IEnumerable<Event> @events = genre_id > 0 ?
+                    _EventGenreRepository.GetEventsByGenre(genre_id) : 
+                    _repository.GetAllActiveEvents();
 
                 _logger.LogInfo($"Returned all Events with genre id: {genre_id} from database.");
 
@@ -183,8 +185,8 @@ namespace AspEventVieuwerAPI.Controllers
             try
             {
                 IEnumerable<Event> events = name == "" ? 
-                    _repository.Event.GetAllActiveEvents() :
-                    _repository.Event.GetByName(name);
+                    _repository.GetAllActiveEvents() :
+                    _repository.GetByName(name);
 
                 _logger.LogInfo($"Returned all Events with names that contain: {name} from database.");
 
@@ -203,14 +205,14 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Event> @events = _repository.Event.GetSortedByStartDate(ascending);
+                IEnumerable<Event> @events = _repository.GetSortedByStartDate(ascending);
 
                 _logger.LogInfo($"Returned all Events from database.");
 
                 List<Event> eventsList = new List<Event>();
                 foreach(Event @event in @events.ToList())
                 {
-                    IEnumerable<EventGenre> eventGenres = _repository.EventGenre.GetByEventWithDetails(@event.id);
+                    IEnumerable<EventGenre> eventGenres = _EventGenreRepository.GetByEventWithDetails(@event.id);
                     @event.genre = _mapper.Map<ICollection<EventGenre>>(eventGenres);
                     eventsList.Add(@event);
                 }
@@ -243,7 +245,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 var DataEntity = _mapper.Map<Event>(@event);
 
-                _repository.Event.CreateEvent(DataEntity);
+                _repository.Create(DataEntity);
                 _repository.Save();
 
                 var createdEntity = _mapper.Map<EventDto>(DataEntity);
@@ -275,7 +277,7 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.Event.GetById(@event.id);
+                var DataEntity = _repository.GetById(@event.id);
                 if (DataEntity == null)
                 {
                     _logger.LogError($"Event with id: {@event.id}, hasn't been found in db.");
@@ -284,13 +286,13 @@ namespace AspEventVieuwerAPI.Controllers
 
                 _mapper.Map(@event, DataEntity);
 
-                IEnumerable<EventGenre> eventGenres = _repository.EventGenre.GetByEvent(DataEntity.id);
+                IEnumerable<EventGenre> eventGenres = _EventGenreRepository.GetByEvent(DataEntity.id);
                 foreach (EventGenre eventGenre in eventGenres)
                 {
-                    _repository.EventGenre.DeleteEventGenre(eventGenre);
+                    _EventGenreRepository.Delete(eventGenre);
                 }
 
-                _repository.Event.UpdateEvent(DataEntity);
+                _repository.Update(DataEntity);
                 _repository.Save();
 
                 return Ok(true);
@@ -307,14 +309,14 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var @event = _repository.Event.GetById(id);
+                var @event = _repository.GetById(id);
                 if (@event == null)
                 {
                     _logger.LogError($"Event with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _repository.Event.DeleteEvent(@event);
+                _repository.Delete(@event);
                 _repository.Save();
 
                 return Ok(true);

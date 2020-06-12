@@ -6,10 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AspEventVieuwerAPI.Extensions
 {
@@ -25,7 +21,6 @@ namespace AspEventVieuwerAPI.Extensions
                     .AllowAnyHeader());
             });
         }
-
 
         public static void ConfigureIISIntegration(this IServiceCollection services)
         {
@@ -48,7 +43,20 @@ namespace AspEventVieuwerAPI.Extensions
 
         public static void ConfigureRepositoryWrapper(this IServiceCollection services)
         {
-            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            //services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            services.AddScoped<IArtistGenreRepository, ArtistGenreRepository>();
+            services.AddScoped<IArtistRepository, ArtistRepository>();
+            services.AddScoped<IDatePlanningRepository, DatePlanningRepository>();
+            services.AddScoped<IEventDateRepository, EventDateRepository>();
+            services.AddScoped<IEventGenreRepository, EventGenreRepository>();
+            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IGenreRepository, GenreRepository>();
+            services.AddScoped<IPreferenceRepository, PreferenceRepository>();
+            services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IScheduleItemRepository, ScheduleItemRepository>();
+            services.AddScoped<IScheduleRepository, ScheduleRepository>();
+            services.AddScoped<IStageRepository, StageRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
     }
 }

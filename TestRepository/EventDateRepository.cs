@@ -9,22 +9,22 @@ using System.Text;
 
 namespace TestRepository
 {
-    public class EventDateRepository : IEventDateRepository
+    public class EventDateRepository : RepositoryBase, IEventDateRepository
     {
         RepositoryCollection collection = new RepositoryCollection();
         private readonly List<EventDate> _eventDates;
 
-        public EventDateRepository()
+        public EventDateRepository(RepositoryContext repositoryContext = null) : base(repositoryContext)
         {
             _eventDates = collection.eventDates;
         }
 
-        public void CreateEventDate(EventDate event_date)
+        public void Create(EventDate event_date)
         {
             _eventDates.Add(event_date);
         }
 
-        public void DeleteEventDate(EventDate event_date)
+        public void Delete(EventDate event_date)
         {
             _eventDates.Remove(event_date);
         }
@@ -76,11 +76,12 @@ namespace TestRepository
             return eventDate;
         }
 
-        public void UpdateEventDate(EventDate event_date)
+        public void Update(EventDate event_date)
         {
             EventDate eventDate = _eventDates.FirstOrDefault(ed => ed.id == event_date.id);
             if (eventDate != null)
                 eventDate = event_date;
         }
+
     }
 }

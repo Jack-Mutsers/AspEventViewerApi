@@ -13,16 +13,6 @@ namespace Repository
     {
         public ReviewRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public void CreateReview(Review review)
-        {
-            Create(review);
-        }
-
-        public void DeleteReview(Review review)
-        {
-            Delete(review);
-        }
-
         public IEnumerable<Review> GetAllOpenReviews()
         {
             return FindByCondition(r => r.validated == false);
@@ -39,9 +29,5 @@ namespace Repository
             return FindByCondition(r => r.id == review_id).FirstOrDefault();
         }
 
-        public void UpdateReview(Review review)
-        {
-            Update(review);
-        }
     }
 }

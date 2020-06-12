@@ -13,16 +13,6 @@ namespace Repository
     {
         public ArtistRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public void CreateArtist(Artist artist)
-        {
-            Create(artist);
-        }
-
-        public void DeleteArtist(Artist artist)
-        {
-            Delete(artist);
-        }
-
         public IEnumerable<Artist> GetAllArtists()
         {
             return FindAll();
@@ -46,14 +36,11 @@ namespace Repository
             return FindByCondition(a => a.id == artist_id).FirstOrDefault();
         }
 
-        public void UpdateArtist(Artist artist)
-        {
-            Update(artist);
-        }
-
         public Artist GetByIdWithDetails(int artist_id)
         {
             return FindByCondition(a => a.id == artist_id).Include(a => a.genre).FirstOrDefault();
         }
+
+
     }
 }
