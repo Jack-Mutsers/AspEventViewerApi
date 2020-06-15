@@ -6,6 +6,7 @@ using AspEventVieuwerAPI.Authentication;
 using AutoMapper;
 using Contracts;
 using Contracts.Logger;
+using Contracts.Logic;
 using Contracts.Repository;
 using Entities.DataTransferObjects;
 using Entities.Models;

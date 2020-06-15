@@ -6,6 +6,7 @@ using AspEventVieuwerAPI.Authentication;
 using AutoMapper;
 using Contracts;
 using Contracts.Logger;
+using Contracts.Logic;
 using Contracts.Repository;
 using Entities.DataTransferObjects;
 using Entities.Models;
@@ -24,13 +25,15 @@ namespace AspEventVieuwerAPI.Controllers
         //private IEventDateRepository _EventDateRepository;
         private IDatePlanningLogic _datePlanningLogic;
         private IEventDateLogic _eventDateLogic;
+        private IArtistLogic _artistLogic;
         private IMapper _mapper;
 
-        public DatePlanningController(ILoggerManager logger, IDatePlanningLogic datePlanningLogic, IEventDateLogic eventDateLogic, IMapper mapper)
+        public DatePlanningController(ILoggerManager logger, IDatePlanningLogic datePlanningLogic, IEventDateLogic eventDateLogic, IArtistLogic artistLogic, IMapper mapper)
         {
             _logger = logger;
             _datePlanningLogic = datePlanningLogic;
             _eventDateLogic = eventDateLogic;
+            _artistLogic = artistLogic;
             _mapper = mapper;
         }
 
@@ -148,6 +151,7 @@ namespace AspEventVieuwerAPI.Controllers
                 }
 
                 datePlanning.event_date = _eventDateLogic.GetByDatePlanning(datePlanning.id);
+                datePlanning.event_date.artists = _artistLogic.GetArtistsByEventDate(datePlanning.event_date.id);
 
                 return Ok(datePlanning);
             }

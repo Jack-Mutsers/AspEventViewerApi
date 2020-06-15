@@ -84,5 +84,12 @@ namespace TestRepository
                 eventDate = event_date;
         }
 
+        public EventDate GetByDatePlanning(int date_planning_id)
+        {
+            return null;
+            //return collection.datePlannings.Where(ed => ed.DatePlanning.id == date_planning_id)
+            //    .Include(ed => ed.DatePlanning)
+            //    .FirstOrDefault();
+        }
     }
 }

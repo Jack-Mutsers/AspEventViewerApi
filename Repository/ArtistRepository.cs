@@ -23,10 +23,7 @@ namespace Repository
 
         public IEnumerable<Artist> GetArtistsByEventDate(int event_date_id)
         {
-            return FindByCondition(a => a.ScheduleItem.schedule.stage.event_date_id == event_date_id)
-                //.Include(a => a.genre)
-                //.Include(a => a.ScheduleItem).ThenInclude(si => si.schedule).ThenInclude(sc => sc.stage)
-                ;
+            return FindByCondition(a => a.ScheduleItem.schedule.stage.event_date_id == event_date_id).OrderBy(a => a.name).Distinct();
         }
 
         public Artist GetById(int artist_id)

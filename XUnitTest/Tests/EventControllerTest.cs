@@ -12,7 +12,7 @@ namespace XUnitTest.Tests
         public EventControllerTest()
         {
             requrements = new ControllerRequrements();
-            _controller = new EventController(requrements.logger, requrements.repository.Event, requrements.repository.EventGenre, requrements.mapper);
+            //_controller = new EventController(requrements.logger, requrements.repository.Event, requrements.repository.EventGenre, requrements.mapper);
         }
 
         [Fact]

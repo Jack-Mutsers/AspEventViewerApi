@@ -9,6 +9,7 @@ namespace Contracts.Repository
     public interface IEventDateRepository : IUniversalRepository<EventDate>
     {
         EventDate GetById(int event_date_id);
+        EventDate GetByDatePlanning(int date_planning_id);
         EventDate GetByIdWithDetails(int event_date_id);
     }
 }

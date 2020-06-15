@@ -4,15 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Contracts.Repository
+namespace Contracts.Logic
 {
     public interface IEventLogic
     {
         IEnumerable<EventDto> GetAllEvents();
         IEnumerable<EventDto> GetAllActiveEvents();
+        IEnumerable<EventDto> SortEventData(OrderRequest orderRequest);
+        IEnumerable<Event> GetEventByStartDate(bool ascending);
         IEnumerable<EventDto> GetByName(string name);
-        IEnumerable<EventDto> GetSortedByName(bool ascending);
-        IEnumerable<EventDto> GetSortedByStartDate(bool ascending);
+        IEnumerable<EventDto> GetAllByGenre(int genre_id);
         EventDto GetByIdWithDetails(int event_id);
         EventDto GetById(int event_id);
         bool Create(EventForCreationDto eventForCreation);

@@ -73,17 +73,77 @@ namespace Logics
 
         public EventDateDto GetByDatePlanning(int date_planning_id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var eventDate = _repository.GetByDatePlanning(date_planning_id);
+
+                if (eventDate == null)
+                {
+                    _logger.LogError($"EventDate with dateplanning id: {date_planning_id}, hasn't been found in db.");
+                    return null;
+                }
+
+                _logger.LogInfo($"Returned EventDate with dateplanning id: {date_planning_id}");
+
+                var Result = _mapper.Map<EventDateDto>(eventDate);
+
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetEventDateByDatePlanning action: {ex.Message}");
+                throw new Exception();
+            }
         }
 
         public EventDateDto GetById(int event_date_id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var eventDate = _repository.GetById(event_date_id);
+
+                if (eventDate == null)
+                {
+                    _logger.LogError($"EventDate with id: {event_date_id}, hasn't been found in db.");
+                    return null;
+                }
+
+                _logger.LogInfo($"Returned EventDate with id: {event_date_id}");
+
+                var Result = _mapper.Map<EventDateDto>(eventDate);
+
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetEventDateById action: {ex.Message}");
+                throw new Exception();
+            }
         }
 
         public EventDateDto GetByIdWithDetails(int event_date_id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var eventDate = _repository.GetByIdWithDetails(event_date_id);
+
+                if (eventDate == null)
+                {
+                    _logger.LogError($"EventDate with id: {event_date_id}, hasn't been found in db.");
+                    return null;
+                }
+
+                _logger.LogInfo($"Returned EventDate with id: {event_date_id}");
+
+                var Result = _mapper.Map<EventDateDto>(eventDate);
+
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetEventDateById action: {ex.Message}");
+                throw new Exception();
+            }
         }
 
         public bool Update(EventDateForUpdateDto eventDateForUpdate)

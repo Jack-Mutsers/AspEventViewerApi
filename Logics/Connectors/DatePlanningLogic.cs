@@ -204,11 +204,6 @@ namespace Logics
             }
         }
 
-        public DatePlanningDto GetLast(int event_id)
-        {
-            throw new NotImplementedException();
-        }
-
         public DatePlanningDto GetNextEvent()
         {
             try

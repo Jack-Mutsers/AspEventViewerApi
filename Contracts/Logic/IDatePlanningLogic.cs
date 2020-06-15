@@ -1,10 +1,7 @@
 ﻿using Entities.DataTransferObjects;
-using Entities.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Contracts.Repository
+namespace Contracts.Logic
 {
     public interface IDatePlanningLogic
     {
@@ -15,7 +12,6 @@ namespace Contracts.Repository
         DatePlanningDto GetById(int planning_id);
         DatePlanningDto GetByIdWithDetails(int planning_id);
         DatePlanningDto GetUpcomming(int event_id);
-        DatePlanningDto GetLast(int event_id);
         bool Create(DatePlanningForCreationDto datePlanningForCreation);
         bool Update(DatePlanningForUpdateDto datePlanningForUpdate);
         bool Delete(int id);

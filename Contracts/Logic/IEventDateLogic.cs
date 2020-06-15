@@ -1,11 +1,6 @@
-﻿using Entities;
-using Entities.DataTransferObjects;
-using Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Entities.DataTransferObjects;
 
-namespace Contracts.Repository
+namespace Contracts.Logic
 {
     public interface IEventDateLogic
     {

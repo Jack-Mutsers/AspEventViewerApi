@@ -14,6 +14,13 @@ namespace Repository
     {
         public EventDateRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
+        public EventDate GetByDatePlanning(int date_planning_id)
+        {
+            return FindByCondition(ed => ed.DatePlanning.id == date_planning_id)
+                .Include(ed => ed.DatePlanning)
+                .FirstOrDefault();
+        }
+
         public EventDate GetById(int event_date_id)
         {
             return FindByCondition(ed => ed.id == event_date_id)

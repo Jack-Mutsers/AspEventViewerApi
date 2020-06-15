@@ -6,6 +6,7 @@ using AspEventVieuwerAPI.Authentication;
 using AutoMapper;
 using Contracts;
 using Contracts.Logger;
+using Contracts.Logic;
 using Contracts.Repository;
 using Entities.DataTransferObjects;
 using Entities.Models;
@@ -21,13 +22,17 @@ namespace AspEventVieuwerAPI.Controllers
     public class EventDateController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IEventDateRepository _repository;
+        //private IEventDateRepository _repository;
+        private IEventDateLogic _eventDateLogic;
+        private IArtistLogic _artistLogic;
         private IMapper _mapper;
 
-        public EventDateController(ILoggerManager logger, IEventDateRepository repository, IMapper mapper)
+        public EventDateController(ILoggerManager logger, IEventDateLogic eventDateLogic, IArtistLogic artistLogic, IMapper mapper)
         {
             _logger = logger;
-            _repository = repository;
+            //_repository = repository;
+            _eventDateLogic = eventDateLogic;
+            _artistLogic = artistLogic;
             _mapper = mapper;
         }
 
@@ -36,23 +41,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var eventDate = _repository.GetById(id);
+                var eventDate = _eventDateLogic.GetById(id);
 
                 if (eventDate == null)
                 {
-                    _logger.LogError($"EventDate with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned EventDate with id: {id}");
-
-                var Result = _mapper.Map<EventDateDto>(eventDate);
-
-                return Ok(Result);
+                return Ok(eventDate);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetEventDateById action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -62,26 +61,19 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var eventDate = _repository.GetByIdWithDetails(id);
+                var eventDate = _eventDateLogic.GetByIdWithDetails(id);
 
                 if (eventDate == null)
                 {
-                    _logger.LogError($"EventDate with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned EventDate with id: {id}");
+                eventDate.artists = _artistLogic.GetArtistsByEventDate(eventDate.id);
 
-                var Result = _mapper.Map<EventDateDto>(eventDate);
-
-                /*ArtistController artistController = new ArtistController(_logger, new ArtistRepository(_repository.RepositoryContext), _mapper);*/ //temp
-                //Result.artists = artistController.GetArtistsByEventDate(Result.id);
-
-                return Ok(Result);
+                return Ok(eventDate);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetEventDateById action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -103,19 +95,13 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _mapper.Map<EventDate>(eventDate);
-
-                _repository.Create(DataEntity);
-                _repository.Save();
-
-                var createdEntity = _mapper.Map<EventDateDto>(DataEntity);
+                bool success = _eventDateLogic.Create(eventDate);
 
                 return Ok("EventDate is created");
                 //return CreatedAtRoute("CategoryById", new { id = createdEntity.id }, createdEntity);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside CreateEventDate action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -137,23 +123,17 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.GetById(eventDate.id);
-                if (DataEntity == null)
+                bool succes = _eventDateLogic.Update(eventDate);
+                
+                if (!succes)
                 {
-                    _logger.LogError($"EventDate with id: {eventDate.id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _mapper.Map(eventDate, DataEntity);
-
-                _repository.Update(DataEntity);
-                _repository.Save();
 
                 return Ok("EventDate is updated");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside UpdateEventDate action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -163,21 +143,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var eventDate = _repository.GetById(id);
-                if (eventDate == null)
+                bool succes = _eventDateLogic.Delete(id);
+
+                if (!succes)
                 {
-                    _logger.LogError($"EventDate with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _repository.Delete(eventDate);
-                _repository.Save();
-
-                return Ok("EventDate is delted");
+                return Ok("EventDate is deleted");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside DeleteEventDate action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
