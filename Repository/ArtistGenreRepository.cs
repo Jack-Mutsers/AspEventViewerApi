@@ -1,11 +1,9 @@
-﻿using Contracts;
+﻿using Contracts.Repository;
 using Entities;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Repository
 {
@@ -29,5 +27,9 @@ namespace Repository
             return FindByCondition(eg => eg.genre_id == genre_id);
         }
 
+        public ArtistGenre GetRecord(int artist_id, int genre_id)
+        {
+            return FindByCondition(ag => ag.artist_id == artist_id && ag.genre_id == genre_id).FirstOrDefault();
+        }
     }
 }

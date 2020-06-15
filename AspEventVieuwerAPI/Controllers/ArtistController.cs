@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AspEventVieuwerAPI.Authentication;
-using AutoMapper;
-using Contracts;
+﻿using AspEventVieuwerAPI.Authentication;
+using Contracts.Logger;
+using Contracts.Logic;
 using Entities.DataTransferObjects;
-using Entities.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace AspEventVieuwerAPI.Controllers
 {
@@ -18,14 +14,12 @@ namespace AspEventVieuwerAPI.Controllers
     public class ArtistController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IArtistRepository _repository;
-        private IMapper _mapper;
+        private IArtistLogic _logic;
 
-        public ArtistController(ILoggerManager logger, IArtistRepository repository, IMapper mapper)
+        public ArtistController(ILoggerManager logger, IArtistLogic logic)
         {
             _logger = logger;
-            _repository = repository;
-            _mapper = mapper;
+            _logic = logic;
         }
 
         [HttpGet]
@@ -33,12 +27,9 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Artist> artist = _repository.GetAllArtists();
+                IEnumerable<ArtistDto> artist = _logic.GetAll();
 
-                _logger.LogInfo($"Returned all Artists from database.");
-
-                var Result = _mapper.Map<IEnumerable<ArtistDto>>(artist);
-                return Ok(Result);
+                return Ok(artist);
             }
             catch (Exception ex)
             {
@@ -52,22 +43,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Artist> artists = _repository.GetArtistsByEventDate(event_date_id);
+                var artists = _logic.GetArtistsByEventDate(event_date_id);
 
                 if (artists == null)
                 {
-                    _logger.LogError($"Artost with id: {artists}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned Artist with id: {event_date_id}");
-
-                var Result = _mapper.Map<IEnumerable<ArtistDto>>(artists);
-                return Ok(Result);
+                return Ok(artists);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetArtistById action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -77,22 +63,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var art = _repository.GetById(id);
+                var art = _logic.GetArtistById(id);
 
                 if (art == null)
                 {
-                    _logger.LogError($"Artist with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned Artist with id: {id}");
-
-                var Result = _mapper.Map<ArtistDto>(art);
-                return Ok(Result);
+                return Ok(art);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetArtistById action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -102,50 +83,20 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var art = _repository.GetByIdWithDetails(id);
+                var art = _logic.GetArtistByIdWithDetails(id);
 
                 if (art == null)
                 {
-                    _logger.LogError($"Artist with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned Artist with id: {id}");
-
-                var Result = _mapper.Map<ArtistDto>(art);
-                return Ok(Result);
+                return Ok(art);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetArtistById action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
-
-        //[HttpGet("ArtistByGenre/{id}")]
-        //public IActionResult GetArtistByGenre(int id)
-        //{
-        //    try
-        //    {
-        //        var art = _repository.Artist.GetArtistsByGenre(id);
-
-        //        if (art == null)
-        //        {
-        //            _logger.LogError($"Artost with id: {id}, hasn't been found in db.");
-        //            return NotFound();
-        //        }
-
-        //        _logger.LogInfo($"Returned Artist with id: {id}");
-
-        //        var Result = _mapper.Map<IEnumerable<ArtistDto>>(art);
-        //        return Ok(Result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError($"Something went wrong inside GetArtistById action: {ex.Message}");
-        //        return StatusCode(500, "Internal server error");
-        //    }
-        //}
 
         [HttpPost]
         public IActionResult CreateArtist([FromBody]ArtistForCreationDto artist)
@@ -164,19 +115,12 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _mapper.Map<Artist>(artist);
-
-                _repository.Create(DataEntity);
-                _repository.Save();
-
-                var createdEntity = _mapper.Map<ArtistDto>(DataEntity);
+                _logic.CreateArtist(artist);
 
                 return Ok("Artist is created");
-                //return CreatedAtRoute("CategoryById", new { id = createdEntity.id }, createdEntity);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside CreateArtist action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -198,23 +142,17 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.GetById(artist.id);
-                if (DataEntity == null)
+                bool succes = _logic.UpdateArtist(artist);
+
+                if (succes == false)
                 {
-                    _logger.LogError($"Artist with id: {artist.id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _mapper.Map(artist, DataEntity);
-
-                _repository.Update(DataEntity);
-                _repository.Save();
 
                 return Ok("Artist is updated");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside UpdateArtist action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -224,21 +162,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var artist = _repository.GetById(id);
-                if (artist == null)
+                bool succes = _logic.DeleteArtist(id);
+
+                if (!succes) 
                 {
-                    _logger.LogError($"Artist with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _repository.Delete(artist);
-                _repository.Save();
-
+                
                 return Ok("Artist is delted");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside DeleteArtist action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }

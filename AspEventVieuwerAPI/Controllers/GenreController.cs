@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using AspEventVieuwerAPI.Authentication;
 using AutoMapper;
 using Contracts;
+using Contracts.Logger;
+using Contracts.Repository;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Logics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,18 +21,16 @@ namespace AspEventVieuwerAPI.Controllers
     public class GenreController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IGenreRepository _GenreRepository;
-        private IEventGenreRepository _EventGenreRepository;
-        private IArtistGenreRepository _ArtistGenreRepository;
-        private IMapper _mapper;
+        private IGenreLogic _genreLogic;
+        private IEventGenreLogic _eventGenreLogic;
+        private IArtistGenreLogic _artistGenreLogic;
 
-        public GenreController(ILoggerManager logger, IGenreRepository genreRepository, IEventGenreRepository eventGenreRepository, IArtistGenreRepository artistGenreRepository, IMapper mapper)
+        public GenreController(ILoggerManager logger, IGenreLogic genreLogic, IEventGenreLogic eventGenreLogic, IArtistGenreLogic artistGenreLogic)
         {
             _logger = logger;
-            _GenreRepository = genreRepository;
-            _EventGenreRepository = eventGenreRepository;
-            _ArtistGenreRepository = artistGenreRepository;
-            _mapper = mapper;
+            _genreLogic = genreLogic;
+            _eventGenreLogic = eventGenreLogic;
+            _artistGenreLogic = artistGenreLogic;
         }
 
         [HttpGet]
@@ -37,16 +38,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var art = _GenreRepository.GetAllGenres();
+                var genres = _genreLogic.GetAllGenres();
 
-                _logger.LogInfo($"Returned all Genre from database.");
+                if (genres == null)
+                {
+                    return NotFound();
+                }
 
-                var Result = _mapper.Map<IEnumerable<GenreDto>>(art);
-                return Ok(Result);
+                return Ok(genres);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetAllGenres action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -56,21 +58,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var art = _GenreRepository.GetById(id);
+                var genre = _genreLogic.GetById(id);
 
-                if (art == null)
+                if (genre == null)
                 {
-                    _logger.LogError($"Genre with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                _logger.LogInfo($"Returned Genre with id: {id}");
 
-                var Result = _mapper.Map<GenreDto>(art);
-                return Ok(Result);
+                return Ok(genre);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetGenreById action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -80,23 +78,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<EventGenre> genres = _EventGenreRepository.GetByEvent(event_id);
+                IEnumerable<EventGenreDto> genres = _eventGenreLogic.GetByEvent(event_id);
 
                 if (genres == null)
                 {
-                    _logger.LogError($"Genre with id: {event_id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned Genre with event id: {event_id}");
-
-                var Result = _mapper.Map<IEnumerable<EventGenreDto>>(genres);
-
-                return Ok(Result);
+                return Ok(genres);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetGenreById action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
 
@@ -107,23 +99,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<EventGenre> genres = _EventGenreRepository.GetByEventWithDetails(event_id);
+                IEnumerable<EventGenreDto> genres = _eventGenreLogic.GetByEventWithDetails(event_id);
 
                 if (genres == null)
                 {
-                    _logger.LogError($"Genre with id: {event_id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned Genre with event id: {event_id}");
-
-                var Result = _mapper.Map<IEnumerable<EventGenreDto>>(genres);
-
-                return Ok(Result);
+                return Ok(genres);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetGenreById action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
 
@@ -134,23 +120,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Genre> genres = _GenreRepository.GetByArtist(artist_id);
+                IEnumerable<GenreDto> genres = _genreLogic.GetByArtist(artist_id);
 
                 if (genres == null)
                 {
-                    _logger.LogError($"Genre with id: {artist_id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned Genre with artist id: {artist_id}");
-
-                var Result = _mapper.Map<IEnumerable<GenreDto>>(genres);
-
-                return Ok(Result);
+                return Ok(genres);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetGenreById action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }

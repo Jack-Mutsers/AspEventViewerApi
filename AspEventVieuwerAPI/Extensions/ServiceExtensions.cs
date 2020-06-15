@@ -1,6 +1,10 @@
 ﻿using Contracts;
+using Contracts.Logger;
+using Contracts.Logic;
+using Contracts.Repository;
 using Entities;
 using LoggerService;
+using Logics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -37,7 +41,7 @@ namespace AspEventVieuwerAPI.Extensions
 
         public static void ConfigureMySqlContext(this IServiceCollection services, IConfiguration config)
         {
-            var connectionString = config["mysqlconnection:connectionString"];
+            var connectionString = config["MySqlData:connectionString"];
             services.AddDbContext<RepositoryContext>(o => o.UseMySql(connectionString));
         }
 
@@ -57,6 +61,20 @@ namespace AspEventVieuwerAPI.Extensions
             services.AddScoped<IScheduleRepository, ScheduleRepository>();
             services.AddScoped<IStageRepository, StageRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<IArtistLogic, ArtistLogic>();
+            services.AddScoped<IArtistGenreLogic, ArtistGenreLogic>();
+            services.AddScoped<IDatePlanningLogic, DatePlanningLogic>();
+            services.AddScoped<IEventDateLogic, EventDateLogic>();
+            services.AddScoped<IEventGenreLogic, EventGenreLogic>();
+            services.AddScoped<IEventLogic, EventLogic>();
+            services.AddScoped<IGenreLogic, GenreLogic>();
+            services.AddScoped<IPreferenceLogic, PreferenceLogic>();
+            services.AddScoped<IReviewLogic, ReviewLogic>();
+            services.AddScoped<IScheduleItemLogic, ScheduleItemLogic>();
+            services.AddScoped<IScheduleLogic, ScheduleLogic>();
+            services.AddScoped<IStageLogic, StageLogic>();
+            services.AddScoped<IUserLogic, UserLogic>();
         }
     }
 }

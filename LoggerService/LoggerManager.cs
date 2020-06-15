@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Contracts;
+﻿using Contracts.Logger;
 using NLog;
 
 namespace LoggerService

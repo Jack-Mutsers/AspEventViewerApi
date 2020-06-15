@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Contracts
+namespace Contracts.Repository
 {
     public interface IReviewRepository : IUniversalRepository<Review>
     {

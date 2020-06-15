@@ -1,4 +1,5 @@
 ﻿using Contracts;
+using Contracts.Repository;
 using Entities;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
@@ -73,6 +74,11 @@ namespace TestRepository
         public void Update(EventGenre model)
         {
             //throw new NotImplementedException();
+        }
+
+        public EventGenre GetRecord(int event_id, int genre_id)
+        {
+            return _eventGenres.Where(eg => eg.event_id == event_id && eg.genre_id == genre_id).FirstOrDefault();
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using AspEventVieuwerAPI.Extensions;
 using AutoMapper;
+using Logics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;

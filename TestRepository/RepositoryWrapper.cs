@@ -1,4 +1,5 @@
 ﻿using Contracts;
+using Contracts.Repository;
 using Entities;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ namespace TestRepository
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {
+        private RepositoryContext Context {get;}
         private IArtistRepository _artist;
         private IArtistGenreRepository _artistgenre;
         private IDatePlanningRepository _dateplanning;

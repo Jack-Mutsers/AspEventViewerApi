@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using AspEventVieuwerAPI.Authentication;
 using AutoMapper;
 using Contracts;
+using Contracts.Logger;
+using Contracts.Repository;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
@@ -72,7 +74,7 @@ namespace AspEventVieuwerAPI.Controllers
 
                 var Result = _mapper.Map<EventDateDto>(eventDate);
 
-                ArtistController artistController = new ArtistController(_logger, new ArtistRepository(_repository.RepositoryContext), _mapper);
+                /*ArtistController artistController = new ArtistController(_logger, new ArtistRepository(_repository.RepositoryContext), _mapper);*/ //temp
                 //Result.artists = artistController.GetArtistsByEventDate(Result.id);
 
                 return Ok(Result);

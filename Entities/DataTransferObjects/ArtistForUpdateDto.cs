@@ -12,6 +12,6 @@ namespace Entities.DataTransferObjects
     {
         public int id { get; set; }
         public string name { get; set; }
-        public IEnumerable<ArtistGenreForUpdateDto> genre { get; set; }
+        public IEnumerable<ArtistForCreationDto> genre { get; set; }
     }
 }

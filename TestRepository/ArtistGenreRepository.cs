@@ -1,4 +1,5 @@
 ﻿using Contracts;
+using Contracts.Repository;
 using Entities;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
@@ -53,6 +54,11 @@ namespace TestRepository
         }
 
         public void Delete(ArtistGenre model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ArtistGenre GetRecord(int artist_id, int genre_id)
         {
             throw new NotImplementedException();
         }

@@ -1,6 +1,8 @@
 ﻿using AspEventVieuwerAPI;
 using AutoMapper;
 using Contracts;
+using Contracts.Logger;
+using Contracts.Repository;
 using LoggerService;
 using System;
 using System.Collections.Generic;

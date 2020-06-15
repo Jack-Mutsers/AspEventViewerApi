@@ -1,11 +1,9 @@
-﻿using Contracts;
+﻿using Contracts.Repository;
 using Entities;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Repository
 {
@@ -37,5 +35,9 @@ namespace Repository
                 .Select(eg => eg.@event);
         }
 
+        public EventGenre GetRecord(int event_id, int genre_id)
+        {
+            return FindByCondition(eg => eg.event_id == event_id && eg.genre_id == genre_id).FirstOrDefault();
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace XUnitTest.Tests
         public GenreControllerTest()
         {
             requrements = new ControllerRequrements();
-            _controller = new GenreController(requrements.logger, requrements.repository.Genre, requrements.repository.EventGenre, requrements.repository.ArtistGenre, requrements.mapper);
+            //_controller = new GenreController(requrements.logger, requrements.repository.Genre, requrements.repository.EventGenre, requrements.repository.ArtistGenre, requrements.mapper);
         }
 
         [Fact]
