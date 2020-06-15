@@ -20,15 +20,17 @@ namespace AspEventVieuwerAPI.Controllers
     public class DatePlanningController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IDatePlanningRepository _repository;
-        private IEventDateRepository _EventDateRepository;
+        //private IDatePlanningRepository _repository;
+        //private IEventDateRepository _EventDateRepository;
+        private IDatePlanningLogic _datePlanningLogic;
+        private IEventDateLogic _eventDateLogic;
         private IMapper _mapper;
 
-        public DatePlanningController(ILoggerManager logger, IDatePlanningRepository repository, IEventDateRepository eventDateRepository, IMapper mapper)
+        public DatePlanningController(ILoggerManager logger, IDatePlanningLogic datePlanningLogic, IEventDateLogic eventDateLogic, IMapper mapper)
         {
             _logger = logger;
-            _repository = repository;
-            _EventDateRepository = eventDateRepository;
+            _datePlanningLogic = datePlanningLogic;
+            _eventDateLogic = eventDateLogic;
             _mapper = mapper;
         }
 
@@ -37,16 +39,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<DatePlanning> datePlannings = _repository.GetAll();
+                IEnumerable<DatePlanningDto> datePlannings = _datePlanningLogic.GetAll();
 
-                _logger.LogInfo($"Returned all Artists from database.");
+                if (datePlannings == null)
+                {
+                    return NotFound();
+                }
 
-                var Result = _mapper.Map<IEnumerable<DatePlanningDto>>(datePlannings);
-                return Ok(Result);
+                return Ok(datePlannings);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetAll action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -56,22 +59,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                DatePlanning datePlanning = _repository.GetNextEvent();
+                DatePlanningDto datePlanning = _datePlanningLogic.GetNextEvent();
 
                 if (datePlanning == null)
                 {
-                    _logger.LogError($"no future date Planning has been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned all Artists from database.");
-
-                var Result = _mapper.Map<DatePlanningDto>(datePlanning);
-                return Ok(Result);
+                return Ok(datePlanning);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetNextEvent action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -81,22 +79,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<DatePlanning> datePlannings = _repository.GetAllByEvent(id);
+                IEnumerable<DatePlanningDto> datePlannings = _datePlanningLogic.GetAllByEvent(id);
 
                 if (datePlannings == null)
                 {
-                    _logger.LogError($"date Planning with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned all Artists from database.");
-
-                var Result = _mapper.Map<IEnumerable<DatePlanningDto>>(datePlannings);
-                return Ok(Result);
+                return Ok(datePlannings);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetAll action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -106,23 +99,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                DatePlanning datePlanning = _repository.GetById(id);
+                DatePlanningDto datePlanning = _datePlanningLogic.GetById(id);
 
                 if (datePlanning == null)
                 {
-                    _logger.LogError($"date Planning with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned all Artists from database.");
-
-                var Result = _mapper.Map<DatePlanningDto>(datePlanning);
-
-                return Ok(Result);
+                return Ok(datePlanning);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetAll action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -132,25 +119,14 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                DatePlanning datePlanning = _repository.GetByIdWithDetails(id);
+                DatePlanningDto datePlanning = _datePlanningLogic.GetByIdWithDetails(id);
 
                 if (datePlanning == null)
                 {
-                    _logger.LogError($"date Planning with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned all Artists from database.");
-
-                var Result = _mapper.Map<DatePlanningDto>(datePlanning);
-
-                //ReviewController reviewController = new ReviewController(_logger, _repository, _mapper);
-                //Result.event_date.reviews = reviewController.GetByEventDate(Result.event_date.id);
-
-                //ArtistController artistController = new ArtistController(_logger, _repository, _mapper);
-                //Result.event_date.artists = artistController.GetArtistsByEventDate(Result.id);
-
-                return Ok(Result);
+                return Ok(datePlanning);
             }
             catch (Exception ex)
             {
@@ -164,31 +140,19 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                DatePlanning datePlanning = _repository.GetUpcomming(event_id);
-
-                if (datePlanning == null)
-                {
-                    datePlanning = _repository.GetLast(event_id);
-                }
+                DatePlanningDto datePlanning = _datePlanningLogic.GetUpcomming(event_id);
 
                 if (datePlanning == null)
                 {
                     return NotFound();
                 }
 
-                datePlanning.event_date = _EventDateRepository.GetById(datePlanning.id);
-                datePlanning.event_date.DatePlanning = null;
+                datePlanning.event_date = _eventDateLogic.GetByDatePlanning(datePlanning.id);
 
-                DatePlanningDto datePlanningDto = _mapper.Map<DatePlanningDto>(datePlanning);
-
-                //ArtistController artistController = new ArtistController(_logger, _repository, _mapper);
-                //datePlanningDto.event_date.artists = artistController.GetArtistsByEventDate(datePlanning.event_date.id);
-
-                return Ok(datePlanningDto);
+                return Ok(datePlanning);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside DeleteDatePlanning action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -198,25 +162,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<DatePlanning> datePlanning = _repository.GetFinishedEventDates(event_id);
+                IEnumerable<DatePlanningDto> datePlannings = _datePlanningLogic.GetFinishedEventDates(event_id);
 
-                List<DatePlanning> correctDatePlanning = new List<DatePlanning>();
-                foreach (DatePlanning date in datePlanning)
+                if (datePlannings == null)
                 {
-                    if (date.event_date.DatePlanning != null)
-                    {
-                        date.event_date.DatePlanning = null;
-                    }
-                    correctDatePlanning.Add(date);
+                    return NotFound();
                 }
 
-                IEnumerable<DatePlanningDto> datePlanningDto = _mapper.Map<IEnumerable<DatePlanningDto>>(correctDatePlanning);
-
-                return Ok(datePlanningDto);
+                return Ok(datePlannings);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside DeleteDatePlanning action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -238,19 +194,12 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _mapper.Map<DatePlanning>(datePlanning);
-
-                _repository.Create(DataEntity);
-                _repository.Save();
-
-                var createdEntity = _mapper.Map<DatePlanningDto>(DataEntity);
+                bool success = _datePlanningLogic.Create(datePlanning);
 
                 return Ok("date planning is created");
-                //return CreatedAtRoute("CategoryById", new { id = createdEntity.id }, createdEntity);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside CreateDatePlanning action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -272,24 +221,17 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.GetById(datePlanning.id);
+                bool succes = _datePlanningLogic.Update(datePlanning);
 
-                if (DataEntity == null)
+                if (!succes)
                 {
-                    _logger.LogError($"date planning with id: {datePlanning.id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _mapper.Map(datePlanning, DataEntity);
-
-                _repository.Update(DataEntity);
-                _repository.Save();
 
                 return Ok("date planning is updated");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside UpdateDatePlanning action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -299,21 +241,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var datePlanning = _repository.GetById(id);
-                if (datePlanning == null)
+                bool succes = _datePlanningLogic.Delete(id);
+
+                if (!succes)
                 {
-                    _logger.LogError($"Date Planning with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _repository.Delete(datePlanning);
-                _repository.Save();
 
                 return Ok("Date Planning is delted");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside DeleteDatePlanning action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }

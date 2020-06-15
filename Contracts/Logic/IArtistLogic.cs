@@ -15,9 +15,9 @@ namespace Contracts.Logic
 
         ArtistDto GetArtistByIdWithDetails(int id);
 
-        bool CreateArtist(ArtistForCreationDto artist);
+        bool CreateArtist(ArtistForCreationDto artistForCreation);
 
-        bool UpdateArtist(ArtistForUpdateDto artist);
+        bool UpdateArtist(ArtistForUpdateDto artistForUpdate);
 
         bool DeleteArtist(int id);
 

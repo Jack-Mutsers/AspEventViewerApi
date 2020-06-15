@@ -173,7 +173,6 @@ namespace Logics
 
                 if (artistDto == null)
                 {
-                    _logger.LogError($"Artist with id: {artist.id}, hasn't been found in db.");
                     return false;
                 }
 
@@ -183,6 +182,8 @@ namespace Logics
 
                 _repository.Update(DataEntity);
                 _repository.Save();
+
+                _logger.LogError($"Updated artist with id: {DataEntity.id}");
 
                 return true;
             }

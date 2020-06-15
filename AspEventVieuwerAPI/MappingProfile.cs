@@ -38,7 +38,6 @@ namespace AspEventVieuwerAPI
 
             CreateMap<Preference, PreferenceDto>();
             CreateMap<PreferenceForCreationDto, Preference>();
-            CreateMap<PreferenceForUpdateDto, Preference>();
 
             CreateMap<Review, ReviewDto>();
             CreateMap<ReviewForCreationDto, Review>();
