@@ -10,6 +10,15 @@ namespace Repository
     {
         public PreferenceRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
+        public void DeleteByUser(int user_id)
+        {
+            IEnumerable<Preference> preferences = FindByCondition(p => p.user_id == user_id).ToList();
+            foreach (Preference preference in preferences)
+            {
+                Delete(preference);
+            }
+        }
+
         public Preference GetById(int preference_id)
         {
             return FindByCondition(p => p.id == preference_id).FirstOrDefault();

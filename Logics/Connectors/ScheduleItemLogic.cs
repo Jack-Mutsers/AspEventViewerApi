@@ -73,17 +73,74 @@ namespace Logics
 
         public ScheduleItemDto GetById(int item_id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var scheduleItem = _repository.GetById(item_id);
+
+                if (scheduleItem == null)
+                {
+                    _logger.LogError($"ScheduleItem with id: {item_id}, hasn't been found in db.");
+                    return null;
+                }
+
+                _logger.LogInfo($"Returned ScheduleItem with id: {item_id}");
+
+                var Result = _mapper.Map<ScheduleItemDto>(scheduleItem);
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetScheduleItemById action: {ex.Message}");
+                throw new Exception();
+            }
         }
 
         public ScheduleItemDto GetByIdWithDetails(int item_id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var scheduleItem = _repository.GetByIdWithDetails(item_id);
+
+                if (scheduleItem == null)
+                {
+                    _logger.LogError($"ScheduleItem with id: {item_id}, hasn't been found in db.");
+                    return null;
+                }
+
+                _logger.LogInfo($"Returned ScheduleItem with id: {item_id}");
+
+                var Result = _mapper.Map<ScheduleItemDto>(scheduleItem);
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetByIdWithDetails action: {ex.Message}");
+                throw new Exception();
+            }
         }
 
         public IEnumerable<ScheduleItemDto> GetBySchedule(int schedule_id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var scheduleItems = _repository.GetBySchedule(schedule_id);
+
+                if (scheduleItems == null)
+                {
+                    _logger.LogError($"ScheduleItems with schedule id: {schedule_id}, hasn't been found in db.");
+                    return null;
+                }
+
+                _logger.LogInfo($"Returned ScheduleItem with schedule id: {schedule_id}");
+
+                var Result = _mapper.Map<IEnumerable<ScheduleItemDto>>(scheduleItems);
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetScheduleItemBySchedule action: {ex.Message}");
+                throw new Exception();
+            }
         }
 
         public bool Update(ScheduleItemForUpdateDto scheduleItemForUpdate)

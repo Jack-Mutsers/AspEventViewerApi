@@ -6,7 +6,7 @@ namespace Contracts.Logic
     {
         UserDto GetUserByLogin(string username, string password);
         UserDto GetById(int User_id);
-        bool Create(UserForCreationDto userForCreation);
+        UserDto Create(UserForCreationDto userForCreation);
         bool Update(UserForUpdateDto userForUpdate);
         bool Delete(int id);
     }

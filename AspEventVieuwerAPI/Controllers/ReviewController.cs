@@ -6,6 +6,7 @@ using AspEventVieuwerAPI.Authentication;
 using AutoMapper;
 using Contracts;
 using Contracts.Logger;
+using Contracts.Logic;
 using Contracts.Repository;
 using Entities.DataTransferObjects;
 using Entities.Models;
@@ -20,14 +21,13 @@ namespace AspEventVieuwerAPI.Controllers
     public class ReviewController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IReviewRepository _repository;
+        private IReviewLogic _reviewLogic;
         private IMapper _mapper;
 
-        public ReviewController(ILoggerManager logger, IReviewRepository repository, IMapper mapper)
+        public ReviewController(ILoggerManager logger, IReviewLogic reviewLogic)
         {
             _logger = logger;
-            _repository = repository;
-            _mapper = mapper;
+            _reviewLogic = reviewLogic;
         }
 
         [HttpGet("GetByEventDate/{id}")]
@@ -35,22 +35,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var reviews = _repository.GetByEventDate(id);
+                var reviews = _reviewLogic.GetByEventDate(id);
 
                 if (reviews == null)
                 {
-                    _logger.LogError($"Reviews with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
                 
-                _logger.LogInfo($"Returned Reviews with id: {id}");
-
-                var Result = _mapper.Map<IEnumerable<ReviewDto>>(reviews);
-                return Ok(Result);
+                return Ok(reviews);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetReviewByEventDate action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -60,16 +55,12 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var reviews = _repository.GetAllOpenReviews();
+                IEnumerable<ReviewDto> reviews = _reviewLogic.GetAllOpenReviews();
 
-                _logger.LogInfo($"Returned all Reviews from database.");
-
-                var Result = _mapper.Map<IEnumerable<ReviewDto>>(reviews);
-                return Ok(Result);
+                return Ok(reviews);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetAllReviews action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -79,22 +70,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var review = _repository.GetById(id);
+                var review = _reviewLogic.GetById(id);
 
                 if (review == null)
                 {
-                    _logger.LogError($"Review with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned Review with id: {id}");
-
-                var Result = _mapper.Map<ReviewDto>(review);
-                return Ok(Result);
+                return Ok(review);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetReviewById action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -116,19 +102,12 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _mapper.Map<Review>(review);
-
-                _repository.Create(DataEntity);
-                _repository.Save();
-
-                var createdEntity = _mapper.Map<ReviewDto>(DataEntity);
+                bool succes = _reviewLogic.Create(review);
 
                 return Ok(true);
-                //return CreatedAtRoute("CategoryById", new { id = createdEntity.id }, createdEntity);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside CreateReview action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -150,23 +129,16 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.GetById(review.id);
-                if (DataEntity == null)
+                bool succes = _reviewLogic.Update(review);
+                if (!succes)
                 {
-                    _logger.LogError($"Review with id: {review.id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _mapper.Map(review, DataEntity);
-
-                _repository.Update(DataEntity);
-                _repository.Save();
 
                 return Ok("Review is updated");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside UpdateReview action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -176,46 +148,18 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var review = _repository.GetById(id);
-                if (review == null)
+                bool succes = _reviewLogic.Delete(id);
+                if (!succes)
                 {
-                    _logger.LogError($"Review with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _repository.Delete(review);
-                _repository.Save();
 
                 return Ok("Review is delted");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside DeleteReview action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
-
-        //public IEnumerable<ReviewDto> GetByEventDate(int event_date_id)
-        //{
-        //    try
-        //    {
-        //        var reviews = _repository.Review.GetByEventDate(event_date_id);
-
-        //        if (reviews == null)
-        //        {
-        //            _logger.LogError($"Reviews with id: {event_date_id}, hasn't been found in db.");
-        //            return null;
-        //        }
-
-        //        _logger.LogInfo($"Returned Reviews with id: {event_date_id}");
-
-        //        return _mapper.Map<IEnumerable<ReviewDto>>(reviews);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError($"Something went wrong inside GetReviewByEventDate action: {ex.Message}");
-        //        return null;
-        //    }
-        //}
     }
 }

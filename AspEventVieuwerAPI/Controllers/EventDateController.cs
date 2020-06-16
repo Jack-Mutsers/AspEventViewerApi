@@ -22,18 +22,14 @@ namespace AspEventVieuwerAPI.Controllers
     public class EventDateController : ControllerBase
     {
         private ILoggerManager _logger;
-        //private IEventDateRepository _repository;
         private IEventDateLogic _eventDateLogic;
         private IArtistLogic _artistLogic;
-        private IMapper _mapper;
 
-        public EventDateController(ILoggerManager logger, IEventDateLogic eventDateLogic, IArtistLogic artistLogic, IMapper mapper)
+        public EventDateController(ILoggerManager logger, IEventDateLogic eventDateLogic, IArtistLogic artistLogic)
         {
             _logger = logger;
-            //_repository = repository;
             _eventDateLogic = eventDateLogic;
             _artistLogic = artistLogic;
-            _mapper = mapper;
         }
 
         [HttpGet("GetEventDateById/{id}")]

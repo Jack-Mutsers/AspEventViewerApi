@@ -6,6 +6,7 @@ using AspEventVieuwerAPI.Authentication;
 using AutoMapper;
 using Contracts;
 using Contracts.Logger;
+using Contracts.Logic;
 using Contracts.Repository;
 using Entities.DataTransferObjects;
 using Entities.Models;
@@ -20,14 +21,12 @@ namespace AspEventVieuwerAPI.Controllers
     public class StageController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IStageRepository _repository;
-        private IMapper _mapper;
+        private IStageLogic _stageLogic;
 
-        public StageController(ILoggerManager logger, IStageRepository repository, IMapper mapper)
+        public StageController(ILoggerManager logger, IStageLogic stageLogic)
         {
             _logger = logger;
-            _repository = repository;
-            _mapper = mapper;
+            _stageLogic = stageLogic;
         }
 
         [HttpGet]
@@ -35,22 +34,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var stages = _repository.GetAll();
+                var stages = _stageLogic.GetAll();
 
                 if (stages == null)
                 {
-                    _logger.LogError($"stages with EventDate id: , hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned stages with EventDate id:");
-
-                var Result = _mapper.Map<IEnumerable<StageDto>>(stages);
-                return Ok(Result);
+                return Ok(stages);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetStageByEventDate action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -60,22 +54,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                IEnumerable<Stage> stages = _repository.GetAllByEventDate(event_date_id);
+                IEnumerable<StageDto> stages = _stageLogic.GetAllByEventDate(event_date_id);
 
                 if (stages == null)
                 {
-                    _logger.LogError($"stages with EventDate id: {event_date_id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _logger.LogInfo($"Returned stages with EventDate id: {event_date_id}");
-
-                IEnumerable<StageDto> Result = _mapper.Map<IEnumerable<StageDto>>(stages);
-                return Ok(Result);
+                
+                return Ok(stages);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetStageByEventDate action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -85,22 +74,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var stage = _repository.GetById(id);
+                var stage = _stageLogic.GetById(id);
 
                 if (stage == null)
                 {
-                    _logger.LogError($"Stage with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _logger.LogInfo($"Returned Stage with id: {id}");
-
-                var Result = _mapper.Map<StageDto>(stage);
-                return Ok(Result);
+                
+                return Ok(stage);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetStageById action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -122,19 +106,12 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _mapper.Map<Stage>(stage);
-
-                _repository.Create(DataEntity);
-                _repository.Save();
-
-                var createdEntity = _mapper.Map<StageDto>(DataEntity);
+                bool succes = _stageLogic.Create(stage);
 
                 return Ok("Stage is created");
-                //return CreatedAtRoute("CategoryById", new { id = createdEntity.id }, createdEntity);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside CreateStage action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -156,23 +133,16 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.GetById(stage.id);
-                if (DataEntity == null)
+                bool succes = _stageLogic.Update(stage);
+                if (!succes)
                 {
-                    _logger.LogError($"Stage with id: {stage.id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _mapper.Map(stage, DataEntity);
-
-                _repository.Update(DataEntity);
-                _repository.Save();
 
                 return Ok("Stage is updated");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside UpdateStage action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -182,21 +152,16 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var stage = _repository.GetById(id);
-                if (stage == null)
+                bool succes = _stageLogic.Delete(id);
+                if (!succes)
                 {
-                    _logger.LogError($"Stage with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _repository.Delete(stage);
-                _repository.Save();
 
                 return Ok("Stage is delted");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside DeleteStage action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }

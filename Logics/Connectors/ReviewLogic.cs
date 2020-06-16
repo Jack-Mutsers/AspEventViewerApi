@@ -73,17 +73,68 @@ namespace Logics
 
         public IEnumerable<ReviewDto> GetAllOpenReviews()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var reviews = _repository.GetAllOpenReviews();
+
+                _logger.LogInfo($"Returned all Reviews from database.");
+
+                var Result = _mapper.Map<IEnumerable<ReviewDto>>(reviews);
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetAllReviews action: {ex.Message}");
+                throw new Exception();
+            }
         }
 
         public IEnumerable<ReviewDto> GetByEventDate(int event_date_id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var reviews = _repository.GetByEventDate(event_date_id);
+
+                if (reviews == null)
+                {
+                    _logger.LogError($"Reviews with id: {event_date_id}, hasn't been found in db.");
+                    return null;
+                }
+
+                _logger.LogInfo($"Returned Reviews with id: {event_date_id}");
+
+                var Result = _mapper.Map<IEnumerable<ReviewDto>>(reviews);
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetReviewByEventDate action: {ex.Message}");
+                throw new Exception();
+            }
         }
 
         public ReviewDto GetById(int review_id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var review = _repository.GetById(review_id);
+
+                if (review == null)
+                {
+                    _logger.LogError($"Review with id: {review_id}, hasn't been found in db.");
+                    return null;
+                }
+
+                _logger.LogInfo($"Returned Review with id: {review_id}");
+
+                var Result = _mapper.Map<ReviewDto>(review);
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetReviewById action: {ex.Message}");
+                throw new Exception();
+            }
         }
 
         public bool Update(ReviewForUpdateDto reviewForUpdate)

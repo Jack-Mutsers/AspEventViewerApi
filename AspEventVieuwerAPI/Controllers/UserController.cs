@@ -6,6 +6,7 @@ using AspEventVieuwerAPI.Authentication;
 using AutoMapper;
 using Contracts;
 using Contracts.Logger;
+using Contracts.Logic;
 using Contracts.Repository;
 using Entities.DataTransferObjects;
 using Entities.Models;
@@ -21,14 +22,12 @@ namespace AspEventVieuwerAPI.Controllers
     public class UserController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IUserRepository _repository;
-        private IMapper _mapper;
+        private IUserLogic _userLogic;
 
-        public UserController(ILoggerManager logger, IUserRepository repository, IMapper mapper)
+        public UserController(ILoggerManager logger, IUserLogic userLogic)
         {
             _logger = logger;
-            _repository = repository;
-            _mapper = mapper;
+            _userLogic = userLogic;
         }
 
         [HttpGet("{id}")]
@@ -36,23 +35,18 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var user = _repository.GetById(id);
+                var user = _userLogic.GetById(id);
 
                 if (user == null)
                 {
-                    _logger.LogError($"User with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _logger.LogInfo($"Returned User with id: {id}");
-
-                var Result = _mapper.Map<UserDto>(user);
-                return Ok(Result);
+                
+                return Ok(user);
 
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetUserById action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -62,30 +56,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var userData = _repository.GetUserByLogin(user.username, user.password);
+                var userData = _userLogic.GetUserByLogin(user.username, user.password);
 
                 if (userData == null)
                 {
-                    _logger.LogError($"Failed loggin attempt with username: {user.username}");
                     return NotFound(false);
                 }
 
-                Hasher hasher = new Hasher();
-                bool valid = hasher.ValidatePassword(userData, user.password);
-                if (valid == false)
-                {
-                    _logger.LogError($"Incorect password for account with username: {user.username}");
-                    return NotFound(false);
-                }
-
-                _logger.LogInfo($"Returned User with id: {userData.id}");
-
-                var Result = _mapper.Map<UserDto>(userData);
-                return Ok(Result);
+                return Ok(userData);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetUserByLogin action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -107,29 +88,16 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                User userCheck = _repository.GetUserByLogin(user.username, "");
-                if (userCheck != null)
+                UserDto userDto = _userLogic.Create(user);
+                if (userDto == null)
                 {
-                    _logger.LogError("Username is already in use");
                     return Problem("Username already exists");
                 }
-
-                Hasher hasher = new Hasher();
-                user.password = hasher.HashPassword(user.password);
-
-                var DataEntity = _mapper.Map<User>(user);
-
-                _repository.Create(DataEntity);
-                _repository.Save();
-
-                //var createdEntity = _mapper.Map<UserDto>(DataEntity);
-
-                //return Ok("User is created");
-                return GetUserById(DataEntity.id);
+                
+                return GetUserById(userDto.id);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside CreateUser action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -151,26 +119,16 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                Hasher hasher = new Hasher();
-                user.password = hasher.HashPassword(user.password);
-
-                var DataEntity = _repository.GetById(user.id);
-                if (DataEntity == null)
+                bool succes = _userLogic.Update(user);
+                if (!succes)
                 {
-                    _logger.LogError($"User with id: {user.id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _mapper.Map(user, DataEntity);
-
-                _repository.Update(DataEntity);
-                _repository.Save();
 
                 return Ok("User is updated");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside UpdateUser action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -180,21 +138,16 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var user = _repository.GetById(id);
-                if (user == null)
+                bool succes = _userLogic.Delete(id);
+                if (!succes)
                 {
-                    _logger.LogError($"User with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _repository.Delete(user);
-                _repository.Save();
 
                 return Ok("User is delted");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside DeleteUser action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }

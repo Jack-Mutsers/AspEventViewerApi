@@ -24,6 +24,7 @@ namespace AspEventVieuwerAPI
             CreateMap<DatePlanningForUpdateDto, DatePlanning>();
 
             CreateMap<Event, EventDto>();
+            CreateMap<EventDto, Event>();
             CreateMap<EventForCreationDto, Event>();
             CreateMap<EventForUpdateDto, Event>();
 

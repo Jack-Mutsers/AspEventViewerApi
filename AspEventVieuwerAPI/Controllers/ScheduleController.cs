@@ -6,6 +6,7 @@ using AspEventVieuwerAPI.Authentication;
 using AutoMapper;
 using Contracts;
 using Contracts.Logger;
+using Contracts.Logic;
 using Contracts.Repository;
 using Entities.DataTransferObjects;
 using Entities.Models;
@@ -20,14 +21,12 @@ namespace AspEventVieuwerAPI.Controllers
     public class ScheduleController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IScheduleRepository _repository;
-        private IMapper _mapper;
+        private IScheduleLogic _scheduleLogic;
 
-        public ScheduleController(ILoggerManager logger, IScheduleRepository repository, IMapper mapper)
+        public ScheduleController(ILoggerManager logger, IScheduleLogic scheduleLogic)
         {
             _logger = logger;
-            _repository = repository;
-            _mapper = mapper;
+            _scheduleLogic = scheduleLogic;
         }
 
         [HttpGet]
@@ -35,16 +34,11 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var schedules = _repository.GetAll();
-
-                _logger.LogInfo($"Returned all Schedules from database.");
-
-                var Result = _mapper.Map<IEnumerable<ArtistDto>>(schedules);
-                return Ok(Result);
+                var schedules = _scheduleLogic.GetAll();
+                return Ok(schedules);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetAllSchedules action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -54,22 +48,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var schedule = _repository.GetByStage(id);
+                var schedules = _scheduleLogic.GetByStage(id);
 
-                if (schedule == null)
+                if (schedules == null)
                 {
-                    _logger.LogError($"Schedules with stage id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-                 
-                _logger.LogInfo($"Returned Schedules with stage id: {id}");
-
-                var Result = _mapper.Map<IEnumerable<ScheduleDto>>(schedule);
-                return Ok(Result);
+                
+                return Ok(schedules);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetByStageWithDetails action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -79,22 +68,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var schedule = _repository.GetByStageWithDetails(id);
+                var schedules = _scheduleLogic.GetByStageWithDetails(id);
 
-                if (schedule == null)
+                if (schedules == null)
                 {
-                    _logger.LogError($"Schedules with stage id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned Schedules with stage id: {id}");
-
-                var Result = _mapper.Map<IEnumerable<ScheduleDto>>(schedule);
-                return Ok(Result);
+                return Ok(schedules);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetByStageWithDetails action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -104,22 +88,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var schedule = _repository.GetById(id);
+                var schedule = _scheduleLogic.GetById(id);
 
                 if (schedule == null)
                 {
-                    _logger.LogError($"Schedule with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _logger.LogInfo($"Returned Schedule with id: {id}");
-
-                var Result = _mapper.Map<ScheduleDto>(schedule);
-                return Ok(Result);
+                return Ok(schedule);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetScheduleById action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -141,19 +120,12 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _mapper.Map<Schedule>(schedule);
-
-                _repository.Create(DataEntity);
-                _repository.Save();
-
-                var createdEntity = _mapper.Map<ArtistDto>(DataEntity);
+                bool succes = _scheduleLogic.Create(schedule);
 
                 return Ok("Schedule is created");
-                //return CreatedAtRoute("CategoryById", new { id = createdEntity.id }, createdEntity);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside CreateSchedule action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -175,23 +147,16 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.GetById(schedule.id);
-                if (DataEntity == null)
+                bool succes = _scheduleLogic.Update(schedule);
+                if (!succes)
                 {
-                    _logger.LogError($"Schedule with id: {schedule.id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _mapper.Map(schedule, DataEntity);
-
-                _repository.Update(DataEntity);
-                _repository.Save();
 
                 return Ok("Schedule is updated");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside UpdateSchedule action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -201,21 +166,16 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var schedule = _repository.GetById(id);
-                if (schedule == null)
+                bool succes = _scheduleLogic.Delete(id);
+                if (!succes)
                 {
-                    _logger.LogError($"Schedule with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _repository.Delete(schedule);
-                _repository.Save();
-
+                
                 return Ok("Schedule is delted");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside DeleteSchedule action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }

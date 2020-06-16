@@ -47,7 +47,9 @@ namespace AspEventVieuwerAPI.Extensions
 
         public static void ConfigureRepositoryWrapper(this IServiceCollection services)
         {
-            //services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            /***********************************************
+            *                 repositories                 *
+            ***********************************************/
             services.AddScoped<IArtistGenreRepository, ArtistGenreRepository>();
             services.AddScoped<IArtistRepository, ArtistRepository>();
             services.AddScoped<IDatePlanningRepository, DatePlanningRepository>();
@@ -62,6 +64,9 @@ namespace AspEventVieuwerAPI.Extensions
             services.AddScoped<IStageRepository, StageRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 
+            /***********************************************
+            *                Logic Classes                 *
+            ***********************************************/
             services.AddScoped<IArtistLogic, ArtistLogic>();
             services.AddScoped<IArtistGenreLogic, ArtistGenreLogic>();
             services.AddScoped<IDatePlanningLogic, DatePlanningLogic>();

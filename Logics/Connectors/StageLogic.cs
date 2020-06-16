@@ -73,17 +73,74 @@ namespace Logics
 
         public IEnumerable<StageDto> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var stages = _repository.GetAll();
+
+                if (stages == null)
+                {
+                    _logger.LogError($"stages with EventDate id: , hasn't been found in db.");
+                    return null;
+                }
+
+                _logger.LogInfo($"Returned stages with EventDate id:");
+
+                var Result = _mapper.Map<IEnumerable<StageDto>>(stages);
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetStageByEventDate action: {ex.Message}");
+                throw new Exception();
+            }
         }
 
         public IEnumerable<StageDto> GetAllByEventDate(int event_date_id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                IEnumerable<Stage> stages = _repository.GetAllByEventDate(event_date_id);
+
+                if (stages == null)
+                {
+                    _logger.LogError($"stages with EventDate id: {event_date_id}, hasn't been found in db.");
+                    return null;
+                }
+
+                _logger.LogInfo($"Returned stages with EventDate id: {event_date_id}");
+
+                IEnumerable<StageDto> Result = _mapper.Map<IEnumerable<StageDto>>(stages);
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetStageByEventDate action: {ex.Message}");
+                throw new Exception();
+            }
         }
 
         public StageDto GetById(int stage_id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var stage = _repository.GetById(stage_id);
+
+                if (stage == null)
+                {
+                    _logger.LogError($"Stage with id: {stage_id}, hasn't been found in db.");
+                    return null;
+                }
+
+                _logger.LogInfo($"Returned Stage with id: {stage_id}");
+
+                var Result = _mapper.Map<StageDto>(stage);
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetStageById action: {ex.Message}");
+                throw new Exception();
+            }
         }
 
         public bool Update(StageForUpdateDto stageForUpdate)

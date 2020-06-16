@@ -19,14 +19,12 @@ namespace AspEventVieuwerAPI.Controllers
         private ILoggerManager _logger;
         private IEventLogic _eventLogic;
         private IEventGenreLogic _eventGenreLogic;
-        private IMapper _mapper;
 
-        public EventController(ILoggerManager logger, IEventLogic eventLogic, IEventGenreLogic eventGenreLogic, IMapper mapper)
+        public EventController(ILoggerManager logger, IEventLogic eventLogic, IEventGenreLogic eventGenreLogic)
         {
             _logger = logger;
             _eventLogic = eventLogic;
             _eventGenreLogic = eventGenreLogic;
-            _mapper = mapper;
         }
 
         [HttpGet("GetAllEvents")]

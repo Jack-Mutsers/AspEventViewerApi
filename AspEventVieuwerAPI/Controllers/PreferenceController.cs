@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AspEventVieuwerAPI.Authentication;
+﻿using AspEventVieuwerAPI.Authentication;
 using AutoMapper;
-using Contracts;
 using Contracts.Logger;
+using Contracts.Logic;
 using Contracts.Repository;
 using Entities.DataTransferObjects;
 using Entities.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace AspEventVieuwerAPI.Controllers
 {
@@ -20,14 +17,13 @@ namespace AspEventVieuwerAPI.Controllers
     public class PreferenceController : ControllerBase
     {
         private ILoggerManager _logger;
-        private IPreferenceRepository _repository;
+        private IPreferenceLogic _preferenceLogic;
         private IMapper _mapper;
 
-        public PreferenceController(ILoggerManager logger, IPreferenceRepository repository, IMapper mapper)
+        public PreferenceController(ILoggerManager logger, IPreferenceLogic preferenceLogic)
         {
             _logger = logger;
-            _repository = repository;
-            _mapper = mapper;
+            _preferenceLogic = preferenceLogic;
         }
 
         [HttpGet("{id}")]
@@ -35,22 +31,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var preference = _repository.GetPreferenceByUser(id);
+                var preference = _preferenceLogic.GetPreferenceByUser(id);
 
                 if (preference == null)
                 {
-                    _logger.LogError($"Preferences with user id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
                  
-                _logger.LogInfo($"Returned Preferences with user id: {id}");
-
-                var Result = _mapper.Map<IEnumerable<PreferenceDto >> (preference);
-                return Ok(Result);
+                return Ok(preference);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetPreferenceByUser action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -60,22 +51,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var preference = _repository.GetById(id);
+                var preference = _preferenceLogic.GetById(id);
 
                 if (preference == null)
                 {
-                    _logger.LogError($"Preference with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
                 
-                _logger.LogInfo($"Returned Preference with id: {id}");
-
-                var Result = _mapper.Map<PreferenceDto>(preference);
-                return Ok(Result);
+                return Ok(preference);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside GetPreferenceById action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -97,29 +83,22 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _mapper.Map<Preference>(preference);
-
-                _repository.Create(DataEntity);
-                _repository.Save();
-
-                var createdEntity = _mapper.Map<PreferenceDto>(DataEntity);
+                bool succes = _preferenceLogic.Create(preference);
 
                 return Ok("Preference is created");
-                //return CreatedAtRoute("CategoryById", new { id = createdEntity.id }, createdEntity);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside CreatePreference action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
 
-        [HttpPut]
-        public IActionResult UpdatePreference([FromBody]ArtistForUpdateDto preference)
+        [HttpPut("{id}")]
+        public IActionResult UpdatePreference([FromBody]List<PreferenceForCreationDto> preferences, int id)
         {
             try
             {
-                if (preference == null)
+                if (preferences == null)
                 {
                     _logger.LogError("Preference object sent from client is null.");
                     return BadRequest("Preference object is null");
@@ -131,23 +110,16 @@ namespace AspEventVieuwerAPI.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var DataEntity = _repository.GetById(preference.id);
-                if (DataEntity == null)
+                var success = _preferenceLogic.UpdateByUser(id, preferences);
+                if (!success)
                 {
-                    _logger.LogError($"Preference with id: {preference.id}, hasn't been found in db.");
                     return NotFound();
                 }
-
-                _mapper.Map(preference, DataEntity);
-
-                _repository.Update(DataEntity);
-                _repository.Save();
 
                 return Ok("Preference is updated");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside UpdatePreference action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -157,21 +129,17 @@ namespace AspEventVieuwerAPI.Controllers
         {
             try
             {
-                var preference = _repository.GetById(id);
-                if (preference == null)
+                bool preference = _preferenceLogic.Delete(id);
+
+                if (!preference)
                 {
-                    _logger.LogError($"Preference with id: {id}, hasn't been found in db.");
                     return NotFound();
                 }
 
-                _repository.Update(preference);
-                _repository.Save();
-
-                return Ok("Preference is delted");
+                return Ok("Preference is deleted");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside DeletePreference action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }

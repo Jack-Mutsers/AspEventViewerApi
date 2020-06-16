@@ -9,5 +9,7 @@ namespace Contracts.Logic
         PreferenceDto GetById(int preference_id);
         bool Create(PreferenceForCreationDto preferenceForCreation);
         bool Delete(int id);
+        bool DeleteByUser(int user_id);
+        bool UpdateByUser(int user_id, List<PreferenceForCreationDto> preferences);
     }
 }

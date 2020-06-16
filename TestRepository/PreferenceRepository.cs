@@ -46,5 +46,9 @@ namespace TestRepository
                 preference1 = preference;
         }
 
+        public void DeleteByUser(int user_id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

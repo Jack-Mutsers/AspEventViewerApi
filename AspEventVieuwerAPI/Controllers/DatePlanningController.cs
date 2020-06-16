@@ -28,13 +28,12 @@ namespace AspEventVieuwerAPI.Controllers
         private IArtistLogic _artistLogic;
         private IMapper _mapper;
 
-        public DatePlanningController(ILoggerManager logger, IDatePlanningLogic datePlanningLogic, IEventDateLogic eventDateLogic, IArtistLogic artistLogic, IMapper mapper)
+        public DatePlanningController(ILoggerManager logger, IDatePlanningLogic datePlanningLogic, IEventDateLogic eventDateLogic, IArtistLogic artistLogic)
         {
             _logger = logger;
             _datePlanningLogic = datePlanningLogic;
             _eventDateLogic = eventDateLogic;
             _artistLogic = artistLogic;
-            _mapper = mapper;
         }
 
         [HttpGet("GetAllDates")]

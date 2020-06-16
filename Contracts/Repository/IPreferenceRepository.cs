@@ -8,6 +8,7 @@ namespace Contracts.Repository
     public interface IPreferenceRepository : IUniversalRepository<Preference>
     {
         IEnumerable<Preference> GetPreferenceByUser(int user_id);
+        void DeleteByUser(int user_id);
         Preference GetById(int preference_id);
     }
 }
