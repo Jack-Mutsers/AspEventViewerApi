@@ -7,6 +7,7 @@ namespace Entities.DataTransferObjects
 {
     public class PreferenceDto
     {
+        public int id { get; set; }
         public GenreDto genre { get; set; }
     }
 }

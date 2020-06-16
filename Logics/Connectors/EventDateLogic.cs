@@ -21,10 +21,10 @@ namespace Logics
         private IEventDateRepository _repository;
         private IMapper _mapper;
 
-        public EventDateLogic(ILoggerManager logger, RepositoryContext repositoryContext, IMapper mapper)
+        public EventDateLogic(ILoggerManager logger, IEventDateRepository eventDateRepository, IMapper mapper)
         {
             _logger = logger;
-            _repository = new EventDateRepository(repositoryContext);
+            _repository = eventDateRepository;
             _mapper = mapper;
         }
 

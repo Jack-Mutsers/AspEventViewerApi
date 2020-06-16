@@ -21,10 +21,10 @@ namespace Logics
         private IGenreRepository _repository;
         private IMapper _mapper;
 
-        public GenreLogic(ILoggerManager logger, RepositoryContext repositoryContext, IMapper mapper)
+        public GenreLogic(ILoggerManager logger, IGenreRepository genreRepository, IMapper mapper)
         {
             _logger = logger;
-            _repository = new GenreRepository(repositoryContext);
+            _repository = genreRepository;
             _mapper = mapper;
         }
 

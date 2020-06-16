@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TestRepository
+namespace TestRepository.succes
 {
     public class PreferenceRepository : RepositoryBase, IPreferenceRepository
     {
@@ -48,7 +48,11 @@ namespace TestRepository
 
         public void DeleteByUser(int user_id)
         {
-            throw new NotImplementedException();
+            IEnumerable<Preference> preferences = _preferences.Where(p => p.user_id == user_id).ToList();
+            foreach (Preference preference in preferences)
+            {
+                Delete(preference);
+            }
         }
     }
 }

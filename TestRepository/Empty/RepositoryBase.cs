@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace TestRepository
+namespace TestRepository.Empty
 {
     public abstract class RepositoryBase
     {

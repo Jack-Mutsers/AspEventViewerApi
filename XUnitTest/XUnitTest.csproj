@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AspEventVieuwerAPI\AspEventVieuwerAPI.csproj" />
+    <ProjectReference Include="..\Logics\Logics.csproj" />
     <ProjectReference Include="..\TestRepository\TestRepository.csproj" />
   </ItemGroup>
 

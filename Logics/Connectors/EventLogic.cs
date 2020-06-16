@@ -20,14 +20,14 @@ namespace Logics
     {
         private ILoggerManager _logger;
         private IEventRepository _eventRepository;
-        private IEventGenreRepository _eventGenreRepository;
+        private IEventGenreLogic _eventGenreLogic;
         private IMapper _mapper;
 
-        public EventLogic(ILoggerManager logger, RepositoryContext repositoryContext, IMapper mapper)
+        public EventLogic(ILoggerManager logger, IEventRepository eventRepository, IEventGenreLogic eventGenreLogic, IMapper mapper)
         {
             _logger = logger;
-            _eventRepository = new EventRepository(repositoryContext);
-            _eventGenreRepository = new EventGenreRepository(repositoryContext);
+            _eventRepository = eventRepository;
+            _eventGenreLogic = eventGenreLogic;
             _mapper = mapper;
         }
 
@@ -234,10 +234,12 @@ namespace Logics
                 List<Event> eventsList = new List<Event>();
                 foreach (Event @event in @events.ToList())
                 {
-                    IEnumerable<EventGenre> eventGenres = _eventGenreRepository.GetByEventWithDetails(@event.id);
+                    IEnumerable<EventGenreDto> eventGenres = _eventGenreLogic.GetByEventWithDetails(@event.id);
                     @event.genre = _mapper.Map<ICollection<EventGenre>>(eventGenres);
                     eventsList.Add(@event);
                 }
+
+                //IEnumerable<EventDto> eventDtos = _mapper.Map<IEnumerable<EventDto>>(eventsList);
 
                 return eventsList;
             }
@@ -263,12 +265,11 @@ namespace Logics
 
                 _mapper.Map(eventForUpdate, DataEntity);
 
-                IEnumerable<EventGenre> eventGenres = _eventGenreRepository.GetByEvent(DataEntity.id);
-                foreach (EventGenre eventGenre in eventGenres)
+                IEnumerable<EventGenreDto> eventGenres = _eventGenreLogic.GetByEvent(DataEntity.id);
+                foreach (EventGenreDto eventGenre in eventGenres)
                 {
-                    _eventGenreRepository.Delete(eventGenre);
+                    _eventGenreLogic.Delete(eventGenre.event_id, eventGenre.genre_id);
                 }
-                _eventGenreRepository.Save();
 
                 _eventRepository.Update(DataEntity);
                 _eventRepository.Save();
@@ -288,15 +289,21 @@ namespace Logics
         {
             try
             {
-                IEnumerable<Event> @events = genre_id > 0 ?
-                    _eventGenreRepository.GetEventsByGenre(genre_id) :
-                    _eventRepository.GetAllActiveEvents();
+                IEnumerable<EventDto> eventsDto;
 
+                if (genre_id > 0)
+                {
+                    eventsDto = _eventGenreLogic.GetEventsByGenre(genre_id);
+                }
+                else
+                {
+                    IEnumerable<Event> @events = _eventRepository.GetAllActiveEvents();
+                    eventsDto = _mapper.Map<IEnumerable<EventDto>>(@events);
+                }
+                
                 _logger.LogInfo($"Returned all Events with genre id: {genre_id} from database.");
 
-                IEnumerable<EventDto> Result = _mapper.Map<IEnumerable<EventDto>>(@events);
-
-                return Result;
+                return eventsDto;
             }
             catch (Exception ex)
             {

@@ -21,10 +21,10 @@ namespace Logics
         private IStageRepository _repository;
         private IMapper _mapper;
 
-        public StageLogic(ILoggerManager logger, RepositoryContext repositoryContext, IMapper mapper)
+        public StageLogic(ILoggerManager logger, IStageRepository stageRepository, IMapper mapper)
         {
             _logger = logger;
-            _repository = new StageRepository(repositoryContext);
+            _repository = stageRepository;
             _mapper = mapper;
         }
 

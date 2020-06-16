@@ -12,5 +12,6 @@ namespace Entities.DataTransferObjects
         public string username { get; set; }
         public string password { get; set; }
         public int right_id { get; set; }
+        public IEnumerable<PreferenceForCreationDto> preferences { get; set; }
     }
 }

@@ -21,10 +21,10 @@ namespace Logics
         private IEventGenreRepository _repository;
         private IMapper _mapper;
 
-        public EventGenreLogic(ILoggerManager logger, RepositoryContext repositoryContext, IMapper mapper)
+        public EventGenreLogic(ILoggerManager logger, IEventGenreRepository eventGenreRepository, IMapper mapper)
         {
             _logger = logger;
-            _repository = new EventGenreRepository(repositoryContext);
+            _repository = eventGenreRepository;
             _mapper = mapper;
         }
 

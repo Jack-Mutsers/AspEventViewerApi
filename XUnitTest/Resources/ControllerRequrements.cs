@@ -26,7 +26,7 @@ namespace XUnitTest.Resources
             mapper = mockMapper.CreateMapper();
 
             logger = new LoggerManager();
-            repository = new RepositoryWrapper();
+            repository = new TestRepository.succes.RepositoryWrapper();
         }
     }
 }

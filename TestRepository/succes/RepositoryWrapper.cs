@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TestRepository
+namespace TestRepository.succes
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {

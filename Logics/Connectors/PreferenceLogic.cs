@@ -17,10 +17,10 @@ namespace Logics
         private IPreferenceRepository _repository;
         private IMapper _mapper;
 
-        public PreferenceLogic(ILoggerManager logger, RepositoryContext repositoryContext, IMapper mapper)
+        public PreferenceLogic(ILoggerManager logger, IPreferenceRepository preferenceRepository, IMapper mapper)
         {
             _logger = logger;
-            _repository = new PreferenceRepository(repositoryContext);
+            _repository = preferenceRepository;
             _mapper = mapper;
         }
 

@@ -21,10 +21,10 @@ namespace Logics
         private IReviewRepository _repository;
         private IMapper _mapper;
 
-        public ReviewLogic(ILoggerManager logger, RepositoryContext repositoryContext, IMapper mapper)
+        public ReviewLogic(ILoggerManager logger, IReviewRepository reviewRepository, IMapper mapper)
         {
             _logger = logger;
-            _repository = new ReviewRepository(repositoryContext);
+            _repository = reviewRepository;
             _mapper = mapper;
         }
 

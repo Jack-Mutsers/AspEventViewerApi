@@ -21,10 +21,10 @@ namespace Logics
         private IScheduleItemRepository _repository;
         private IMapper _mapper;
 
-        public ScheduleItemLogic(ILoggerManager logger, RepositoryContext repositoryContext, IMapper mapper)
+        public ScheduleItemLogic(ILoggerManager logger, IScheduleItemRepository scheduleItemRepository, IMapper mapper)
         {
             _logger = logger;
-            _repository = new ScheduleItemRepository(repositoryContext);
+            _repository = scheduleItemRepository;
             _mapper = mapper;
         }
 

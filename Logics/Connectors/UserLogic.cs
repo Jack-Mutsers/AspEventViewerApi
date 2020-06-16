@@ -12,6 +12,7 @@ using Contracts.Logic;
 using Contracts.Logger;
 using AutoMapper;
 using Entities.DataTransferObjects;
+using System.Linq;
 
 namespace Logics
 {
@@ -19,12 +20,14 @@ namespace Logics
     {
         private ILoggerManager _logger;
         private IUserRepository _repository;
+        private IPreferenceLogic _preferenceLogic;
         private IMapper _mapper;
 
-        public UserLogic(ILoggerManager logger, RepositoryContext repositoryContext, IMapper mapper)
+        public UserLogic(ILoggerManager logger, IUserRepository userRepository, IPreferenceLogic preferenceLogic, IMapper mapper)
         {
             _logger = logger;
-            _repository = new UserRepository(repositoryContext);
+            _repository = userRepository;
+            _preferenceLogic = preferenceLogic;
             _mapper = mapper;
         }
 
@@ -32,6 +35,12 @@ namespace Logics
         {
             try
             {
+                if (userForCreation.name == "" || userForCreation.password == "" || userForCreation.right_id == 0)
+                {
+                    _logger.LogError("invalid user data");
+                    return null;
+                }
+
                 User userCheck = _repository.GetUserByLogin(userForCreation.username, "");
                 if (userCheck != null)
                 {
@@ -69,6 +78,13 @@ namespace Logics
 
                 User user = _mapper.Map<User>(userDto);
 
+                IEnumerable<PreferenceDto> preferences =  _preferenceLogic.GetPreferenceByUser(user.id);
+
+                foreach (PreferenceDto preferenceDto in preferences)
+                {
+                    _preferenceLogic.Delete(preferenceDto.id);
+                }
+
                 _repository.Delete(user);
                 _repository.Save();
 
@@ -93,9 +109,18 @@ namespace Logics
                     return null;
                 }
 
+                if (user.id == 0)
+                {
+                    _logger.LogError($"Empty User has been returned from the db");
+                    throw new Exception();
+                }
+
                 _logger.LogInfo($"Returned User with id: {User_id}");
 
                 var Result = _mapper.Map<UserDto>(user);
+
+                Result.preference = _preferenceLogic.GetPreferenceByUser(Result.id);
+
                 return Result;
 
             }
@@ -153,6 +178,14 @@ namespace Logics
                 }
 
                 _mapper.Map(userForUpdate, DataEntity);
+
+                bool succes = _preferenceLogic.UpdateByUser(userForUpdate.id, userForUpdate.preferences.ToList());
+
+                if (!succes)
+                {
+                    _logger.LogError($"Failed to update Preferences of User with id: {userForUpdate.id}");
+                    return false;
+                }
 
                 _repository.Update(DataEntity);
                 _repository.Save();

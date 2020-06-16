@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TestRepository
+namespace TestRepository.succes
 {
     public class UserRepository : RepositoryBase, IUserRepository
     {
@@ -22,6 +22,7 @@ namespace TestRepository
 
         public void Create(User user)
         {
+            user.id = (_users.Count() + 1);
             _users.Add(user);
         }
 
@@ -34,12 +35,15 @@ namespace TestRepository
         {
             User user = _users.Where(u => u.id == User_id).FirstOrDefault();
 
-            user.right = collection.rights.Where(r => r.id == user.right_id).FirstOrDefault();
-            user.preference = collection.preferences.Where(p => p.user_id == user.id).ToList();
-
-            foreach (Preference preference in user.preference)
+            if (user != null)
             {
-                preference.genre = collection.genres.Where(g=>g.id == preference.genre_id).FirstOrDefault();
+                user.right = collection.rights.Where(r => r.id == user.right_id).FirstOrDefault();
+                user.preference = collection.preferences.Where(p => p.user_id == user.id).ToList();
+
+                foreach (Preference preference in user.preference)
+                {
+                    preference.genre = collection.genres.Where(g => g.id == preference.genre_id).FirstOrDefault();
+                }
             }
 
             return user;
@@ -49,12 +53,15 @@ namespace TestRepository
         {
             User user = _users.Where(u => u.username == username).FirstOrDefault();
 
-            user.right = collection.rights.Where(r => r.id == user.right_id).FirstOrDefault();
-            user.preference = collection.preferences.Where(p => p.user_id == user.id).ToList();
-
-            foreach (Preference preference in user.preference)
+            if (user != null)
             {
-                preference.genre = collection.genres.Where(g => g.id == preference.genre_id).FirstOrDefault();
+                user.right = collection.rights.Where(r => r.id == user.right_id).FirstOrDefault();
+                user.preference = collection.preferences.Where(p => p.user_id == user.id).ToList();
+
+                foreach (Preference preference in user.preference)
+                {
+                    preference.genre = collection.genres.Where(g => g.id == preference.genre_id).FirstOrDefault();
+                }
             }
 
             return user;

@@ -21,10 +21,10 @@ namespace Logics
         private IArtistRepository _repository;
         private IMapper _mapper;
 
-        public ArtistLogic(ILoggerManager logger, RepositoryContext repositoryContext, IMapper mapper)
+        public ArtistLogic(ILoggerManager logger, IArtistRepository artistRepository, IMapper mapper)
         {
             _logger = logger;
-            _repository = new ArtistRepository(repositoryContext);
+            _repository = artistRepository;
             _mapper = mapper;
         }
 

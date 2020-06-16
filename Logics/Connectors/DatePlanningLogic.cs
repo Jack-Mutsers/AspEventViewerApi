@@ -21,10 +21,10 @@ namespace Logics
         private IDatePlanningRepository _repository;
         private IMapper _mapper;
 
-        public DatePlanningLogic(ILoggerManager logger, RepositoryContext repositoryContext, IMapper mapper)
+        public DatePlanningLogic(ILoggerManager logger, IDatePlanningRepository datePlanningRepository, IMapper mapper)
         {
             _logger = logger;
-            _repository = new DatePlanningRepository(repositoryContext);
+            _repository = datePlanningRepository;
             _mapper = mapper;
         }
 

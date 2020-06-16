@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TestRepository
+namespace TestRepository.succes
 {
     public class ArtistRepository : RepositoryBase, IArtistRepository
     {
