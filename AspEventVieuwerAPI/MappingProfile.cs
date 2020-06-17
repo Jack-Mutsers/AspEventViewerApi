@@ -33,7 +33,6 @@ namespace AspEventVieuwerAPI
 
             CreateMap<EventGenre, EventGenreDto>();
             CreateMap<EventGenreDto, EventGenre>();
-            CreateMap<EventGenreDto, EventGenre>();
             CreateMap<EventGenreForCreationDto, EventGenre>();
 
             CreateMap<EventDate, EventDateDto>();
@@ -41,6 +40,7 @@ namespace AspEventVieuwerAPI
             CreateMap<EventDateForUpdateDto, EventDate>();
 
             CreateMap<Genre, GenreDto>();
+            CreateMap<GenreDto, Genre>();
 
             CreateMap<Preference, PreferenceDto>();
             CreateMap<PreferenceDto, Preference>();
